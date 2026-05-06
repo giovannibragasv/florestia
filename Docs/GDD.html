@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<!-- ==================================================================
+     LONG DOCUMENT · English · parchment design system
+     Multi-page A4 white paper / tech report / annual review
+     Flow: cover -> toc -> exec summary -> chapters -> appendix
+     ================================================================== -->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Florestia — Game Design Document (MVP)</title>
+<meta name="author" content="Carlos Eduardo, Gabriel Mattos, Giovanni Braga, Gustavo Teixeira, Luiz Eduardo, Pedro Miguel">
+<meta name="description" content="Documento de design do jogo Florestia — MVP educativo no estilo Stardew Valley para Amazon Hacking 2026.">
+<meta name="keywords" content="Florestia, GDD, Unity, game design, educação, Amazon Hacking, MVP">
+<meta name="generator" content="Kami">
+<style>
+  /* Palatino is a system font, no @font-face needed */
+  @font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono.woff2") format("woff2"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono.woff2") format("woff2"); font-weight: 500; font-style: normal; }
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+
+    @top-right {
+      content: string(section-title);
+      font-family: Charter, Georgia, Palatino, serif;
+      font-size: 8pt;
+      color: #6b6a64;
+    }
+
+    @bottom-center {
+      content: counter(page) "  ·  Florestia GDD (MVP)";
+      font-family: Charter, Georgia, Palatino, serif;
+      font-size: 9pt;
+      color: #6b6a64;
+    }
+  }
+  @page:first {
+    @top-right { content: ""; }
+    @bottom-center { content: ""; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory:     #faf9f5;
+    --near-black:#141413;
+    --dark-warm: #3d3d3a;
+    --olive:     #504e49;
+    --stone:     #6b6a64;
+    --brand:     #1B365D;
+    --border:    #e8e6dc;
+    --border-soft:#e5e3d8;
+    --tag-bg:    #E4ECF5;
+
+    --serif: Charter, Georgia,
+             Palatino, "Times New Roman", serif;
+    --sans: var(--serif);
+    --mono:  "JetBrains Mono", "SF Mono", "Fira Code",
+             Consolas, Monaco, monospace;
+  }
+
+  html, body { background: var(--parchment); }
+
+  @media screen {
+    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm 22mm 22mm; }
+  }
+
+  body {
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  .sans { font-family: var(--sans); }
+
+  /* COVER */
+  .cover {
+    min-height: 240mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40mm 0 0 0;
+    break-after: page;
+  }
+  .cover-eyebrow {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 2pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 18pt;
+  }
+  .cover-title {
+    font-size: 40pt;
+    font-weight: 500;
+    color: var(--near-black);
+    line-height: 1.12;
+    letter-spacing: -0.5pt;
+    margin-bottom: 16pt;
+  }
+  .cover-sub {
+    font-family: var(--sans);
+    font-size: 14pt;
+    color: var(--olive);
+    line-height: 1.45;
+    max-width: 85%;
+    margin-bottom: 30pt;
+  }
+  .cover-meta {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--stone);
+    line-height: 1.55;
+    font-variant-numeric: tabular-nums;
+  }
+  .cover-meta strong { color: var(--dark-warm); font-weight: 500; }
+
+  /* TOC */
+  .toc { break-after: page; }
+  .toc h2 {
+    font-size: 22pt;
+    font-weight: 500;
+    margin-bottom: 14pt;
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 8pt;
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6pt 0;
+    border-bottom: 0.3pt dotted var(--border);
+    font-size: 11pt;
+  }
+  .toc-item:last-of-type { border-bottom: none; }
+  .toc-num {
+    color: var(--brand);
+    font-weight: 500;
+    min-width: 30pt;
+    font-variant-numeric: tabular-nums;
+  }
+  .toc-title {
+    flex: 1;
+    color: var(--near-black);
+    padding-left: 6pt;
+  }
+  .toc-page {
+    color: var(--stone);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* HEADINGS */
+  h1 {
+    font-size: 24pt;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.3pt;
+    margin: 0 0 10pt 0;
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 8pt;
+    color: var(--near-black);
+    break-after: avoid;
+  }
+  h2 {
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 24pt 0 6pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+    string-set: section-title content();
+  }
+  h3 {
+    font-size: 13pt;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 18pt 0 4pt 0;
+    color: var(--dark-warm);
+    break-after: avoid;
+  }
+
+  .chapter-num {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 6pt;
+  }
+
+  /* PARAGRAPHS */
+  p { margin: 0 0 10pt 0; line-height: 1.55; color: var(--near-black); }
+
+  .lead {
+    font-size: 12pt;
+    line-height: 1.55;
+    color: var(--dark-warm);
+    margin-bottom: 14pt;
+  }
+
+  .hl { color: var(--brand); font-weight: 500; }
+  strong { font-weight: 500; }
+
+  /* LISTS */
+  ul, ol {
+    margin: 6pt 0 10pt 0;
+    padding-left: 20pt;
+    line-height: 1.55;
+  }
+  ul li::marker { color: var(--brand); }
+  ol li::marker { color: var(--brand); font-weight: 500; }
+
+  /* QUOTE */
+  blockquote, .quote {
+    border-left: 2pt solid var(--brand);
+    margin: 12pt 0;
+    padding: 4pt 0 4pt 16pt;
+    color: var(--olive);
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+  blockquote .cite, .quote .cite {
+    display: block;
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    margin-top: 4pt;
+  }
+
+  /* CODE */
+  code {
+    font-family: var(--mono);
+    font-size: 9pt;
+    background: var(--ivory);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    color: var(--dark-warm);
+  }
+  pre {
+    font-family: var(--mono);
+    font-size: 9pt;
+    line-height: 1.5;
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 10pt 0;
+    white-space: pre-wrap;
+    color: var(--near-black);
+    break-inside: avoid;
+  }
+  pre code { background: transparent; padding: 0; font-size: inherit; }
+
+  /* TABLE (kami-table) */
+  table, .kami-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+  table th, .kami-table th {
+    text-align: left;
+    font-family: var(--sans);
+    font-weight: 500;
+    color: var(--dark-warm);
+    padding: 6pt 8pt;
+    border-bottom: 1pt solid var(--border);
+    background: var(--ivory);
+  }
+  table td, .kami-table td {
+    padding: 5pt 8pt;
+    border-bottom: 0.3pt solid var(--border-soft);
+    vertical-align: top;
+  }
+  table.compact th, .kami-table.compact th { padding: 3pt 6pt; font-size: 8pt; }
+  table.compact td, .kami-table.compact td { padding: 2pt 6pt; font-size: 8pt; line-height: 1.4; }
+  table.financial td:not(:first-child), .kami-table.financial td:not(:first-child) {
+    text-align: right; font-variant-numeric: tabular-nums;
+  }
+  table.financial th:not(:first-child), .kami-table.financial th:not(:first-child) { text-align: right; }
+  table.striped tbody tr:nth-child(even) td, .kami-table.striped tbody tr:nth-child(even) td {
+    background: var(--ivory);
+  }
+  table .total td, .kami-table .total td {
+    font-weight: 500; border-top: 1pt solid var(--brand); border-bottom: none; color: var(--near-black);
+  }
+
+  /* CALLOUT / TAKEAWAY */
+  .callout {
+    background: var(--ivory);
+    border-left: 2pt solid var(--brand);
+    padding: 10pt 14pt;
+    border-radius: 3pt;
+    margin: 12pt 0;
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+  .callout blockquote,
+  .callout .quote {
+    border-left: none;
+    padding-left: 0;
+    margin: 6pt 0;
+    color: var(--olive);
+  }
+  .callout blockquote:first-child,
+  .callout .quote:first-child { margin-top: 0; }
+  .callout blockquote:last-child,
+  .callout .quote:last-child  { margin-bottom: 0; }
+  .takeaway {
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .takeaway-label {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 4pt;
+  }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-family: var(--sans);
+    font-size: 9pt;
+    font-weight: 500;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    letter-spacing: 0.4pt;
+    text-transform: uppercase;
+    margin-right: 4pt;
+  }
+
+  /* FIGURE */
+  figure { margin: 14pt 0; break-inside: avoid; }
+  figure img { max-width: 100%; border-radius: 4pt; }
+  figcaption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    margin-top: 6pt;
+    text-align: center;
+  }
+
+  /* CHAPTER BREAK */
+  .chapter { break-before: page; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="cover">
+  <div>
+    <div class="cover-eyebrow">Game Design Document · MVP</div>
+    <div class="cover-title">Florestia</div>
+    <div class="cover-sub">Jogo educativo de agricultura familiar amazônica — Unity + C# — Amazon Hacking 2026</div>
+  </div>
+  <div class="cover-meta">
+    <strong>Carlos Eduardo · Gabriel Mattos · Giovanni Braga · Gustavo Teixeira · Luiz Eduardo · Pedro Miguel</strong><br>
+    Versão 0.1 · 2026.05<br>
+    CESUPA — Escola de Negócios, Tecnologia e Inovação (ARGO)
+  </div>
+</section>
+
+<!-- TOC -->
+<section class="toc">
+  <h2>Sumário</h2>
+  <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">Visão Geral</span></div>
+  <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">Loop Central</span></div>
+  <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">Mundo e Estrutura de Cenas</span></div>
+  <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">Mecânicas da Roça (FarmScene)</span></div>
+  <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">Mecânicas do Mercado (MarketScene)</span></div>
+  <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">Economia do Jogo</span></div>
+  <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">Camada Matemática (Hybrid)</span></div>
+  <div class="toc-item"><span class="toc-num">08</span><span class="toc-title">Arquitetura Unity</span></div>
+  <div class="toc-item"><span class="toc-num">09</span><span class="toc-title">Direção de Arte</span></div>
+  <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">Fora do Escopo (MVP)</span></div>
+  <div class="toc-item"><span class="toc-num">11</span><span class="toc-title">Cronograma de Desenvolvimento</span></div>
+</section>
+
+<!-- Chapter 01 -->
+<section class="chapter">
+  <div class="chapter-num">01 · Visão Geral</div>
+  <h1>Visão Geral</h1>
+
+  <p class="lead">
+    Florestia é um jogo educativo no estilo Stardew Valley, ambientado na agricultura familiar amazônica de Vila Jutaí (Moju-PA). O jogador assume o papel de um jovem agricultor que administra sua roça ao longo de <span class="hl">15 dias</span>, tomando decisões reais de plantio, colheita e precificação para terminar o ciclo "no verde".
+  </p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Atributo</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Engine</strong></td><td>Unity + C#</td></tr>
+      <tr><td><strong>Plataforma</strong></td><td>PC (Windows / Mac) — Android como meta futura</td></tr>
+      <tr><td><strong>Público-alvo</strong></td><td>8–11 anos</td></tr>
+      <tr><td><strong>Tema educacional</strong></td><td>Matemática aplicada a decisões econômicas da agricultura familiar (BNCC)</td></tr>
+      <tr><td><strong>Abordagem pedagógica</strong></td><td>Game-based learning + Educação Popular (Freire, 1996)</td></tr>
+      <tr><td><strong>ODS alinhados</strong></td><td>ODS 1 — Erradicação da Pobreza · ODS 4 — Educação de Qualidade</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    A matemática emerge da realidade concreta do educando — não de quizzes isolados. Jogar é calcular; calcular é sobreviver.
+  </div>
+</section>
+
+<!-- Chapter 02 -->
+<section class="chapter">
+  <div class="chapter-num">02 · Loop Central</div>
+  <h1>Loop Central</h1>
+
+  <p class="lead">
+    Cada dia in-game dura <span class="hl">5 minutos</span>. O jogador alterna entre a roça diurna e o mercado noturno, repetindo o ciclo por 15 dias até o resultado final.
+  </p>
+
+  <pre><code>Manhã  →  [FARM SCENE: plantar / regar / colher com stamina]
+       →  Céu escurece + notificação "Vá ao mercado pela ponte"
+       →  Jogador caminha até a ponte
+       →  [MARKET SCENE: definir preço / vender para compradores]
+       →  Resumo noturno + salvamento automático (JSON)
+       →  Próximo dia</code></pre>
+
+  <p>Após 15 dias → <strong>END SCREEN</strong>: resumo financeiro completo, resultado (ganhou / perdeu) e lição aprendida.</p>
+
+  <h2>Transição Dia → Noite</h2>
+  <ul>
+    <li>No <strong>minuto 4</strong> (80% do dia): céu começa a escurecer gradualmente.</li>
+    <li>No <strong>minuto 4:30</strong>: notificação na tela — <em>"A noite chegou! Vá ao mercado pela ponte."</em></li>
+    <li>Ao chegar na ponte: transição de cena para MarketScene, independentemente do timer.</li>
+    <li>Timer zerado sem ir à ponte: jogador dorme sem vender — dia avança, estoque retido.</li>
+  </ul>
+</section>
+
+<!-- Chapter 03 -->
+<section class="chapter">
+  <div class="chapter-num">03 · Mundo e Estrutura de Cenas</div>
+  <h1>Mundo e Estrutura de Cenas</h1>
+
+  <h2>Cenas Unity</h2>
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Cena</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>FarmScene</code></td><td>Roça diurna: grid 6×6, casinha, ponte ao sul</td></tr>
+      <tr><td><code>MarketScene</code></td><td>Mercado noturno: feirantes e atravessadores</td></tr>
+      <tr><td><code>EndScreen</code></td><td>Resumo dos 15 dias: receita, custos e saldo final</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Layout da Roça (FarmScene)</h2>
+  <ul>
+    <li><strong>Grid:</strong> 6×6 tiles plantáveis.</li>
+    <li><strong>Casa:</strong> tile fixo no canto superior esquerdo — não plantável.</li>
+    <li><strong>Ponte:</strong> tile de saída ao sul — ativa a transição para MarketScene ao interagir à noite.</li>
+    <li><strong>Progressão futura (pós-MVP):</strong> jogador compra tiles adicionais para expandir até 10×10.</li>
+  </ul>
+</section>
+
+<!-- Chapter 04 -->
+<section class="chapter">
+  <div class="chapter-num">04 · Mecânicas da Roça</div>
+  <h1>Mecânicas da Roça (FarmScene)</h1>
+
+  <h2>Stamina</h2>
+  <p>O jogador tem <strong>20 pontos de stamina</strong> por dia. Cada ação custa stamina; ao zerá-la, o jogador não pode mais agir e deve ir ao mercado ou aguardar o fim do dia. Não há barra de stamina secundária (comida) no MVP.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Ação</th>
+        <th>Custo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Arar tile</td><td>1</td></tr>
+      <tr><td>Plantar semente</td><td>1</td></tr>
+      <tr><td>Regar tile</td><td>1</td></tr>
+      <tr><td>Colher</td><td>1</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Culturas (MVP)</h2>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Cultura</th>
+        <th>Crescimento</th>
+        <th>Custo da semente</th>
+        <th>Preço base de venda</th>
+        <th>Estratégia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Mandioca</strong></td>
+        <td>2 dias</td>
+        <td>R$3</td>
+        <td>R$7</td>
+        <td>Giro rápido, baixa margem</td>
+      </tr>
+      <tr>
+        <td><strong>Cacau</strong></td>
+        <td>4 dias</td>
+        <td>R$6</td>
+        <td>R$16</td>
+        <td>Equilíbrio risco/retorno</td>
+      </tr>
+      <tr>
+        <td><strong>Açaí</strong></td>
+        <td>6 dias</td>
+        <td>R$10</td>
+        <td>R$28</td>
+        <td>Alto valor, capital imobilizado</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul>
+    <li>Crescimento em dias in-game — não em tempo real.</li>
+    <li>Cada tile comporta 1 planta.</li>
+    <li>Planta não colhida no prazo: não estraga no MVP (simplificação).</li>
+  </ul>
+
+  <div class="callout">
+    <strong>Regra de ouro educacional:</strong> margem bruta = preço de venda − custo da semente. O jogador aprende isso experimentando, não lendo.
+  </div>
+</section>
+
+<!-- Chapter 05 -->
+<section class="chapter">
+  <div class="chapter-num">05 · Mecânicas do Mercado</div>
+  <h1>Mecânicas do Mercado (MarketScene)</h1>
+
+  <h2>Fluxo</h2>
+  <ol>
+    <li>Jogador chega ao mercado com o estoque colhido do dia.</li>
+    <li>Para cada cultura no estoque, o jogador define <strong>seu preço de venda</strong> (slider ou input numérico).</li>
+    <li>Compradores aparecem em sequência e reagem ao preço definido:
+      <ul>
+        <li><strong>Preço ≤ max do comprador:</strong> compra realizada → dinheiro entra no saldo.</li>
+        <li><strong>Preço &gt; max do comprador:</strong> comprador rejeita com feedback visual e fala curta (ex.: <em>"Tá caro demais!"</em>) e vai embora.</li>
+      </ul>
+    </li>
+    <li>Mercado fecha após todos os compradores passarem.</li>
+    <li>Estoque não vendido é retido para o próximo dia — sem deterioração no MVP.</li>
+  </ol>
+
+  <h2>Tipos de Compradores</h2>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Max price (Mandioca / Cacau / Açaí)</th>
+        <th>Volume</th>
+        <th>Frequência</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Atravessador</strong></td>
+        <td>R$5 / R$12 / R$20</td>
+        <td>Alto — compra tudo</td>
+        <td>Alta</td>
+      </tr>
+      <tr>
+        <td><strong>Feirante local</strong></td>
+        <td>R$7 / R$15 / R$26</td>
+        <td>Médio</td>
+        <td>Média</td>
+      </tr>
+      <tr>
+        <td><strong>Comprador direto</strong></td>
+        <td>R$9 / R$18 / R$30</td>
+        <td>Baixo — 1–2 unidades</td>
+        <td>Baixa</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>O jogador não vê o max price — aprende por tentativa e erro ao longo dos 15 dias.</p>
+
+  <div class="callout">
+    <strong>Tensão educacional:</strong> o atravessador aceita quase sempre (preço baixo e volume alto), mas o comprador direto paga mais. Decidir a quem vender e a qual preço é a mecânica central da negociação.
+  </div>
+</section>
+
+<!-- Chapter 06 -->
+<section class="chapter">
+  <div class="chapter-num">06 · Economia do Jogo</div>
+  <h1>Economia do Jogo</h1>
+
+  <table class="financial striped">
+    <thead>
+      <tr>
+        <th>Parâmetro</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Capital inicial</td><td>R$50</td></tr>
+      <tr><td>Custo fixo diário</td><td>R$2 (alimentação, manutenção)</td></tr>
+      <tr><td>Custo fixo total (15 dias)</td><td>R$30</td></tr>
+      <tr><td>Saldo mínimo sem vender nada</td><td>R$20 no dia 15</td></tr>
+      <tr><td>Condição de vitória</td><td>Saldo &gt; R$0 ao fim do dia 15</td></tr>
+      <tr><td>Condição de derrota</td><td>Saldo &lt; R$0 em qualquer dia</td></tr>
+    </tbody>
+  </table>
+
+  <p>Com R$50 de capital e R$2/dia de custo fixo, o jogador tem margem para errar nos primeiros dias — mas precisa rentabilizar a roça a partir do <strong>dia 7–8</strong>. Isso cria uma progressão natural de urgência sem deixar o início frustrante.</p>
+</section>
+
+<!-- Chapter 07 -->
+<section class="chapter">
+  <div class="chapter-num">07 · Camada Matemática</div>
+  <h1>Camada Matemática (Hybrid)</h1>
+
+  <p class="lead">
+    O jogador nunca é parado para resolver um exercício. A matemática é <span class="hl">sempre visível</span> e <span class="hl">sempre consequente</span>.
+  </p>
+
+  <h2>HUD durante o Mercado</h2>
+  <p>Para cada cultura sendo precificada, o painel exibe em tempo real:</p>
+  <pre><code>Custo: R$6    |    Seu preço: R$16    |    Margem: R$10  (+166%)</code></pre>
+  <ul>
+    <li><strong>Custo</strong> = custo da semente gasta para produzir aquela unidade.</li>
+    <li><strong>Margem</strong> atualiza em tempo real conforme o slider de preço se move.</li>
+    <li><strong>Cor:</strong> verde se margem positiva; vermelho se preço abaixo do custo.</li>
+  </ul>
+
+  <h2>Resumo Noturno</h2>
+  <p>Ao fim de cada noite de mercado:</p>
+  <pre><code>Dia 3 — Resumo
+Vendido:    Mandioca ×4 @ R$7    =  R$28
+            Cacau    ×1 @ R$15   =  R$15
+Receita:                            R$43
+Custo fixo:                        -R$2
+Saldo:                              R$91</code></pre>
+
+  <h2>End Screen (Dia 15)</h2>
+  <ul>
+    <li>Gráfico de linha: evolução do saldo ao longo dos 15 dias.</li>
+    <li>Total investido em sementes vs. total arrecadado nas vendas.</li>
+    <li>Cultura mais rentável do ciclo.</li>
+    <li>Mensagem educacional contextualizada — ex.: <em>"Você aprendeu a calcular margem! Na roça de verdade, isso chama precificação."</em></li>
+  </ul>
+</section>
+
+<!-- Chapter 08 -->
+<section class="chapter">
+  <div class="chapter-num">08 · Arquitetura Unity</div>
+  <h1>Arquitetura Unity (Sistemas)</h1>
+
+  <p class="lead">
+    O desenvolvimento corre em três tracks paralelos. Os sistemas de cada track expõem interfaces acordadas no dia 1 para que a integração no dia 7–8 não seja um gargalo.
+  </p>
+
+  <h2>Track A — Core Systems</h2>
+  <ul>
+    <li><code>GameManager</code> (singleton): estado global, dia atual, saldo e transições de cena.</li>
+    <li><code>DayNightCycle</code>: timer de 5 min, controle de iluminação, disparo da notificação e bridge trigger.</li>
+    <li><code>CropSystem</code>: estado por tile — <code>Empty → Tilled → Planted → Growing → Ready</code> — countdown por dia.</li>
+    <li><code>StaminaSystem</code>: inteiro simples, decrementado por ação, bloqueio quando = 0.</li>
+  </ul>
+
+  <h2>Track B — Economy / UI</h2>
+  <ul>
+    <li><code>InventorySystem</code>: dicionário <code>{CropType → quantidade}</code>.</li>
+    <li><code>PricingSystem</code>: preços base, cálculo de margem em tempo real.</li>
+    <li><code>BuyerSystem</code>: lista de compradores por noite, lógica de aceitação, feedback visual e de voz.</li>
+    <li><code>HUDController</code>: saldo, stamina bar, contador de dias, notificação noturna.</li>
+    <li><code>MarketUIController</code>: slider de preço, painel de margem, fila de compradores.</li>
+  </ul>
+
+  <h2>Track C — Art / World</h2>
+  <ul>
+    <li>Tilemap: farm grid 6×6 plantável + casa + ponte — pixel art com referência Stardew Valley.</li>
+    <li>Sprites: 3 culturas × 4 estágios de crescimento = <strong>12 sprites</strong>.</li>
+    <li>Compradores: 3 tipos × 1 sprite cada.</li>
+    <li>Sky gradient: animação de cor (azul claro → laranja → roxo escuro) ao longo do dia.</li>
+  </ul>
+
+  <h2>Save System</h2>
+  <ul>
+    <li>Salvar após cada noite de mercado.</li>
+    <li>Formato: JSON local em <code>/saves/save.json</code>.</li>
+    <li>Dados: dia atual, saldo, inventário e estado de cada tile (cultura + dias restantes).</li>
+    <li>Offline-first: sem nenhuma chamada de rede.</li>
+  </ul>
+</section>
+
+<!-- Chapter 09 -->
+<section class="chapter">
+  <div class="chapter-num">09 · Direção de Arte</div>
+  <h1>Direção de Arte</h1>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Atributo</th>
+        <th>Decisão</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Estilo</strong></td><td>Pixel art 2D top-down, referência Stardew Valley</td></tr>
+      <tr><td><strong>Paleta</strong></td><td>Tons amazônicos — verdes profundos, ocre, terroso, detalhes em verde-água e amarelo</td></tr>
+      <tr><td><strong>Arte MVP</strong></td><td>Sprites gerados por IA (DALL-E / Midjourney) com base no estilo Stardew; substituíveis por arte original em v2</td></tr>
+      <tr><td><strong>UI</strong></td><td>Simples e legível para 8–11 anos: ícones grandes, texto curto</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Chapter 10 -->
+<section class="chapter">
+  <div class="chapter-num">10 · Fora do Escopo</div>
+  <h1>Fora do Escopo (MVP)</h1>
+
+  <p>As features abaixo estão explicitamente fora do MVP. Qualquer tentativa de incluí-las durante o desenvolvimento deve ser vetada e registrada como backlog de v2.</p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>Versão</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Atravessador como NPC separado com loop de negociação</td><td>v2</td></tr>
+      <tr><td>Expansão do grid além de 6×6</td><td>v2</td></tr>
+      <tr><td>Múltiplas save slots</td><td>v2</td></tr>
+      <tr><td>Android build</td><td>v2</td></tr>
+      <tr><td>Sistema de NPCs com árvore de diálogo</td><td>v2</td></tr>
+      <tr><td>Deterioração de estoque</td><td>v2</td></tr>
+      <tr><td>Clima com bônus de crescimento</td><td>v2</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Chapter 11 -->
+<section class="chapter">
+  <div class="chapter-num">11 · Cronograma</div>
+  <h1>Cronograma de Desenvolvimento (12 dias)</h1>
+
+  <p class="lead">
+    Três tracks correm em paralelo do dia 1. A integração acontece nos dias 7–8; os dias 9–11 são para polish e balanceamento; o dia 12 é exclusivo para build final e testes.
+  </p>
+
+  <table class="compact striped">
+    <thead>
+      <tr>
+        <th>Dias</th>
+        <th>Track A — Core Systems</th>
+        <th>Track B — Economy / UI</th>
+        <th>Track C — Art / World</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1–2</strong></td>
+        <td>GameManager, DayNightCycle</td>
+        <td>InventorySystem, estrutura de dados</td>
+        <td>Tilemap base, casa, ponte</td>
+      </tr>
+      <tr>
+        <td><strong>3–4</strong></td>
+        <td>CropSystem (estados + timer)</td>
+        <td>PricingSystem + HUD saldo/stamina</td>
+        <td>Sprites das 3 culturas (4 estágios)</td>
+      </tr>
+      <tr>
+        <td><strong>5–6</strong></td>
+        <td>StaminaSystem + interação de tile</td>
+        <td>BuyerSystem + MarketUIController</td>
+        <td>Sprites compradores + UI mercado</td>
+      </tr>
+      <tr>
+        <td><strong>7–8</strong></td>
+        <td>Integração Farm ↔ Market (transição de cena)</td>
+        <td>Resumo noturno + save JSON</td>
+        <td>Sky gradient + notificação noturna</td>
+      </tr>
+      <tr>
+        <td><strong>9–10</strong></td>
+        <td>End Screen + condição vitória/derrota</td>
+        <td>Balanceamento da economia (playtests)</td>
+        <td>Polish: sons, partículas de colheita</td>
+      </tr>
+      <tr>
+        <td><strong>11</strong></td>
+        <td>Bug fixing de integração</td>
+        <td>Ajuste de números (preços, stamina)</td>
+        <td>Arte final substituindo placeholders</td>
+      </tr>
+      <tr>
+        <td><strong>12</strong></td>
+        <td>Build final + testes completos</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Entrega</div>
+    MVP jogável entregue entre <strong>18–22 de maio de 2026</strong> (Entrega 4 — 10,0 pontos) via Google Classroom do Amazon Hacking 2026.
+  </div>
+</section>
+
+</body>
+</html>
