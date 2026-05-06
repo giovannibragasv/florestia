@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Florestia — Documento de Design Educacional</title>
+<meta name="author" content="Carlos Eduardo, Gabriel Mattos, Giovanni Braga, Gustavo Teixeira, Luiz Eduardo, Pedro Miguel">
+<meta name="description" content="Documento de design educacional do jogo Florestia — fundamentação teórica, mapeamento BNCC, evidências empíricas e progressão pedagógica.">
+<meta name="keywords" content="Florestia, EDD, BNCC, educação matemática, game-based learning, letramento financeiro, Amazon Hacking, Freire">
+<meta name="generator" content="Kami">
+<style>
+  @font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono.woff2") format("woff2"); font-weight: 400; }
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+    @top-right { content: string(section-title); font-family: Charter, Georgia, Palatino, serif; font-size: 8pt; color: #6b6a64; }
+    @bottom-center { content: counter(page) "  ·  Florestia — Documento de Design Educacional"; font-family: Charter, Georgia, Palatino, serif; font-size: 9pt; color: #6b6a64; }
+  }
+  @page:first { @top-right { content: ""; } @bottom-center { content: ""; } }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --parchment: #f5f4ed; --ivory: #faf9f5; --near-black: #141413;
+    --dark-warm: #3d3d3a; --olive: #504e49; --stone: #6b6a64;
+    --brand: #1B365D; --border: #e8e6dc; --border-soft: #e5e3d8; --tag-bg: #E4ECF5;
+    --serif: Charter, Georgia, Palatino, "Times New Roman", serif;
+    --sans: var(--serif);
+    --mono: "JetBrains Mono", "SF Mono", Consolas, Monaco, monospace;
+  }
+  html, body { background: var(--parchment); }
+  @media screen { body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm 22mm 22mm; } }
+  body { color: var(--near-black); font-family: var(--serif); font-size: 10.5pt; line-height: 1.55; }
+
+  .cover { min-height: 240mm; display: flex; flex-direction: column; justify-content: space-between; padding: 40mm 0 0 0; break-after: page; }
+  .cover-eyebrow { font-family: var(--sans); font-size: 10pt; color: var(--brand); letter-spacing: 2pt; text-transform: uppercase; font-weight: 500; margin-bottom: 18pt; }
+  .cover-title { font-size: 40pt; font-weight: 500; color: var(--near-black); line-height: 1.12; letter-spacing: -0.5pt; margin-bottom: 16pt; }
+  .cover-sub { font-family: var(--sans); font-size: 14pt; color: var(--olive); line-height: 1.45; max-width: 90%; margin-bottom: 30pt; }
+  .cover-meta { font-family: var(--sans); font-size: 10pt; color: var(--stone); line-height: 1.55; }
+  .cover-meta strong { color: var(--dark-warm); font-weight: 500; }
+
+  .toc { break-after: page; }
+  .toc h2 { font-size: 22pt; font-weight: 500; margin-bottom: 14pt; border-left: 2.5pt solid var(--brand); border-radius: 1.5pt; padding-left: 8pt; }
+  .toc-item { display: flex; justify-content: space-between; align-items: baseline; padding: 6pt 0; border-bottom: 0.3pt dotted var(--border); font-size: 11pt; }
+  .toc-item:last-of-type { border-bottom: none; }
+  .toc-num { color: var(--brand); font-weight: 500; min-width: 30pt; }
+  .toc-title { flex: 1; color: var(--near-black); padding-left: 6pt; }
+
+  h1 { font-size: 24pt; font-weight: 500; line-height: 1.15; letter-spacing: -0.3pt; margin: 0 0 10pt 0; border-left: 2.5pt solid var(--brand); border-radius: 1.5pt; padding-left: 8pt; color: var(--near-black); break-after: avoid; }
+  h2 { font-size: 16pt; font-weight: 500; line-height: 1.25; margin: 24pt 0 6pt 0; color: var(--near-black); break-after: avoid; string-set: section-title content(); }
+  h3 { font-size: 13pt; font-weight: 500; line-height: 1.3; margin: 18pt 0 4pt 0; color: var(--dark-warm); break-after: avoid; }
+  h4 { font-size: 11pt; font-weight: 500; margin: 14pt 0 3pt 0; color: var(--olive); break-after: avoid; }
+
+  .chapter-num { font-family: var(--sans); font-size: 10pt; color: var(--brand); letter-spacing: 1pt; text-transform: uppercase; font-weight: 500; margin-bottom: 6pt; }
+  .chapter { break-before: page; }
+
+  p { margin: 0 0 10pt 0; line-height: 1.55; }
+  .lead { font-size: 12pt; line-height: 1.55; color: var(--dark-warm); margin-bottom: 14pt; }
+  .hl { color: var(--brand); font-weight: 500; }
+  strong { font-weight: 500; }
+
+  ul, ol { margin: 6pt 0 10pt 0; padding-left: 20pt; line-height: 1.55; }
+  ul li::marker { color: var(--brand); }
+  ol li::marker { color: var(--brand); font-weight: 500; }
+
+  blockquote { border-left: 2pt solid var(--brand); margin: 12pt 0; padding: 4pt 0 4pt 16pt; color: var(--olive); line-height: 1.55; break-inside: avoid; }
+  .cite { display: block; font-size: 9pt; color: var(--stone); margin-top: 4pt; }
+
+  code { font-family: var(--mono); font-size: 9pt; background: var(--ivory); padding: 1pt 4pt; border-radius: 2pt; color: var(--dark-warm); }
+  pre { font-family: var(--mono); font-size: 9pt; line-height: 1.5; background: var(--ivory); border-radius: 4pt; padding: 10pt 14pt; margin: 10pt 0; white-space: pre-wrap; color: var(--near-black); break-inside: avoid; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin: 12pt 0; break-inside: avoid; }
+  table th { text-align: left; font-family: var(--sans); font-weight: 500; color: var(--dark-warm); padding: 6pt 8pt; border-bottom: 1pt solid var(--border); background: var(--ivory); }
+  table td { padding: 5pt 8pt; border-bottom: 0.3pt solid var(--border-soft); vertical-align: top; }
+  table.compact th { padding: 3pt 6pt; font-size: 8pt; }
+  table.compact td { padding: 3pt 6pt; font-size: 8.5pt; line-height: 1.4; }
+  table.striped tbody tr:nth-child(even) td { background: var(--ivory); }
+
+  .callout { background: var(--ivory); border-left: 2pt solid var(--brand); padding: 10pt 14pt; border-radius: 3pt; margin: 12pt 0; line-height: 1.55; break-inside: avoid; }
+  .takeaway { background: var(--ivory); border-radius: 4pt; padding: 10pt 14pt; margin: 14pt 0; break-inside: avoid; }
+  .takeaway-label { font-family: var(--sans); font-size: 9pt; color: var(--brand); letter-spacing: 1pt; text-transform: uppercase; font-weight: 500; margin-bottom: 4pt; }
+
+  .tag { display: inline-block; background: var(--tag-bg); color: var(--brand); font-family: var(--sans); font-size: 8.5pt; font-weight: 500; padding: 1pt 5pt; border-radius: 3pt; letter-spacing: 0.3pt; text-transform: uppercase; margin-right: 3pt; white-space: nowrap; }
+
+  .ref { font-size: 9pt; color: var(--stone); line-height: 1.5; margin: 4pt 0; padding-left: 16pt; text-indent: -16pt; }
+
+  .evidence-card { background: var(--ivory); border: 0.5pt solid var(--border); border-radius: 6pt; padding: 10pt 14pt; margin: 10pt 0; break-inside: avoid; }
+  .evidence-card .ev-title { font-size: 10pt; font-weight: 500; color: var(--near-black); margin-bottom: 3pt; }
+  .evidence-card .ev-meta { font-size: 8.5pt; color: var(--stone); margin-bottom: 5pt; }
+  .evidence-card .ev-body { font-size: 9.5pt; color: var(--olive); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="cover">
+  <div>
+    <div class="cover-eyebrow">Documento de Design Educacional · EDD v0.1</div>
+    <div class="cover-title">Florestia</div>
+    <div class="cover-sub">Fundamentação pedagógica, mapeamento BNCC e evidências empíricas do jogo educativo para a agricultura familiar amazônica</div>
+  </div>
+  <div class="cover-meta">
+    <strong>Carlos Eduardo · Gabriel Mattos · Giovanni Braga · Gustavo Teixeira · Luiz Eduardo · Pedro Miguel</strong><br>
+    Versão 0.1 · 2026.05 · Referência: BNCC (MEC, 2018) · Matemática · Anos Iniciais EF04–EF05<br>
+    CESUPA — Escola de Negócios, Tecnologia e Inovação (ARGO) — Amazon Hacking 2026
+  </div>
+</section>
+
+<!-- TOC -->
+<section class="toc">
+  <h2>Sumário</h2>
+  <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">Fundamentação Teórica</span></div>
+  <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">Público-Alvo e Recorte Curricular</span></div>
+  <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">Competências Gerais da BNCC</span></div>
+  <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">Habilidades Específicas — Mapeamento por Mecânica</span></div>
+  <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">Quadro Consolidado BNCC × Mecânica</span></div>
+  <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">Tema Transversal: Educação Financeira</span></div>
+  <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">Progressão Pedagógica — Loops do GDD</span></div>
+  <div class="toc-item"><span class="toc-num">08</span><span class="toc-title">Evidências Empíricas da Abordagem</span></div>
+  <div class="toc-item"><span class="toc-num">09</span><span class="toc-title">Referências</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 01 — Fundamentação Teórica                -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">01 · Fundamentação Teórica</div>
+  <h1>Fundamentação Teórica</h1>
+
+  <p class="lead">O design educacional de Florestia repousa sobre três pilares convergentes: a pedagogia freireana da realidade concreta, a literatura consolidada de game-based learning em matemática, e a abordagem da Matemática Realística aplicada a contextos culturalmente situados.</p>
+
+  <h2>1.1 Educação Popular e o Princípio da Realidade Concreta</h2>
+
+  <p>A hipótese central de Florestia deriva diretamente de Freire (1996): o conteúdo escolar ganha legitimidade cognitiva apenas quando operado sobre a realidade concreta do educando. Crianças de 8 a 11 anos em Vila Jutaí (Moju-PA) aprendem adição, subtração e porcentagem na escola — mas raramente aplicam essas operações às decisões econômicas que moldam a vida de suas famílias: precificar um cacho de açaí, calcular a margem da farinha, planejar a safra de cacau.</p>
+
+  <blockquote>
+    "O ato pedagógico parte da realidade concreta do educando e só ganha sentido quando essa realidade é tratada como conteúdo legítimo de reflexão."
+    <span class="cite">— FREIRE, Paulo. Pedagogia da Autonomia: saberes necessários à prática educativa. São Paulo: Paz e Terra, 1996.</span>
+  </blockquote>
+
+  <p>Florestia não cria um contexto artificial para a matemática — situa a matemática da BNCC dentro das transações reais da feira local. A hipótese operacional: conceitos como margem bruta, proporcionalidade e análise de dados ganham tração cognitiva quando a criança os opera com consequências reais de jogo (BRASIL, 2018).</p>
+
+  <h2>1.2 Game-Based Learning em Matemática</h2>
+
+  <p>A literatura de game-based learning (GBL) documenta sistematicamente que ambientes de jogo digital oferecem condições únicas para a aprendizagem matemática. Uma revisão sistemática de 43 artigos publicados entre 2008 e 2019 (Hussein et al., 2021) encontrou ganhos positivos em aquisição de conhecimento, habilidades cognitivas e domínio afetivo-motivacional na grande maioria dos estudos revisados, com operações aritméticas como o tópico mais frequentemente abordado. Uma meta-análise de 17 estudos empíricos (Byun &amp; Joung, 2018) confirma efeito positivo geral dos jogos digitais sobre o desempenho matemático no ensino básico.</p>
+
+  <p>Três mecanismos explicam por que jogos são eficazes para matemática elementar:</p>
+
+  <ul>
+    <li><strong>Feedback imediato:</strong> o resultado do cálculo aparece como consequência do jogo — o saldo cai, o comprador vai embora, a colheita não ocorre. A correção é intrínseca, não dependente do professor (Hung et al., 2014).</li>
+    <li><strong>Motivação intrínseca:</strong> jogos sérios ativam a motivação interna por competição, interação e criatividade — reduzindo a ansiedade matemática e promovendo mentalidade de crescimento (White &amp; McCoy, 2019; Partovi &amp; Razavi, 2019).</li>
+    <li><strong>Engajamento sustentado:</strong> estudos longitudinais de dois anos com 215 estudantes mostram que jogos baseados em gestão mantêm interesse elevado, especialmente entre estudantes de baixo desempenho (Yeh et al., 2019).</li>
+  </ul>
+
+  <h2>1.3 Matemática Realística e Aprendizagem Contextualizada</h2>
+
+  <p>A Educação Matemática Realística (RME) parte do princípio de que contextos realistas são o ponto de partida para o desenvolvimento de conceitos matemáticos formais — não uma aplicação posterior (Freudenthal, 1991). Uma meta-análise de 28 estudos (Putri et al., 2025) confirma que abordagens multicontextuais — especialmente RME e etnomatemática — têm forte impacto positivo, com destaque para contextos culturalmente situados na Ásia, onde a relevância cultural amplifica o efeito.</p>
+
+  <p>Florestia opera precisamente nessa intersecção: o contexto amazônico (açaí, mandioca, cacau, fair trading) não é decoração estética — é o sistema de signos dentro do qual a matemática da BNCC ganha significado operacional. A abordagem contextual melhora significativamente habilidades de conexão matemática, pensamento crítico e resolução de problemas em estudantes do ensino fundamental (Anugraheni et al., 2025; Sainab et al., 2025).</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 02 — Público-Alvo                         -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">02 · Público-Alvo e Recorte Curricular</div>
+  <h1>Público-Alvo e Recorte Curricular</h1>
+
+  <table class="striped">
+    <thead><tr><th>Atributo</th><th>Definição</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Faixa etária</strong></td><td>8–11 anos</td></tr>
+      <tr><td><strong>Segmento BNCC</strong></td><td>Ensino Fundamental — Anos Iniciais</td></tr>
+      <tr><td><strong>Anos de referência</strong></td><td>4º ano (EF04) e 5º ano (EF05)</td></tr>
+      <tr><td><strong>Disciplina principal</strong></td><td>Matemática — Unidades Temáticas: Números, Álgebra, Probabilidade e Estatística</td></tr>
+      <tr><td><strong>Tema Transversal</strong></td><td>Educação Financeira e para o Consumo (BNCC, 2018, p. 266)</td></tr>
+      <tr><td><strong>Território</strong></td><td>Vila Jutaí, município de Moju, Nordeste Paraense</td></tr>
+      <tr><td><strong>Perfil sociocultural</strong></td><td>Comunidade quilombola e ribeirinha, agricultura familiar camponesa</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Justificativa do Recorte EF04–EF05</h2>
+
+  <p>O recorte no 4º e 5º anos é deliberado e sustentado pela estrutura da própria BNCC. É nessa faixa que o documento introduz explicitamente:</p>
+
+  <ul>
+    <li><strong>EF04MA25</strong> — situações de compra e venda, troco e desconto com ênfase em consumo ético;</li>
+    <li><strong>EF05MA06</strong> — porcentagens (10%, 25%, 50%, 75%, 100%) com aplicação a cálculos financeiros;</li>
+    <li><strong>EF05MA12</strong> — proporcionalidade direta entre quantidades, base para planejamento de safra.</li>
+  </ul>
+
+  <p>O 3º ano (EF03) ainda trabalha predominantemente com operações aritméticas abstratas sem contexto econômico explícito. O 6º ano em diante pertence aos Anos Finais e ultrapassa a faixa etária do público. EF04–EF05 é a janela curricular correta.</p>
+
+  <div class="callout">
+    A escolha de 8–11 anos também é pedagogicamente motivada: crianças nessa faixa estão no estágio operacional concreto de Piaget — precisam de objetos tangíveis e situações reais para construir conceitos matemáticos abstratos (Sainab et al., 2025). O jogo fornece exatamente esse suporte concreto-simbólico.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 03 — Competências Gerais                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">03 · Competências Gerais da BNCC</div>
+  <h1>Competências Gerais da BNCC Desenvolvidas</h1>
+
+  <p>A BNCC define 10 Competências Gerais que devem permear toda a Educação Básica. Florestia endereça três delas de forma direta e verificável:</p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th style="width:8%">Código</th>
+        <th style="width:28%">Competência Geral</th>
+        <th>Como Florestia a desenvolve</th>
+        <th style="width:18%">Mecânica associada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>CG2</strong></td>
+        <td>Pensamento científico, crítico e criativo</td>
+        <td>O jogador formula hipóteses de precificação ("se cobrar R$9, o comprador direto aceita?"), executa, observa o resultado e refina a estratégia — ciclo completo de pensamento investigativo em cada rodada de 5 minutos</td>
+        <td>Mercado noturno — slider de preço</td>
+      </tr>
+      <tr>
+        <td><strong>CG7</strong></td>
+        <td>Argumentação com base em dados e evidências</td>
+        <td>O resumo noturno exige que o jogador leia e interprete dados reais (receita, custo, margem, saldo) e avalie suas escolhas de plantio e preço — raciocínio analítico aplicado a evidências do próprio jogo</td>
+        <td>Resumo noturno — tabela financeira</td>
+      </tr>
+      <tr>
+        <td><strong>CG10</strong></td>
+        <td>Responsabilidade e cidadania — consumo consciente e responsável</td>
+        <td>A mecânica do atravessador ensina que aceitar qualquer preço perpetua dependência econômica. A vitória requer autonomia de precificação — consumo ético em ação, não como slogan. Referenciado diretamente por EF04MA25 (BNCC, 2018)</td>
+        <td>Tipos de compradores — atravessador vs. comprador direto</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 04 — Mapeamento por Mecânica              -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">04 · Habilidades Específicas — Mapeamento por Mecânica</div>
+  <h1>Habilidades Específicas da BNCC — Mapeamento por Mecânica</h1>
+
+  <!-- 4.1 -->
+  <h2>4.1 Gestão do Capital Diário</h2>
+  <p><strong>Descrição da mecânica:</strong> O jogador inicia com R$50 de capital, paga R$2/dia de custo fixo (alimentação, manutenção) e compra sementes com o saldo disponível. O HUD exibe o saldo em tempo real; se atingir R$0 em qualquer dia, o jogo termina em derrota.</p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th style="width:14%">Habilidade</th>
+        <th style="width:34%">Descrição completa (BNCC, 2018)</th>
+        <th>Como é desenvolvida em Florestia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag">EF04MA03</span></td>
+        <td>Resolver e elaborar problemas com números naturais envolvendo adição e subtração, utilizando estratégias diversas, como cálculo mental e algoritmos</td>
+        <td>Cada compra de semente é uma subtração com consequência imediata — o saldo cai e o jogador vê o resultado sem mediação. A pressão do custo fixo diário força o jogador a monitorar o saldo e calcular quanto pode gastar</td>
+      </tr>
+      <tr>
+        <td><span class="tag">EF04MA05</span></td>
+        <td>Utilizar as relações entre adição e subtração, bem como multiplicação e divisão, para ampliar o cálculo mental e resolver problemas</td>
+        <td>"Se comprar 3 sementes de cacau (R$6 cada), gasto R$18 — quanto me sobra de R$44?" — cálculo mental com consequência real de jogo, repetido dezenas de vezes por sessão</td>
+      </tr>
+      <tr>
+        <td><span class="tag">EF05MA07</span></td>
+        <td>Resolver e elaborar problemas de adição e subtração com números naturais e números racionais, com e sem suporte de imagem</td>
+        <td>O resumo noturno exibe a operação completa: receita do dia − custo fixo = novo saldo. O jogador lê e interpreta essa subtração em contexto financeiro real, preparando-se para o dia seguinte</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4.2 -->
+  <h2>4.2 Precificação no Mercado Noturno</h2>
+  <p><strong>Descrição da mecânica:</strong> Para cada cultura no estoque, o jogador define seu preço de venda via slider. O HUD exibe em tempo real: <code>Custo: R$X | Seu preço: R$Y | Margem: R$Z (+W%)</code>. Compradores aparecem em sequência; aceitam se o preço estiver abaixo do seu máximo, rejeitam com feedback visual e fala ("Tá caro demais!") caso contrário.</p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th style="width:14%">Habilidade</th>
+        <th style="width:34%">Descrição completa (BNCC, 2018)</th>
+        <th>Como é desenvolvida em Florestia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag">EF04MA25</span></td>
+        <td>Resolver e elaborar problemas que envolvam situações de compra e venda e formas de pagamento, utilizando termos como troco e desconto, enfatizando o consumo ético, consciente e responsável</td>
+        <td>A mecânica inteira do mercado <em>é</em> uma situação de venda: o jogador opera os conceitos de custo, preço e margem como decisões ativas, não como enunciados. A ênfase em consumo ético está codificada na penalização do atravessador</td>
+      </tr>
+      <tr>
+        <td><span class="tag">EF05MA06</span></td>
+        <td>Associar as representações 10%, 25%, 50%, 75% e 100% respectivamente à décima parte, à quarta parte, à metade, a três quartos e ao inteiro, para calcular porcentagens, utilizando estratégias pessoais, cálculo mental e calculadora</td>
+        <td>O HUD exibe a margem como percentual em tempo real (+166% para açaí a R$28, −20% se o jogador tentar vender abaixo do custo). O jogador aprende intuitivamente o que significa uma margem de 100%, 50% ou negativa antes de a escola formalizar o conceito</td>
+      </tr>
+      <tr>
+        <td><span class="tag">EF05MA08</span></td>
+        <td>Resolver e elaborar problemas de multiplicação e divisão com números naturais e números racionais decimais finitos</td>
+        <td>Calcular a receita esperada de uma venda em lote: 4 unidades de mandioca × R$7 = R$28. O HUD faz esse cálculo ao vivo enquanto o jogador ajusta a quantidade a vender — multiplicação com contexto e consequência</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4.3 -->
+  <h2>4.3 Decisão de Plantio — Qual Cultura, Quanto e Quando</h2>
+  <p><strong>Descrição da mecânica:</strong> O jogador escolhe entre três culturas amazônicas, cada uma com custo, prazo e margem distintos, usando 20 pontos de stamina por dia em um grid de 6×6 tiles e ciclo de 15 dias.</p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th style="width:14%">Habilidade</th>
+        <th style="width:34%">Descrição completa (BNCC, 2018)</th>
+        <th>Como é desenvolvida em Florestia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag">EF04MA05</span></td>
+        <td>Utilizar relações entre as operações para ampliar o cálculo mental e resolver problemas</td>
+        <td>Comparar retornos por dia exige divisão mental: Mandioca R$4/2d = R$2/dia; Cacau R$10/4d = R$2,50/dia; Açaí R$18/6d = R$3/dia. O jogador repete esse cálculo implicitamente a cada decisão de plantio</td>
+      </tr>
+      <tr>
+        <td><span class="tag">EF05MA08</span></td>
+        <td>Resolver e elaborar problemas de multiplicação com naturais e decimais</td>
+        <td>Estimar a receita total do lote: "5 tiles de açaí × R$28 = R$140 em 6 dias". Multiplicação direta com consequência financeira real no ciclo de 15 dias</td>
+      </tr>
+      <tr>
+        <td><span class="tag">EF05MA12</span></td>
+        <td>Resolver problemas que envolvam variação de proporcionalidade direta entre duas quantidades, identificando a constante de proporcionalidade</td>
+        <td>Mais tiles plantados = mais sementes compradas = mais receita potencial. O jogador descobre e internaliza a relação de proporcionalidade direta antes de a nomear formalmente — princípio da Matemática Realística (Freudenthal, 1991)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4.4 -->
+  <h2>4.4 Leitura do Resumo Financeiro e End Screen</h2>
+  <p><strong>Descrição da mecânica:</strong> Ao fim de cada noite, o resumo exibe uma tabela de vendas (cultura × quantidade × preço × total) e o saldo atualizado. No dia 15, o End Screen exibe: gráfico de linha do saldo ao longo dos 15 dias, total investido vs. arrecadado, cultura mais rentável, e mensagem educacional contextualizada.</p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th style="width:14%">Habilidade</th>
+        <th style="width:34%">Descrição completa (BNCC, 2018)</th>
+        <th>Como é desenvolvida em Florestia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag">EF04MA27</span></td>
+        <td>Analisar dados apresentados em tabelas simples ou de dupla entrada e em gráficos de barras ou de colunas, com ou sem suporte de tecnologia digital</td>
+        <td>O resumo noturno é uma tabela de dupla entrada (cultura × métrica) lida e interpretada a cada sessão de jogo — 15 leituras de tabela por ciclo completo, em contexto motivacionalmente real</td>
+      </tr>
+      <tr>
+        <td><span class="tag">EF05MA24</span></td>
+        <td>Interpretar dados estatísticos apresentados em textos, tabelas e gráficos referentes a temas de interesse da área</td>
+        <td>O gráfico de linha do End Screen (saldo × 15 dias) é uma série temporal que o jogador lê para entender sua trajetória financeira, identificar os dias de melhor desempenho e planejar uma estratégia diferente no próximo ciclo</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 05 — Quadro Consolidado                   -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">05 · Quadro Consolidado</div>
+  <h1>Quadro Consolidado BNCC × Mecânica</h1>
+
+  <table class="compact striped">
+    <thead>
+      <tr>
+        <th>Habilidade</th>
+        <th>Unidade Temática</th>
+        <th>Ano</th>
+        <th>Mecânica de Jogo</th>
+        <th>Loop GDD</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>EF04MA03</strong></td><td>Números</td><td>4º</td><td>Gestão de capital — compra de sementes, custo fixo diário</td><td>Gestão</td></tr>
+      <tr><td><strong>EF04MA05</strong></td><td>Números</td><td>4º</td><td>Cálculo mental de retorno por dia, estimativa de receita</td><td>Decisão</td></tr>
+      <tr><td><strong>EF04MA25</strong></td><td>Números</td><td>4º</td><td>Precificação no mercado — compra, venda, consumo ético</td><td>Negociação</td></tr>
+      <tr><td><strong>EF04MA27</strong></td><td>Prob. e Estatística</td><td>4º</td><td>Leitura do resumo noturno em tabela de vendas</td><td>Gestão</td></tr>
+      <tr><td><strong>EF05MA06</strong></td><td>Números</td><td>5º</td><td>HUD de margem percentual em tempo real</td><td>Negociação</td></tr>
+      <tr><td><strong>EF05MA07</strong></td><td>Números</td><td>5º</td><td>Receita − custo fixo = saldo no resumo noturno</td><td>Gestão</td></tr>
+      <tr><td><strong>EF05MA08</strong></td><td>Números</td><td>5º</td><td>Receita esperada por lote (multiplicação)</td><td>Decisão</td></tr>
+      <tr><td><strong>EF05MA12</strong></td><td>Álgebra</td><td>5º</td><td>Proporcionalidade na escolha de quantos tiles plantar</td><td>Decisão</td></tr>
+      <tr><td><strong>EF05MA24</strong></td><td>Prob. e Estatística</td><td>5º</td><td>Gráfico de evolução do saldo no End Screen</td><td>Gestão</td></tr>
+    </tbody>
+  </table>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Síntese</div>
+    <strong>9 habilidades BNCC</strong> de Matemática (EF04–EF05), distribuídas em 3 Unidades Temáticas (Números, Álgebra, Probabilidade e Estatística), desenvolvidas por <strong>4 mecânicas de jogo</strong> integradas em <strong>3 loops pedagógicos</strong> — sem nenhum quiz ou exercício desconectado da ação.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 06 — Tema Transversal                     -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">06 · Tema Transversal</div>
+  <h1>Tema Transversal: Educação Financeira e para o Consumo</h1>
+
+  <p class="lead">A BNCC reconhece Educação Financeira e para o Consumo como tema transversal obrigatório que deve permear todas as disciplinas (BNCC, 2018, p. 266). Florestia endereça esse tema de forma estrutural — não decorativa.</p>
+
+  <h2>As Quatro Dimensões do Letramento Financeiro em Florestia</h2>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th style="width:25%">Dimensão</th>
+        <th>Como Florestia a endereça</th>
+        <th style="width:20%">Suporte empírico</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Planejamento financeiro</strong></td>
+        <td>O jogador gerencia receita, custo fixo e saldo ao longo de 15 dias — ciclo completo de orçamento familiar, com decisões de curto prazo (sementes de mandioca hoje) versus médio prazo (açaí em 6 dias)</td>
+        <td>Santosa (2024); Zykina (2022)</td>
+      </tr>
+      <tr>
+        <td><strong>Consumo consciente e responsável</strong></td>
+        <td>A mecânica do atravessador penaliza quem aceita o menor preço por conveniência — a vitória requer autonomia de precificação, não submissão ao intermediário. Alinhado diretamente com EF04MA25 (BNCC)</td>
+        <td>Abdusattarova (2025); Rodríguez-Raga et al. (2021)</td>
+      </tr>
+      <tr>
+        <td><strong>Precificação justa</strong></td>
+        <td>O jogador aprende que preço = custo + margem, não apenas "quanto o comprador aceita". O HUD torna esse conceito visível e operacional em tempo real</td>
+        <td>Chen et al. (2022); Murugiah et al. (2023)</td>
+      </tr>
+      <tr>
+        <td><strong>Risco e retorno</strong></td>
+        <td>Açaí tem a maior margem (R$18 por tile) mas imobiliza capital por 6 dos 15 dias disponíveis — decisão de risco/retorno vivenciada sem abstração, dentro do contexto real da bioeconomia amazônica</td>
+        <td>Chen et al. (2022)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    O tema transversal não é uma camada separada adicionada ao jogo — é o próprio jogo. Cada mecânica é simultaneamente uma decisão de jogo e uma operação de educação financeira. A literatura confirma que jogos são mais eficazes que guias e websites para letramento financeiro em escolas públicas (Rodríguez-Raga et al., 2021).
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 07 — Progressão Pedagógica                -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">07 · Progressão Pedagógica</div>
+  <h1>Progressão Pedagógica — Loops do GDD</h1>
+
+  <p class="lead">O GDD estrutura o jogo em três loops aninhados. A complexidade matemática cresce de loop para loop — o jogador domina operações básicas no Loop 1 antes de enfrentar proporcionalidade no Loop 2 e porcentagem no Loop 3.</p>
+
+  <table class="striped">
+    <thead>
+      <tr>
+        <th style="width:18%">Loop (GDD)</th>
+        <th style="width:28%">Conteúdo matemático</th>
+        <th style="width:28%">Habilidades BNCC</th>
+        <th>Momento no jogo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <strong>Loop 1 — Gestão</strong><br>
+          <span style="font-size:8.5pt;color:#6b6a64;">plantar, regar, colher, gerir saldo</span>
+        </td>
+        <td>Adição e subtração com naturais; multiplicação simples (área × custo); contagem de dias; gestão de orçamento</td>
+        <td>EF04MA03 · EF04MA05 · EF04MA27 · EF05MA07</td>
+        <td>Daytime (FarmScene) + Resumo noturno — dias 1 a 15</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Loop 2 — Decisão</strong><br>
+          <span style="font-size:8.5pt;color:#6b6a64;">qual cultura, quantos tiles, quando colher</span>
+        </td>
+        <td>Comparação de margens por dia; proporcionalidade direta; multiplicação para estimar receita total do lote; divisão para calcular retorno/dia</td>
+        <td>EF04MA05 · EF05MA08 · EF05MA12</td>
+        <td>Planejamento antes de plantar — decisões recorrentes a cada dia</td>
+      </tr>
+      <tr>
+        <td>
+          <strong>Loop 3 — Negociação</strong><br>
+          <span style="font-size:8.5pt;color:#6b6a64;">definir preço, vender, interpretar resultado</span>
+        </td>
+        <td>Compra e venda; margem bruta absoluta e percentual; interpretação de dados em tabelas e gráficos; consumo ético</td>
+        <td>EF04MA25 · EF05MA06 · EF05MA08 · EF05MA24</td>
+        <td>MarketScene (nightly) + End Screen (dia 15)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Diagrama da Progressão</h2>
+  <pre><code>Operações básicas      Proporcionalidade      Porcentagem e dados
+(EF04MA03, MA05)  →   (EF05MA08, MA12)   →   (EF05MA06, MA24)
+     Loop 1                Loop 2                  Loop 3
+  [Gestão]              [Decisão]              [Negociação]
+  Adição /              Multiplicação /         Margem % /
+  Subtração             Divisão aplicada        Leitura de gráfico</code></pre>
+
+  <p>A progressão respeita a sequência da BNCC: operações com naturais (EF04) antes de operações com racionais e percentuais (EF05). Um jogador de 4º ano completa os dois primeiros loops com plena competência curricular; o 3º loop oferece antecipação dos conteúdos do 5º ano.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 08 — Evidências Empíricas                 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">08 · Evidências Empíricas</div>
+  <h1>Evidências Empíricas da Abordagem</h1>
+
+  <p class="lead">As três pilastras do design de Florestia — game-based learning em matemática, letramento financeiro via jogos, e matemática contextualizada — são sustentadas por um corpus robusto de literatura peer-reviewed. Os estudos mais relevantes estão sintetizados abaixo.</p>
+
+  <h2>8.1 Game-Based Learning em Matemática Elementar</h2>
+
+  <div class="evidence-card">
+    <div class="ev-title">Digital Game-Based Learning in K-12 Mathematics Education: A Systematic Literature Review</div>
+    <div class="ev-meta">Hussein et al. (2021) · 83 citações · Education and Information Technologies</div>
+    <div class="ev-body">Revisão sistemática de 43 artigos (2008–2019). Encontrou ganhos positivos em aquisição de conhecimento, habilidades cognitivas e domínio afetivo-motivacional na grande maioria dos estudos. Operações aritméticas foram o tópico mais frequentemente abordado — exatamente o núcleo de Florestia.</div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="ev-title">Digital Game-Based Learning for K-12 Mathematics Education: A Meta-Analysis</div>
+    <div class="ev-meta">Byun &amp; Joung (2018) · 148 citações · School Science and Mathematics</div>
+    <div class="ev-body">Meta-análise de 17 estudos empíricos. Confirma efeito positivo geral dos jogos digitais sobre o desempenho matemático no ensino básico. Estabelece fundamento quantitativo para a eficácia da abordagem de Florestia.</div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="ev-title">Influence of Game-Based Learning in Mathematics Education on Cognitive and Affective Domains: A Systematic Review</div>
+    <div class="ev-meta">Hui et al. (2023) · 68 citações · Frontiers in Psychology</div>
+    <div class="ev-body">Revisão sistemática PRISMA de 28 artigos (2018–2022). GBL impacta positivamente dois domínios cognitivos (conhecimento e habilidades matemáticas) e cinco domínios afetivos (desempenho, atitude, motivação, interesse e engajamento) — todos relevantes para o público de 8–11 anos de Florestia.</div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="ev-title">Enhancing Achievement and Interest in Mathematics Learning through Math-Island</div>
+    <div class="ev-meta">Yeh et al. (2019) · 185 citações · Research and Practice in Technology Enhanced Learning</div>
+    <div class="ev-body">Experimento longitudinal de 2 anos com 215 estudantes do ensino fundamental usando um jogo de gestão/construção para matemática. Resultado: melhora no desempenho e manutenção de alto interesse, especialmente entre alunos de baixo desempenho. O design de gestão de recursos de Florestia é estruturalmente análogo ao Math-Island.</div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="ev-title">Effects of Digital Game-Based Learning on Students' Self-Efficacy, Motivation, Anxiety, and Achievements in Learning Mathematics</div>
+    <div class="ev-meta">Hung et al. (2014) · 228 citações · Journal of Computers in Education</div>
+    <div class="ev-body">Quasi-experimento com 69 estudantes do ensino fundamental. Ambiente GBL promoveu significativamente desempenho, autoeficácia e motivação em matemática. Relevante para justificar o design de Florestia como alternativa à instrução convencional.</div>
+  </div>
+
+  <h2>8.2 Letramento Financeiro via Jogos Digitais para Crianças</h2>
+
+  <div class="evidence-card">
+    <div class="ev-title">Game, Guide or Website for Financial Education: Evidence from an Experiment in Colombian Schools</div>
+    <div class="ev-meta">Rodríguez-Raga et al. (2021) · 23 citações · Journal of Behavioral and Experimental Finance</div>
+    <div class="ev-body">Experimento randomizado com 1.337 estudantes (6–18 anos) em quatro escolas de Bogotá, comparando jogo, guia e website como ferramentas de educação financeira. Jogos foram mais eficazes para escolas públicas — o perfil exato do público de Florestia em Vila Jutaí.</div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="ev-title">My-Investment: Using Digital Games to Help Children Learn Financial Management</div>
+    <div class="ev-meta">Chen et al. (2022) · 3 citações · Research and Practice in Technology Enhanced Learning</div>
+    <div class="ev-body">Estudo de caso com 29 estudantes do 5º ano usando jogo digital de gestão financeira. 59% demonstraram comportamentos adequados de gestão financeira, com estratégias de investimento conservadoras — padrão esperável e desejável em um contexto de economia familiar rural.</div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="ev-title">Game-Based Financial Planning Simulator for Elementary School Students</div>
+    <div class="ev-meta">Santosa (2024) · Journal of Educational Learning and Innovation</div>
+    <div class="ev-body">Desenvolvimento e teste de simulador financeiro baseado em Roblox para estudantes do ensino fundamental em Java Central. Pré-teste/pós-teste confirmou aumento significativo no letramento financeiro, especialmente em planejamento financeiro — habilidade central de Florestia.</div>
+  </div>
+
+  <h2>8.3 Matemática Contextualizada e Etnomatemática</h2>
+
+  <div class="evidence-card">
+    <div class="ev-title">Enhancing Mathematical Skills Through Multicontextual Approaches: A Meta-Analysis</div>
+    <div class="ev-meta">Putri et al. (2025) · Cogent Education</div>
+    <div class="ev-body">Meta-análise de 28 estudos (2015–2023). Abordagens multicontextuais — RME, etnomatemática, integração tecnológica — têm forte impacto positivo, com destaque para contextos culturalmente situados na Ásia. Florestia opera exatamente na intersecção de RME + etnomatemática amazônica + tecnologia educacional.</div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="ev-title">The Impact of Realistic Problem-Based Learning on Mathematical Connection Abilities: Evidence from Elementary Schools in Indonesia</div>
+    <div class="ev-meta">Anugraheni et al. (2025) · 1 citação · Cogent Education</div>
+    <div class="ev-body">Quasi-experimento com 126 estudantes indonésios (10–12 anos) comparando aprendizagem baseada em problemas realísticos (R-PBL) com instrução convencional. R-PBL melhorou significativamente as habilidades de conexão matemática em todas as subdimensões avaliadas. Relevância direta: contexto de país em desenvolvimento, mesma faixa etária, mesma abordagem realística.</div>
+  </div>
+
+  <div class="evidence-card">
+    <div class="ev-title">Contextual Approach in Mathematics Learning for Elementary School Children</div>
+    <div class="ev-meta">Sainab et al. (2025) · SMART: Journal of Multidisciplinary Educational</div>
+    <div class="ev-body">Revisão da literatura sobre abordagem contextual (CTL) em matemática elementar. CTL melhora significativamente engajamento, motivação e habilidades de resolução de problemas quando tarefas matemáticas são conectadas ao cotidiano. Fundamenta a escolha de Florestia de situar toda a matemática no contexto da agricultura familiar.</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- Chapter 09 — Referências                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section class="chapter">
+  <div class="chapter-num">09 · Referências</div>
+  <h1>Referências</h1>
+
+  <h2>Documentos Curriculares</h2>
+  <p class="ref">BRASIL. <strong>Base Nacional Comum Curricular.</strong> Brasília: MEC, 2018. Disponível em: basenacionalcomum.mec.gov.br</p>
+
+  <h2>Pedagogia e Educação Popular</h2>
+  <p class="ref">FREIRE, Paulo. <strong>Pedagogia da Autonomia:</strong> saberes necessários à prática educativa. São Paulo: Paz e Terra, 1996.</p>
+  <p class="ref">FREUDENTHAL, Hans. <strong>Revisiting Mathematics Education.</strong> Dordrecht: Kluwer Academic Publishers, 1991.</p>
+
+  <h2>Game-Based Learning em Matemática</h2>
+  <p class="ref">BYUN, JaeHwan; JOUNG, Eunmi. Digital Game-Based Learning for K-12 Mathematics Education: A Meta-Analysis. <em>School Science and Mathematics,</em> 2018. DOI: 10.1111/ssm.12271</p>
+  <p class="ref">HUNG, Chun-Ming et al. Effects of digital game-based learning on students' self-efficacy, motivation, anxiety, and achievements in learning mathematics. <em>Journal of Computers in Education,</em> v. 1, n. 2–3, p. 151–166, 2014.</p>
+  <p class="ref">HUI, Hii Bii et al. Influence of game-based learning in mathematics education on the students' cognitive and affective domain: A systematic review. <em>Frontiers in Psychology,</em> v. 14, 2023.</p>
+  <p class="ref">HUSSEIN, Mahmood H. et al. Digital game-based learning in K-12 mathematics education: a systematic literature review. <em>Education and Information Technologies,</em> v. 27, p. 2919–2956, 2021.</p>
+  <p class="ref">PARTOVI, Tahereh; RAZAVI, Mohammad Reza. The effect of game-based learning on academic achievement motivation of elementary school students. <em>Learning and Motivation,</em> v. 68, 2019.</p>
+  <p class="ref">WHITE, Kylie; McCOY, Leah. Effects of Game-Based Learning on Attitude and Achievement in Elementary Mathematics. <em>Networks: An Online Journal for Teacher Research,</em> v. 21, n. 1, 2019.</p>
+  <p class="ref">YEH, Charles Y. C. et al. Enhancing achievement and interest in mathematics learning through Math-Island. <em>Research and Practice in Technology Enhanced Learning,</em> v. 14, n. 5, 2019.</p>
+
+  <h2>Letramento Financeiro via Jogos</h2>
+  <p class="ref">CHEN, Zhi-Hong et al. My-Investment: Using Digital Games to Help Children Learn Financial Management. <em>Research and Practice in Technology Enhanced Learning,</em> v. 17, n. 1, 2022.</p>
+  <p class="ref">MURUGIAH, Logasvathi et al. Children's understanding of financial literacy and parents' choice of financial knowledge learning methods in Malaysia. <em>MethodsX,</em> v. 11, 2023.</p>
+  <p class="ref">RODRÍGUEZ-RAGA, Santiago et al. Game, guide or website for financial education improvement: Evidence from an experiment in Colombian schools. <em>Journal of Behavioral and Experimental Finance,</em> v. 30, 2021.</p>
+  <p class="ref">SANTOSA, Donald Samuel Slamet. Game Based Financial Planning Simulator for Elementary School Students. <em>Journal of Educational Learning and Innovation,</em> 2024.</p>
+  <p class="ref">ZYKINA, Victoria. Organizing Financial Literacy Teaching in Primary School through STEM Education. <em>Problems of Education,</em> 2022.</p>
+
+  <h2>Matemática Contextualizada e Realística</h2>
+  <p class="ref">ANUGRAHENI, I. et al. The impact of realistic problem-based learning on mathematical connection abilities: evidence from elementary schools in Indonesia. <em>Cogent Education,</em> v. 12, n. 1, 2025.</p>
+  <p class="ref">PUTRI, Linda Indiyarti et al. Enhancing mathematical skills through multicontextual approaches: a meta-analysis of realistic mathematics, ethnomathematics, and technology integration. <em>Cogent Education,</em> 2025.</p>
+  <p class="ref">SAINAB et al. Contextual Approach in Mathematics Learning for Elementary School Children. <em>SMART: Journal of Multidisciplinary Educational,</em> 2025.</p>
+
+  <h2>Game-Based Learning — Teoria Geral</h2>
+  <p class="ref">GEE, James Paul. <strong>What Video Games Have to Teach Us About Learning and Literacy.</strong> New York: Palgrave Macmillan, 2007.</p>
+  <p class="ref">PRENSKY, Marc. <strong>Digital Game-Based Learning.</strong> New York: McGraw-Hill, 2001.</p>
+</section>
+
+</body>
+</html>
