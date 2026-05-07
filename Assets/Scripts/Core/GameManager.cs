@@ -21,6 +21,11 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
+
     void Start()
     {
         SaveData loaded = SaveSystem.Load();

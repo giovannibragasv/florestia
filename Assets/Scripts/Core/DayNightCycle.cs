@@ -53,11 +53,11 @@ public class DayNightCycle : MonoBehaviour
     public void Pause() => _paused = true;
     public void Resume() => _paused = false;
 
-    public void Reset()
+    public void ResetDay()
     {
         _elapsed = 0f;
         _warningShown = false;
         _paused = false;
-        nightWarningPanel.SetActive(false);
+        nightWarningPanel?.SetActive(false);
     }
 }
