@@ -31,8 +31,11 @@ public class EndScreenController : MonoBehaviour
 
     void Start()
     {
-        playAgainButton.onClick.AddListener(OnPlayAgain);
-        if (GameManager.Instance.IsGameOver) BuildEndScreen();
+        if (playAgainButton != null)
+            playAgainButton.onClick.AddListener(OnPlayAgain);
+
+        if (GameManager.Instance != null && GameManager.Instance.IsGameOver)
+            BuildEndScreen();
     }
 
     public void RecordDayBalance(float balance) => _balanceHistory.Add(balance);

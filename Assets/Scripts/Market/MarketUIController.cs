@@ -28,6 +28,8 @@ public class MarketUIController : MonoBehaviour
 
     void Start()
     {
+        if (cropDropdown == null) return;
+
         cropDropdown.onValueChanged.AddListener(_ => OnCropChanged());
         priceSlider.onValueChanged.AddListener(_ => RefreshPriceDisplay());
         sellButton.onClick.AddListener(OnSellClicked);
