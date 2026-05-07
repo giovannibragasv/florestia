@@ -18,7 +18,10 @@ public class CropSlot : MonoBehaviour
     {
         _renderer = GetComponent<SpriteRenderer>();
         if (GetComponent<Collider2D>() == null)
-            gameObject.AddComponent<BoxCollider2D>();
+        {
+            var col = gameObject.AddComponent<BoxCollider2D>();
+            col.isTrigger = true; // walkable — player passes through, OverlapCircle still detects
+        }
     }
 
     public bool TryPlant(CropData crop)
@@ -72,7 +75,7 @@ public class CropSlot : MonoBehaviour
         _renderer.sprite = _crop.growthStageSprites[stage];
     }
 
-    void OnMouseDown()
+    public void Interact()
     {
         if (ToolbarController.Instance == null) return;
 
