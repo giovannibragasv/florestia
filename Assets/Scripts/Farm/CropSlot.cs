@@ -14,7 +14,12 @@ public class CropSlot : MonoBehaviour
     public bool NeedsWater => _crop != null && !_wateredToday && !IsReady;
     public CropData Crop => _crop;
 
-    void Awake() => _renderer = GetComponent<SpriteRenderer>();
+    void Awake()
+    {
+        _renderer = GetComponent<SpriteRenderer>();
+        if (GetComponent<Collider2D>() == null)
+            gameObject.AddComponent<BoxCollider2D>();
+    }
 
     public bool TryPlant(CropData crop)
     {
@@ -65,6 +70,28 @@ public class CropSlot : MonoBehaviour
         if (_crop == null) { _renderer.sprite = null; return; }
         int stage = Mathf.Min(_daysPlanted, _crop.growthStageSprites.Length - 1);
         _renderer.sprite = _crop.growthStageSprites[stage];
+    }
+
+    void OnMouseDown()
+    {
+        if (ToolbarController.Instance == null) return;
+
+        switch (ToolbarController.Instance.Selected)
+        {
+            case ToolType.Mandioca:
+            case ToolType.Cacau:
+            case ToolType.Acai:
+                CropData crop = CropSystem.Instance?.GetCropData((int)ToolbarController.Instance.Selected);
+                if (crop != null) TryPlant(crop);
+                break;
+            case ToolType.Water:
+                TryWater();
+                break;
+            case ToolType.Harvest:
+                CropData harvested = TryHarvest();
+                if (harvested != null) InventorySystem.Instance?.AddCrop(harvested.cropName);
+                break;
+        }
     }
 
     public CropSlotSaveData GetSaveData() => new CropSlotSaveData

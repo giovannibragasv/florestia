@@ -13,6 +13,12 @@ public class CropSystem : MonoBehaviour
         Instance = this;
     }
 
+    public CropData GetCropData(int index)
+    {
+        if (cropCatalog == null || index < 0 || index >= cropCatalog.Length) return null;
+        return cropCatalog[index];
+    }
+
     public void OnDayEnd()
     {
         foreach (var slot in slots) slot.OnDayEnd();
