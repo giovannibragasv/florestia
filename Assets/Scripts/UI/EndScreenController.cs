@@ -31,6 +31,8 @@ public class EndScreenController : MonoBehaviour
 
     void Start()
     {
+        SceneCameraUtility.EnsureUICamera();
+
         if (playAgainButton != null)
             playAgainButton.onClick.AddListener(OnPlayAgain);
 
@@ -46,6 +48,8 @@ public class EndScreenController : MonoBehaviour
 
     void BuildEndScreen()
     {
+        SceneCameraUtility.EnsureUICamera();
+
         float final = GameManager.Instance.Balance;
         finalBalanceLabel.text = $"Saldo final: R${final:F2}";
 

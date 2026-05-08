@@ -28,6 +28,8 @@ public class MarketUIController : MonoBehaviour
 
     void Start()
     {
+        SceneCameraUtility.EnsureUICamera();
+
         if (cropDropdown == null) return;
 
         cropDropdown.onValueChanged.AddListener(_ => OnCropChanged());

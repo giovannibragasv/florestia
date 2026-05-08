@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
 public class CropSlot : MonoBehaviour
 {
     public int SlotIndex;
@@ -22,13 +23,28 @@ public class CropSlot : MonoBehaviour
     void Awake()
     {
         _soilRenderer = GetComponent<SpriteRenderer>();
+        if (_soilRenderer == null)
+        {
+            Debug.LogError($"CropSlot '{name}' needs a SpriteRenderer.");
+            enabled = false;
+            return;
+        }
 
         var cropGO = new GameObject("CropSprite");
         cropGO.transform.SetParent(transform, false);
         _cropRenderer = cropGO.AddComponent<SpriteRenderer>();
         _cropRenderer.sortingOrder = _soilRenderer.sortingOrder + 1;
 
-        var col = GetComponent<BoxCollider2D>() ?? gameObject.AddComponent<BoxCollider2D>();
+        if (!TryGetComponent(out BoxCollider2D col) || col == null)
+            col = gameObject.AddComponent<BoxCollider2D>();
+
+        if (col == null)
+        {
+            Debug.LogError($"CropSlot '{name}' could not create a BoxCollider2D.");
+            enabled = false;
+            return;
+        }
+
         col.isTrigger = true;
         col.size = new Vector2(0.9f, 0.9f);
     }
