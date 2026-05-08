@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Sprite[] walkDown;
     [SerializeField] Sprite[] walkUp;
     [SerializeField] Sprite[] walkSide;
+    [SerializeField] Vector2 mapMin = new Vector2(-3.5f, -2.45f);
+    [SerializeField] Vector2 mapMax = new Vector2(7.5f, 7.45f);
 
     // 0=up  1=right  2=down  3=left  (Stardew convention)
     public int FacingDirection { get; private set; } = 2;
@@ -48,7 +50,19 @@ public class PlayerController : MonoBehaviour
             TryInteract();
     }
 
-    void FixedUpdate() => _rb.linearVelocity = _input * moveSpeed;
+    void FixedUpdate()
+    {
+        _rb.linearVelocity = _input * moveSpeed;
+        Vector2 pos = _rb.position;
+        Vector2 clamped = new Vector2(
+            Mathf.Clamp(pos.x, mapMin.x, mapMax.x),
+            Mathf.Clamp(pos.y, mapMin.y, mapMax.y));
+        if (clamped != pos)
+        {
+            _rb.position = clamped;
+            _rb.linearVelocity = Vector2.zero;
+        }
+    }
 
     void LateUpdate()
     {

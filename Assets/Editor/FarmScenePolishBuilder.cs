@@ -22,6 +22,7 @@ public static class FarmScenePolishBuilder
         HUDBuilder.Build();
         ToolbarBuilder.Build();
         EnsureDayNightUI();
+        EnsureMapBounds();
         CameraConfineryBuilder.Add();
         FontAssigner.Assign();
 
@@ -36,6 +37,7 @@ public static class FarmScenePolishBuilder
             "Assets/Sprites/Terrain/terrain_grass.png",
             "Assets/Sprites/Terrain/terrain_soil.png",
             "Assets/Sprites/Terrain/terrain_soil_watered.png",
+            "Assets/Sprites/Terrain/terrain_path.png",
             "Assets/Sprites/Terrain/terrain_bridge.png",
             "Assets/Sprites/UI/ui_house.png",
             "Assets/Sprites/UI/ui_coin.png",
@@ -126,6 +128,9 @@ public static class FarmScenePolishBuilder
             image.raycastTarget = false;
             Undo.RegisterCreatedObjectUndo(skyGO, "Apply Farm Scene Polish");
         }
+        var skyImage = sky.GetComponent<Image>() ?? sky.gameObject.AddComponent<Image>();
+        skyImage.color = new Color(0.53f, 0.81f, 0.98f, 0f);
+        skyImage.raycastTarget = false;
         sky.SetAsFirstSibling();
 
         var warning = ct.Find("NightWarningPanel");
@@ -166,8 +171,32 @@ public static class FarmScenePolishBuilder
         if (cycle == null) return;
 
         SerializedObject so = new SerializedObject(cycle);
-        so.FindProperty("skyOverlay").objectReferenceValue = sky.GetComponent<Image>();
+        so.FindProperty("skyOverlay").objectReferenceValue = skyImage;
         so.FindProperty("nightWarningPanel").objectReferenceValue = warning.gameObject;
         so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    static void EnsureMapBounds()
+    {
+        var old = GameObject.Find("MapBounds");
+        if (old != null) Undo.DestroyObjectImmediate(old);
+
+        var root = new GameObject("MapBounds");
+        Undo.RegisterCreatedObjectUndo(root, "Apply Farm Scene Polish");
+
+        MakeWall(root.transform, "North", new Vector2(2f, 8.1f), new Vector2(12.5f, 0.35f));
+        MakeWall(root.transform, "South", new Vector2(2f, -3.05f), new Vector2(12.5f, 0.35f));
+        MakeWall(root.transform, "West", new Vector2(-4.1f, 2.4f), new Vector2(0.35f, 11.5f));
+        MakeWall(root.transform, "East", new Vector2(8.1f, 2.4f), new Vector2(0.35f, 11.5f));
+    }
+
+    static void MakeWall(Transform parent, string name, Vector2 position, Vector2 size)
+    {
+        var wall = new GameObject(name);
+        wall.transform.SetParent(parent, false);
+        wall.transform.position = position;
+        var collider = wall.AddComponent<BoxCollider2D>();
+        collider.size = size;
+        Undo.RegisterCreatedObjectUndo(wall, "Apply Farm Scene Polish");
     }
 }

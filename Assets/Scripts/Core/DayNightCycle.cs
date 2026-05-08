@@ -49,13 +49,19 @@ public class DayNightCycle : MonoBehaviour
         if (skyOverlay == null) return;
 
         Color morning = new Color(0.53f, 0.81f, 0.98f, 0f);
-        Color golden = new Color(0.98f, 0.72f, 0.3f, 0.25f);
-        Color dusk = new Color(0.15f, 0.05f, 0.3f, 0.6f);
+        Color golden = new Color(0.98f, 0.60f, 0.22f, 0.12f);
+        Color dusk = new Color(0.08f, 0.05f, 0.18f, 0.42f);
         float t = Mathf.Clamp01(NormalizedTime);
 
-        skyOverlay.color = t <= 0.6f
-            ? Color.Lerp(morning, golden, Mathf.InverseLerp(0f, 0.6f, t))
-            : Color.Lerp(golden, dusk, Mathf.InverseLerp(0.6f, 1f, t));
+        if (t <= 0.2f)
+        {
+            skyOverlay.color = morning;
+            return;
+        }
+
+        skyOverlay.color = t <= 0.7f
+            ? Color.Lerp(morning, golden, Mathf.InverseLerp(0.2f, 0.7f, t))
+            : Color.Lerp(golden, dusk, Mathf.InverseLerp(0.7f, 1f, t));
     }
 
     public void Pause() => _paused = true;
@@ -67,5 +73,6 @@ public class DayNightCycle : MonoBehaviour
         _warningShown = false;
         _paused = false;
         nightWarningPanel?.SetActive(false);
+        UpdateSkyColor();
     }
 }

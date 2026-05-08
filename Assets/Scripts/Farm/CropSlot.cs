@@ -44,15 +44,16 @@ public class CropSlot : MonoBehaviour
         GameManager.Instance.SpendBalance(crop.seedCost);
         _crop = crop;
         _daysPlanted = 0;
-        _wateredToday = false;
         RefreshSprite();
         return true;
     }
 
     public bool TryWater()
     {
-        if (IsEmpty || _wateredToday || IsReady) return false;
-        if (!StaminaSystem.Instance.TrySpend(_crop.staminaCostToWater)) return false;
+        if (_wateredToday || IsReady) return false;
+
+        int staminaCost = _crop != null ? _crop.staminaCostToWater : 1;
+        if (!StaminaSystem.Instance.TrySpend(staminaCost)) return false;
 
         _wateredToday = true;
         RefreshSprite();
@@ -74,8 +75,7 @@ public class CropSlot : MonoBehaviour
 
     public void OnDayEnd()
     {
-        if (_crop == null) return;
-        if (_wateredToday) _daysPlanted++;
+        if (_crop != null && _wateredToday) _daysPlanted++;
         _wateredToday = false;
         RefreshSprite();
     }
@@ -85,7 +85,7 @@ public class CropSlot : MonoBehaviour
         // Soil layer — always visible; darken when watered
         if (_soilRenderer != null)
         {
-            bool showWatered = _wateredToday && _crop != null && soilWateredSprite != null;
+            bool showWatered = _wateredToday && soilWateredSprite != null;
             _soilRenderer.sprite = showWatered ? soilWateredSprite : soilSprite;
         }
 

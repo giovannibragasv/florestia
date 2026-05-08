@@ -31,8 +31,10 @@ public static class TilemapBuilder
 
         Sprite soilSprite = AssetDatabase.LoadAssetAtPath<Sprite>(
             "Assets/Sprites/Terrain/terrain_soil.png");
+        Sprite pathSprite = AssetDatabase.LoadAssetAtPath<Sprite>(
+            "Assets/Sprites/Terrain/terrain_path.png");
         var pathTile = soilSprite != null
-            ? GetOrCreateTile($"{tileDir}/PathTile.asset", soilSprite)
+            ? GetOrCreateTile($"{tileDir}/PathTile.asset", pathSprite != null ? pathSprite : soilSprite)
             : grassTile;
 
         // Grid root

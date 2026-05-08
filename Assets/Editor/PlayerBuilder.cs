@@ -43,6 +43,8 @@ public static class PlayerBuilder
         var pc = playerGO.AddComponent<PlayerController>();
         SerializedObject so = new SerializedObject(pc);
         so.FindProperty("tileHighlight").objectReferenceValue = hlSR;
+        so.FindProperty("mapMin").vector2Value = new Vector2(-3.5f, -2.45f);
+        so.FindProperty("mapMax").vector2Value = new Vector2(7.5f, 7.45f);
         AssignSprites(so.FindProperty("walkDown"),
             "Assets/Sprites/Player/player_walk_down_0.png",
             "Assets/Sprites/Player/player_walk_down_1.png");
