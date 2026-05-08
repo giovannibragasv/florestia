@@ -14,11 +14,11 @@ public static class FontAssigner
 
         int updated = 0;
         foreach (TextMeshProUGUI text in Object.FindObjectsByType<TextMeshProUGUI>(
-            FindObjectsInactive.Include, FindObjectsSortMode.None))
+            FindObjectsInactive.Include))
             if (AssignFont(text, font)) updated++;
 
         foreach (TextMeshPro text in Object.FindObjectsByType<TextMeshPro>(
-            FindObjectsInactive.Include, FindObjectsSortMode.None))
+            FindObjectsInactive.Include))
             if (AssignFont(text, font)) updated++;
 
         if (updated > 0)
