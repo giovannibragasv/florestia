@@ -22,6 +22,15 @@ public class EndScreenController : MonoBehaviour
     [SerializeField] Button playAgainButton;
 
     readonly Dictionary<string, float> _revenuePerCrop = new();
+    readonly List<DailySale> _currentDaySales = new();
+
+    public struct DailySale
+    {
+        public string cropName;
+        public int quantity;
+        public float pricePerUnit;
+        public float total;
+    }
 
     void Awake()
     {
@@ -57,11 +66,22 @@ public class EndScreenController : MonoBehaviour
             BuildEndScreen();
     }
 
-    public void RecordSale(string cropName, float revenue)
+    public void RecordSale(string cropName, float revenue, int quantity, float pricePerUnit)
     {
         _revenuePerCrop.TryGetValue(cropName, out float current);
         _revenuePerCrop[cropName] = current + revenue;
+        _currentDaySales.Add(new DailySale
+        {
+            cropName = cropName,
+            quantity = quantity,
+            pricePerUnit = pricePerUnit,
+            total = revenue
+        });
     }
+
+    public IReadOnlyList<DailySale> GetCurrentDaySales() => _currentDaySales;
+
+    public void ClearCurrentDaySales() => _currentDaySales.Clear();
 
     void BuildEndScreen()
     {
