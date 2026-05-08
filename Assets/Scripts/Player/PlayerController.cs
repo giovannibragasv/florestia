@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Sprite[] walkSide;
     [SerializeField] Vector2 mapMin = new Vector2(-3.5f, -2.45f);
     [SerializeField] Vector2 mapMax = new Vector2(7.5f, 7.45f);
+    [SerializeField] float forwardSelectDistance = 1.45f;
+    [SerializeField] float lateralSelectTolerance = 0.75f;
+    [SerializeField] float backwardSelectTolerance = 0.3f;
 
     // 0=up  1=right  2=down  3=left  (Stardew convention)
     public int FacingDirection { get; private set; } = 2;
@@ -23,6 +26,7 @@ public class PlayerController : MonoBehaviour
 
     Rigidbody2D _rb;
     SpriteRenderer _sr;
+    CropSlot[] _cachedSlots;
     Vector2 _input;
     float _animTimer;
     int _animFrame;
@@ -116,20 +120,20 @@ public class PlayerController : MonoBehaviour
     {
         if (tileHighlight == null) return;
 
-        Vector2 targetPos = (Vector2)transform.position
-            + FacingOffset[FacingDirection] * interactionRange;
-
-        CropSlot found = FindSlotNear(targetPos);
+        CropSlot found = FindSlotInFacingDirection();
         tileHighlight.gameObject.SetActive(found != null);
         if (found != null)
         {
             tileHighlight.transform.position = new Vector3(
                 found.transform.position.x,
                 found.transform.position.y, 0f);
-            float alpha = 0.3f + 0.15f * Mathf.Sin(Time.time * 4f);
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 7f);
+            float alpha = Mathf.Lerp(0.65f, 0.9f, pulse);
+            float scale = Mathf.Lerp(1.08f, 1.18f, pulse);
             Color c = tileHighlight.color;
             c.a = alpha;
             tileHighlight.color = c;
+            tileHighlight.transform.localScale = new Vector3(scale, scale, 1f);
         }
     }
 
@@ -137,28 +141,62 @@ public class PlayerController : MonoBehaviour
     {
         if (ToolbarController.Instance == null) return;
 
-        Vector2 targetPos = (Vector2)transform.position
-            + FacingOffset[FacingDirection] * interactionRange;
-
-        FindSlotNear(targetPos)?.Interact();
+        FindSlotInFacingDirection()?.Interact();
     }
 
-    CropSlot FindSlotNear(Vector2 pos)
+    CropSlot FindSlotInFacingDirection()
     {
-        foreach (var hit in Physics2D.OverlapCircleAll(pos, 0.45f))
+        RefreshSlotCacheIfNeeded();
+
+        Vector2 origin = transform.position;
+        Vector2 forward = FacingOffset[FacingDirection];
+        Vector2 target = origin + forward * interactionRange;
+        CropSlot best = null;
+        float bestScore = float.MaxValue;
+
+        foreach (var slot in _cachedSlots)
         {
-            var slot = hit.GetComponent<CropSlot>();
-            if (slot != null) return slot;
+            if (slot == null) continue;
+
+            Vector2 delta = (Vector2)slot.transform.position - origin;
+            float forwardDistance = Vector2.Dot(delta, forward);
+            if (forwardDistance < -backwardSelectTolerance ||
+                forwardDistance > forwardSelectDistance)
+                continue;
+
+            float lateralDistance = Mathf.Abs(
+                forward.x * delta.y - forward.y * delta.x);
+            if (lateralDistance > lateralSelectTolerance)
+                continue;
+
+            float distanceToTarget = Vector2.Distance(slot.transform.position, target);
+            float behindPenalty = forwardDistance < 0f ? 1f : 0f;
+            float score = distanceToTarget + lateralDistance * 0.5f + behindPenalty;
+            if (score < bestScore)
+            {
+                bestScore = score;
+                best = slot;
+            }
         }
-        return null;
+
+        return best;
+    }
+
+    void RefreshSlotCacheIfNeeded()
+    {
+        if (_cachedSlots != null && _cachedSlots.Length > 0) return;
+        _cachedSlots = FindObjectsByType<CropSlot>();
     }
 
     void OnDrawGizmosSelected()
     {
         if (!Application.isPlaying) return;
         Gizmos.color = Color.yellow;
-        Vector2 targetPos = (Vector2)transform.position
-            + FacingOffset[FacingDirection] * interactionRange;
-        Gizmos.DrawWireSphere(targetPos, 0.45f);
+        Vector2 forward = FacingOffset[FacingDirection];
+        Vector2 center = (Vector2)transform.position + forward * (forwardSelectDistance * 0.5f);
+        Vector2 size = Mathf.Abs(forward.x) > 0f
+            ? new Vector2(forwardSelectDistance, lateralSelectTolerance * 2f)
+            : new Vector2(lateralSelectTolerance * 2f, forwardSelectDistance);
+        Gizmos.DrawWireCube(center, size);
     }
 }

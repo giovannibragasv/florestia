@@ -36,8 +36,8 @@ public static class PlayerBuilder
         hlGO.SetActive(false);
         var hlSR = hlGO.AddComponent<SpriteRenderer>();
         hlSR.sprite = soilSprite;
-        hlSR.color  = new Color(1f, 0.95f, 0.3f, 0.45f); // yellow, semi-transparent
-        hlSR.sortingOrder = 5;
+        hlSR.color  = new Color(1f, 0.95f, 0.15f, 0.8f);
+        hlSR.sortingOrder = 30;
         Undo.RegisterCreatedObjectUndo(hlGO, "Build Player");
 
         var pc = playerGO.AddComponent<PlayerController>();
@@ -45,6 +45,9 @@ public static class PlayerBuilder
         so.FindProperty("tileHighlight").objectReferenceValue = hlSR;
         so.FindProperty("mapMin").vector2Value = new Vector2(-3.5f, -2.45f);
         so.FindProperty("mapMax").vector2Value = new Vector2(7.5f, 7.45f);
+        so.FindProperty("forwardSelectDistance").floatValue = 1.45f;
+        so.FindProperty("lateralSelectTolerance").floatValue = 0.75f;
+        so.FindProperty("backwardSelectTolerance").floatValue = 0.3f;
         AssignSprites(so.FindProperty("walkDown"),
             "Assets/Sprites/Player/player_walk_down_0.png",
             "Assets/Sprites/Player/player_walk_down_1.png");
