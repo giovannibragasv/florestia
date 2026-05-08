@@ -6,13 +6,27 @@ using TMPro;
 public static class HUDBuilder
 {
     [MenuItem("Florestia/Build Farm HUD")]
-    static void Build()
+    public static void Build()
     {
         Canvas canvas = Object.FindFirstObjectByType<Canvas>();
         if (canvas == null)
         {
-            Debug.LogError("No Canvas found in scene. Add one first.");
-            return;
+            var cgo = new GameObject("Canvas");
+            canvas = cgo.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            var scaler = cgo.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.matchWidthOrHeight = 0.5f;
+            cgo.AddComponent<GraphicRaycaster>();
+            Undo.RegisterCreatedObjectUndo(cgo, "Build Farm HUD");
+        }
+        else
+        {
+            var scaler = canvas.GetComponent<CanvasScaler>() ?? canvas.gameObject.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.matchWidthOrHeight = 0.5f;
         }
         Transform ct = canvas.transform;
 
@@ -33,33 +47,41 @@ public static class HUDBuilder
         // ── Top-left panel ──────────────────────────────────
         var tlPanel = MakeAnchoredRect("TopLeft", hudGO.transform,
             new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
-            new Vector2(8, -8), new Vector2(180, 110));
-        tlPanel.gameObject.AddComponent<Image>().color = new Color(0, 0, 0, 0.45f);
+            new Vector2(16, -16), new Vector2(210, 98));
+        tlPanel.gameObject.AddComponent<Image>().color = new Color(0.08f, 0.055f, 0.035f, 0.78f);
+
+        MakeIcon("CoinIcon", tlPanel, "Assets/Sprites/UI/ui_coin.png",
+            new Vector2(14, -14), new Vector2(26, 26));
+        MakeIcon("StaminaIcon", tlPanel, "Assets/Sprites/UI/ui_stamina.png",
+            new Vector2(14, -62), new Vector2(24, 24));
 
         var balanceLabel = MakeLabel("BalanceLabel", tlPanel,
-            "R$50,00", new Vector2(90, -18), new Vector2(170, 32), 22);
+            "R$50,00", new Vector2(48, -12), new Vector2(150, 30), 21);
 
         var dayLabel = MakeLabel("DayLabel", tlPanel,
-            "Dia 1/15", new Vector2(90, -52), new Vector2(170, 28), 18);
+            "Dia 1/15", new Vector2(48, -40), new Vector2(150, 24), 17);
 
         var staminaLabel = MakeLabel("StaminaLabel", tlPanel,
-            "20/20", new Vector2(90, -84), new Vector2(80, 24), 16);
+            "20/20", new Vector2(48, -68), new Vector2(70, 22), 15);
 
         // Stamina bar (placed right of the label)
         var sliderRT = MakeAnchoredRect("StaminaBar", tlPanel,
             new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0),
-            new Vector2(110, 10), new Vector2(60, 14));
+            new Vector2(116, 13), new Vector2(78, 14));
         var slider = sliderRT.gameObject.AddComponent<Slider>();
         slider.minValue = 0f; slider.maxValue = 1f; slider.value = 1f;
 
         // ── Top-right: timer ────────────────────────────────
         var trPanel = MakeAnchoredRect("TopRight", hudGO.transform,
             new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1),
-            new Vector2(-8, -8), new Vector2(110, 44));
-        trPanel.gameObject.AddComponent<Image>().color = new Color(0, 0, 0, 0.45f);
+            new Vector2(-16, -16), new Vector2(132, 46));
+        trPanel.gameObject.AddComponent<Image>().color = new Color(0.08f, 0.055f, 0.035f, 0.78f);
+        MakeIcon("SunIcon", trPanel, "Assets/Sprites/UI/ui_sun.png",
+            new Vector2(-118, -10), new Vector2(26, 26));
 
         var timerLabel = MakeLabel("TimerLabel", trPanel,
-            "05:00", new Vector2(-55, -22), new Vector2(100, 36), 24);
+            "05:00", new Vector2(-86, -10), new Vector2(74, 30), 22);
+        timerLabel.alignment = TextAlignmentOptions.Right;
 
         // ── Wire HUDController ──────────────────────────────
         var hudCtrlGO = GameObject.Find("_HUD");
@@ -107,5 +129,17 @@ public static class HUDBuilder
         tmp.alignment = TextAlignmentOptions.Left;
         tmp.color = Color.white;
         return tmp;
+    }
+
+    static void MakeIcon(string name, RectTransform parent, string spritePath,
+        Vector2 anchoredPos, Vector2 size)
+    {
+        var rt = MakeAnchoredRect(name, parent,
+            new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
+            anchoredPos, size);
+        var image = rt.gameObject.AddComponent<Image>();
+        image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
+        image.color = Color.white;
+        image.preserveAspect = true;
     }
 }

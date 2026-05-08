@@ -4,11 +4,14 @@ using UnityEngine;
 public static class BridgeBuilder
 {
     [MenuItem("Florestia/Build Bridge")]
-    static void Build()
+    public static void Build()
     {
+        var existing = GameObject.Find("Bridge");
+        if (existing != null) Undo.DestroyObjectImmediate(existing);
+
         var bridge = new GameObject("Bridge");
-        bridge.transform.position = new Vector3(2.75f, -1.65f, 0f);
-        bridge.transform.localScale = new Vector3(2.2f, 1f, 1f);
+        bridge.transform.position = new Vector3(2.5f, -2.15f, 0f);
+        bridge.transform.localScale = new Vector3(2f, 1f, 1f);
 
         var sr = bridge.AddComponent<SpriteRenderer>();
         sr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/Terrain/terrain_bridge.png")
@@ -17,7 +20,7 @@ public static class BridgeBuilder
 
         var collider = bridge.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
-        collider.size = new Vector2(2.2f, 0.6f);
+        collider.size = new Vector2(2f, 0.65f);
 
         bridge.AddComponent<BridgeTrigger>();
         Undo.RegisterCreatedObjectUndo(bridge, "Build Bridge");

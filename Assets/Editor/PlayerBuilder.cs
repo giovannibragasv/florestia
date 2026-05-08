@@ -4,14 +4,14 @@ using UnityEditor;
 public static class PlayerBuilder
 {
     [MenuItem("Florestia/Build Player")]
-    static void Build()
+    public static void Build()
     {
         var existing = Object.FindFirstObjectByType<PlayerController>();
         if (existing != null) Undo.DestroyObjectImmediate(existing.gameObject);
 
         var playerGO = new GameObject("Player");
         Undo.RegisterCreatedObjectUndo(playerGO, "Build Player");
-        playerGO.transform.position = new Vector3(2.75f, -0.8f, 0f);
+        playerGO.transform.position = new Vector3(2.5f, -1.15f, 0f);
 
         var rb = playerGO.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0f;

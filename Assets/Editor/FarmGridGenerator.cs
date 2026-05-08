@@ -3,8 +3,10 @@ using UnityEditor;
 
 public static class FarmGridGenerator
 {
+    const float CellSize = 1f;
+
     [MenuItem("Florestia/Generate 6x6 Farm Grid")]
-    static void GenerateGrid()
+    public static void GenerateGrid()
     {
         var existing = GameObject.Find("FarmGrid");
         if (existing != null) Undo.DestroyObjectImmediate(existing);
@@ -30,12 +32,18 @@ public static class FarmGridGenerator
             {
                 GameObject slot = new GameObject($"CropSlot_{index:D2}");
                 slot.transform.SetParent(parent.transform);
-                slot.transform.localPosition = new Vector3(col * 1.1f, row * 1.1f, 0f);
+                slot.transform.localPosition = new Vector3(col * CellSize, row * CellSize, 0f);
 
                 SpriteRenderer sr = slot.AddComponent<SpriteRenderer>();
                 sr.sprite = soilSprite != null ? soilSprite : null;
                 if (soilSprite == null) sr.color = new Color(0.55f, 0.35f, 0.15f, 1f);
                 sr.sortingOrder = 0;
+                if (soilSprite != null && (row + col) % 2 == 0)
+                    sr.color = new Color(0.96f, 0.92f, 0.84f, 1f);
+
+                var collider = slot.AddComponent<BoxCollider2D>();
+                collider.isTrigger = true;
+                collider.size = new Vector2(0.9f, 0.9f);
 
                 CropSlot cropSlot = slot.AddComponent<CropSlot>();
                 cropSlot.SlotIndex = index;

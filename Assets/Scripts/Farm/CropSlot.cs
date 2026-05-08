@@ -28,11 +28,9 @@ public class CropSlot : MonoBehaviour
         _cropRenderer = cropGO.AddComponent<SpriteRenderer>();
         _cropRenderer.sortingOrder = _soilRenderer.sortingOrder + 1;
 
-        if (GetComponent<Collider2D>() == null)
-        {
-            var col = gameObject.AddComponent<BoxCollider2D>();
-            col.isTrigger = true;
-        }
+        var col = GetComponent<BoxCollider2D>() ?? gameObject.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        col.size = new Vector2(0.9f, 0.9f);
     }
 
     void Start() => RefreshSprite();

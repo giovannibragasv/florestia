@@ -53,6 +53,8 @@ public class PlayerController : MonoBehaviour
     void LateUpdate()
     {
         if (Camera.main == null) return;
+        if (Camera.main.GetComponent<CameraConfiner>() != null) return;
+
         Vector3 target = transform.position;
         target.z = -10f;
         Camera.main.transform.position =

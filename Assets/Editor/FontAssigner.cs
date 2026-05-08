@@ -6,7 +6,7 @@ using UnityEngine;
 public static class FontAssigner
 {
     [MenuItem("Florestia/Assign TMP Fonts")]
-    static void Assign()
+    public static void Assign()
     {
         TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(
             "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");

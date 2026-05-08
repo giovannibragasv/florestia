@@ -5,10 +5,10 @@ using System.IO;
 
 public static class TilemapBuilder
 {
-    const float CellSize = 1.1f; // matches FarmGrid tile spacing
+    public const float CellSize = 1f; // one 32px sprite = one world unit
 
     [MenuItem("Florestia/Build Grass Tilemap")]
-    static void Build()
+    public static void Build()
     {
         // Remove existing grid
         var existingGrid = GameObject.Find("WorldGrid");
@@ -27,17 +27,13 @@ public static class TilemapBuilder
         if (!Directory.Exists(tileDir))
             Directory.CreateDirectory(tileDir);
 
-        // Create grass tile asset
-        string tilePath = $"{tileDir}/GrassTile.asset";
-        var grassTile = AssetDatabase.LoadAssetAtPath<Tile>(tilePath);
-        if (grassTile == null)
-        {
-            grassTile = ScriptableObject.CreateInstance<Tile>();
-            grassTile.sprite = grassSprite;
-            grassTile.colliderType = Tile.ColliderType.None;
-            AssetDatabase.CreateAsset(grassTile, tilePath);
-            AssetDatabase.SaveAssets();
-        }
+        var grassTile = GetOrCreateTile($"{tileDir}/GrassTile.asset", grassSprite);
+
+        Sprite soilSprite = AssetDatabase.LoadAssetAtPath<Sprite>(
+            "Assets/Sprites/Terrain/terrain_soil.png");
+        var pathTile = soilSprite != null
+            ? GetOrCreateTile($"{tileDir}/PathTile.asset", soilSprite)
+            : grassTile;
 
         // Grid root
         var gridGO = new GameObject("WorldGrid");
@@ -46,22 +42,51 @@ public static class TilemapBuilder
         grid.cellSize = new Vector3(CellSize, CellSize, 0f);
         grid.cellLayout = GridLayout.CellLayout.Rectangle;
 
-        // Ground tilemap child
-        var tilemapGO = new GameObject("Ground");
-        tilemapGO.transform.SetParent(gridGO.transform, false);
-        var tilemap = tilemapGO.AddComponent<Tilemap>();
-        var tilemapRenderer = tilemapGO.AddComponent<TilemapRenderer>();
-        tilemapRenderer.sortingOrder = -1; // behind everything
+        var ground = MakeTilemap(gridGO.transform, "Ground", -20);
+        var path = MakeTilemap(gridGO.transform, "Paths", -19);
 
-        // Paint grass from (-4,-4) to (9,9) in tile coordinates
-        // Farm occupies tiles (0,0) to (5,5) — grass fills the surrounding world
-        for (int x = -4; x <= 9; x++)
-            for (int y = -4; y <= 9; y++)
-                tilemap.SetTile(new Vector3Int(x, y, 0), grassTile);
+        for (int x = -10; x <= 14; x++)
+            for (int y = -7; y <= 11; y++)
+                ground.SetTile(new Vector3Int(x, y, 0), grassTile);
 
-        Undo.RegisterCreatedObjectUndo(tilemapGO, "Build Grass Tilemap");
+        // Warm dirt walkways make the farm read as a place instead of a debug grid.
+        for (int x = -3; x <= 6; x++)
+            path.SetTile(new Vector3Int(x, -2, 0), pathTile);
+        for (int y = -2; y <= 6; y++)
+            path.SetTile(new Vector3Int(-2, y, 0), pathTile);
+        for (int x = -4; x <= 0; x++)
+            for (int y = 5; y <= 7; y++)
+                path.SetTile(new Vector3Int(x, y, 0), pathTile);
+
         Selection.activeGameObject = gridGO;
 
-        Debug.Log("Grass tilemap built (WorldGrid). Farm tiles (0,0)–(5,5) sit on top at sorting order 0+.");
+        Debug.Log("Polished grass/path tilemap built (WorldGrid). Farm tiles sit on top at sorting order 0+.");
+    }
+
+    static Tile GetOrCreateTile(string path, Sprite sprite)
+    {
+        var tile = AssetDatabase.LoadAssetAtPath<Tile>(path);
+        if (tile == null)
+        {
+            tile = ScriptableObject.CreateInstance<Tile>();
+            AssetDatabase.CreateAsset(tile, path);
+        }
+
+        tile.sprite = sprite;
+        tile.colliderType = Tile.ColliderType.None;
+        EditorUtility.SetDirty(tile);
+        AssetDatabase.SaveAssets();
+        return tile;
+    }
+
+    static Tilemap MakeTilemap(Transform parent, string name, int sortingOrder)
+    {
+        var tilemapGO = new GameObject(name);
+        tilemapGO.transform.SetParent(parent, false);
+        var tilemap = tilemapGO.AddComponent<Tilemap>();
+        var tilemapRenderer = tilemapGO.AddComponent<TilemapRenderer>();
+        tilemapRenderer.sortingOrder = sortingOrder;
+        Undo.RegisterCreatedObjectUndo(tilemapGO, "Build Grass Tilemap");
+        return tilemap;
     }
 }

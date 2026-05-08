@@ -34,8 +34,16 @@ public class ToolbarController : MonoBehaviour
         RefreshHighlight();
     }
 
+    public void SelectMandioca() => Select(ToolType.Mandioca);
+    public void SelectCacau() => Select(ToolType.Cacau);
+    public void SelectAcai() => Select(ToolType.Acai);
+    public void SelectWater() => Select(ToolType.Water);
+    public void SelectHarvest() => Select(ToolType.Harvest);
+
     void RefreshHighlight()
     {
+        if (slotBackgrounds == null) return;
+
         for (int i = 0; i < slotBackgrounds.Length; i++)
         {
             if (slotBackgrounds[i] == null) continue;
