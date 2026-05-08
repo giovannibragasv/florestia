@@ -25,17 +25,23 @@ public class HUDController : MonoBehaviour
 
     void Update()
     {
-        if (DayNightCycle.Instance == null) return;
-        float rem = DayNightCycle.Instance.TimeRemaining;
-        int mins = Mathf.FloorToInt(rem / 60f);
-        int secs = Mathf.FloorToInt(rem % 60f);
-        timerLabel.text = $"{mins:D2}:{secs:D2}";
+        if (DayNightCycle.Instance != null && timerLabel != null)
+        {
+            float rem = DayNightCycle.Instance.TimeRemaining;
+            int mins = Mathf.FloorToInt(rem / 60f);
+            int secs = Mathf.FloorToInt(rem % 60f);
+            timerLabel.text = $"{mins:D2}:{secs:D2}";
+            timerLabel.color = DayNightCycle.Instance.IsNight ? Color.red : Color.white;
+        }
+
+        if (GameManager.Instance != null && balanceLabel != null)
+            balanceLabel.color = GameManager.Instance.Balance < 20f ? Color.red : Color.white;
     }
 
     public void RefreshBalance(float balance)
     {
         balanceLabel.text = $"R${balance:F2}";
-        balanceLabel.color = balance >= 0 ? Color.white : new Color(1f, 0.3f, 0.3f);
+        balanceLabel.color = balance < 20f ? Color.red : Color.white;
     }
 
     public void RefreshDay(int day)
