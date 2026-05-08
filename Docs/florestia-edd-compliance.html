@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Florestia · Conformidade BNCC · Estado do Protótipo</title>
+<meta name="author" content="Equipe Florestia">
+<meta name="description" content="Mapeamento das nove habilidades BNCC do EDD do Florestia para mecânicas in-game no estado atual do protótipo.">
+<meta name="keywords" content="florestia, bncc, edd, protótipo, educação financeira, matemática, ensino fundamental">
+<meta name="generator" content="Kami">
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+
+    @top-right {
+      content: string(section-title);
+      font-family: Charter, Georgia, Palatino, serif;
+      font-size: 8pt;
+      color: #6b6a64;
+    }
+
+    @bottom-center {
+      content: counter(page) "  ·  Florestia · Conformidade BNCC";
+      font-family: Charter, Georgia, Palatino, serif;
+      font-size: 9pt;
+      color: #6b6a64;
+    }
+  }
+  @page:first {
+    @top-right { content: ""; }
+    @bottom-center { content: ""; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory:     #faf9f5;
+    --near-black:#141413;
+    --dark-warm: #3d3d3a;
+    --olive:     #504e49;
+    --stone:     #6b6a64;
+    --brand:     #1B365D;
+    --border:    #e8e6dc;
+    --border-soft:#e5e3d8;
+    --tag-bg:    #E4ECF5;
+
+    --serif: Charter, Georgia, Palatino, "Times New Roman", serif;
+    --sans: var(--serif);
+    --mono: "JetBrains Mono", "SF Mono", "Fira Code", Consolas, Monaco, monospace;
+  }
+
+  html, body { background: var(--parchment); }
+
+  @media screen {
+    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm 22mm 22mm; }
+  }
+
+  body {
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  .sans { font-family: var(--sans); }
+
+  .cover {
+    min-height: 240mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40mm 0 0 0;
+    break-after: page;
+  }
+  .cover-eyebrow {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 2pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 18pt;
+  }
+  .cover-title {
+    font-size: 40pt;
+    font-weight: 500;
+    color: var(--near-black);
+    line-height: 1.12;
+    letter-spacing: -0.5pt;
+    margin-bottom: 16pt;
+  }
+  .cover-sub {
+    font-family: var(--sans);
+    font-size: 14pt;
+    color: var(--olive);
+    line-height: 1.45;
+    max-width: 88%;
+    margin-bottom: 30pt;
+  }
+  .cover-meta {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--stone);
+    line-height: 1.55;
+    font-variant-numeric: tabular-nums;
+  }
+  .cover-meta strong { color: var(--dark-warm); font-weight: 500; }
+
+  .toc { break-after: page; }
+  .toc h2 {
+    font-size: 22pt;
+    font-weight: 500;
+    margin-bottom: 14pt;
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 8pt;
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6pt 0;
+    border-bottom: 0.3pt dotted var(--border);
+    font-size: 11pt;
+  }
+  .toc-item:last-of-type { border-bottom: none; }
+  .toc-num {
+    color: var(--brand);
+    font-weight: 500;
+    min-width: 30pt;
+    font-variant-numeric: tabular-nums;
+  }
+  .toc-title { flex: 1; color: var(--near-black); padding-left: 6pt; }
+  .toc-page { color: var(--stone); font-variant-numeric: tabular-nums; }
+
+  h1 {
+    font-size: 24pt;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.3pt;
+    margin: 0 0 10pt 0;
+    border-left: 2.5pt solid var(--brand);
+    border-radius: 1.5pt;
+    padding-left: 8pt;
+    color: var(--near-black);
+    break-after: avoid;
+  }
+  h2 {
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 24pt 0 6pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+    string-set: section-title content();
+  }
+  h3 {
+    font-size: 12pt;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 16pt 0 4pt 0;
+    color: var(--dark-warm);
+    break-after: avoid;
+  }
+
+  .chapter-num {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 6pt;
+  }
+
+  p { margin: 0 0 10pt 0; line-height: 1.55; color: var(--near-black); }
+
+  .lead {
+    font-size: 12pt;
+    line-height: 1.55;
+    color: var(--dark-warm);
+    margin-bottom: 14pt;
+  }
+
+  .hl { color: var(--brand); font-weight: 500; }
+  strong { font-weight: 500; }
+
+  ul, ol {
+    margin: 6pt 0 10pt 0;
+    padding-left: 20pt;
+    line-height: 1.55;
+  }
+  ul li::marker { color: var(--brand); }
+  ol li::marker { color: var(--brand); font-weight: 500; }
+
+  blockquote, .quote {
+    border-left: 2pt solid var(--brand);
+    margin: 12pt 0;
+    padding: 4pt 0 4pt 16pt;
+    color: var(--olive);
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+  blockquote .cite, .quote .cite {
+    display: block;
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    margin-top: 4pt;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 9pt;
+    background: var(--ivory);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    color: var(--dark-warm);
+  }
+  pre {
+    font-family: var(--mono);
+    font-size: 9pt;
+    line-height: 1.5;
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 10pt 0;
+    white-space: pre-wrap;
+    color: var(--near-black);
+    break-inside: avoid;
+  }
+  pre code { background: transparent; padding: 0; font-size: inherit; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+  table th {
+    text-align: left;
+    font-family: var(--sans);
+    font-weight: 500;
+    color: var(--dark-warm);
+    padding: 6pt 8pt;
+    border-bottom: 1pt solid var(--border);
+    background: var(--ivory);
+  }
+  table td {
+    padding: 5pt 8pt;
+    border-bottom: 0.3pt solid var(--border-soft);
+    vertical-align: top;
+  }
+  table.compact th { padding: 3pt 6pt; font-size: 8pt; }
+  table.compact td { padding: 2pt 6pt; font-size: 8pt; line-height: 1.4; }
+
+  .callout {
+    background: var(--ivory);
+    border-left: 2pt solid var(--brand);
+    padding: 10pt 14pt;
+    border-radius: 3pt;
+    margin: 12pt 0;
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+  .takeaway {
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .takeaway-label {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 4pt;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-family: var(--sans);
+    font-size: 8.5pt;
+    font-weight: 500;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    letter-spacing: 0.4pt;
+    text-transform: uppercase;
+    margin-right: 4pt;
+  }
+  .tag.green { background: #E2EEDF; color: #2E5934; }
+  .tag.amber { background: #F2EBD7; color: #6B4E11; }
+
+  .habilidade {
+    margin: 18pt 0;
+    padding: 12pt 14pt 4pt 14pt;
+    background: var(--ivory);
+    border-radius: 4pt;
+    border-left: 2pt solid var(--brand);
+    break-inside: avoid;
+  }
+  .habilidade-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6pt;
+  }
+  .habilidade-code {
+    font-family: var(--sans);
+    font-size: 11pt;
+    font-weight: 500;
+    color: var(--brand);
+    letter-spacing: 0.5pt;
+  }
+  .habilidade-title {
+    font-size: 11pt;
+    color: var(--dark-warm);
+    margin-left: 8pt;
+    flex: 1;
+  }
+  .habilidade-bncc {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--olive);
+    line-height: 1.5;
+    margin-bottom: 6pt;
+  }
+  .habilidade-mech {
+    font-size: 10pt;
+    color: var(--near-black);
+    line-height: 1.55;
+  }
+  .habilidade-mech strong { color: var(--brand); }
+
+  figure { margin: 14pt 0; break-inside: avoid; }
+  figcaption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    margin-top: 6pt;
+    text-align: center;
+  }
+
+  .chapter { break-before: page; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="cover">
+  <div>
+    <div class="cover-eyebrow">Documento Técnico · Florestia</div>
+    <div class="cover-title">Conformidade BNCC<br>Estado do Protótipo</div>
+    <div class="cover-sub">Como o protótipo do Florestia já exercita as nove habilidades BNCC do EDD, e o que falta para a fase de polimento.</div>
+  </div>
+  <div class="cover-meta">
+    <strong>Equipe Florestia</strong><br>
+    Carlos Eduardo · Gabriel Mattos · Giovanni Braga<br>
+    Gustavo Teixeira · Luiz Eduardo · Pedro Miguel<br><br>
+    Versão 0.1 · Maio de 2026<br>
+    CESUPA · Amazon Hacking 2026 · CC7NA
+  </div>
+</section>
+
+<!-- TOC -->
+<section class="toc">
+  <h2>Conteúdo</h2>
+  <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">Sumário Executivo</span><span class="toc-page">03</span></div>
+  <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">Estado do Protótipo</span><span class="toc-page">04</span></div>
+  <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">Mapeamento BNCC × Mecânica</span><span class="toc-page">06</span></div>
+  <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">Janela de Polimento (10 dias)</span><span class="toc-page">10</span></div>
+  <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">Anexo</span><span class="toc-page">12</span></div>
+</section>
+
+<!-- Chapter 01 -->
+<section class="chapter">
+  <div class="chapter-num">01 · Sumário Executivo</div>
+  <h1>Sumário Executivo</h1>
+
+  <p class="lead">
+    O protótipo do Florestia exercita, no estado atual do código, <span class="hl">as nove habilidades BNCC</span> mapeadas no EDD. Cada habilidade tem agora uma mecânica concreta no jogo que força o aluno a operá-la — não apenas descrever. Este documento existe para que essa correspondência possa ser auditada item a item, e para deixar explícito o que cabe à fase de polimento dos próximos dez dias.
+  </p>
+
+  <h2>Conclusões principais</h2>
+  <ul>
+    <li>Quatro habilidades já eram exercitadas pelo loop original do jogo (saldo, mercado, margem percentual, gráfico final).</li>
+    <li>Três habilidades estavam <em>previstas no design</em> mas não eram exercitadas pela jogabilidade — o aluno podia atravessar quinze dias sem fazer a operação. Foram fechadas nesta sessão com coaching matemático no HUD e venda em quantidade.</li>
+    <li>Duas habilidades dependiam do <strong>Resumo Noturno</strong> previsto no GDD §7 e ausente do código. Foi implementado como modal entre o mercado e o avanço de dia.</li>
+  </ul>
+
+  <div class="takeaway">
+    <div class="takeaway-label">Perguntas que este documento responde</div>
+    <ol>
+      <li>Para cada habilidade BNCC do EDD, qual mecânica do jogo a exercita?</li>
+      <li>O que já estava pronto antes desta sessão e o que foi adicionado?</li>
+      <li>O que cabe à janela de polimento de dez dias e o que fica fora do escopo do MVP?</li>
+    </ol>
+  </div>
+
+  <h2>Escopo deste documento</h2>
+  <p>
+    Este texto trata do <span class="hl">protótipo</span>, não do MVP final. Arte, áudio, balanceamento fino, ajustes de UI e acabamento Stardew-like são trabalho da janela de polimento subsequente, descrita no Capítulo 04. O argumento aqui é estritamente pedagógico: as mecânicas necessárias para sustentar as nove habilidades BNCC já existem no código.
+  </p>
+</section>
+
+<!-- Chapter 02 -->
+<section class="chapter">
+  <div class="chapter-num">02 · Estado do Protótipo</div>
+  <h1>Estado do Protótipo</h1>
+
+  <p class="lead">
+    O protótipo executa o loop completo do GDD: <span class="hl">plantar → regar → colher → mercado → vender → próximo dia → tela final</span>. Os ScriptableObjects de cultura e comprador estão preenchidos com os valores exatos do GDD, verificados via leitura direta dos arquivos YAML.
+  </p>
+
+  <h2>Verificação de valores do GDD</h2>
+
+  <table>
+    <thead>
+      <tr><th>Item GDD</th><th>Valor especificado</th><th>Asset no projeto</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Mandioca</td><td>2 dias / R$3 / R$7</td><td>Mandioca.asset · 2 / 3 / 7</td></tr>
+      <tr><td>Cacau</td><td>4 dias / R$6 / R$16</td><td>Cacau.asset · 4 / 6 / 16</td></tr>
+      <tr><td>Açaí</td><td>6 dias / R$10 / R$28</td><td>Acai.asset · 6 / 10 / 28</td></tr>
+      <tr><td>Atravessador (preço máx.)</td><td>5 / 12 / 20</td><td>Atravessador.asset · 5 / 12 / 20</td></tr>
+      <tr><td>Feirante (preço máx.)</td><td>7 / 15 / 26</td><td>Feirante.asset · 7 / 15 / 26</td></tr>
+      <tr><td>Comprador Direto (preço máx.)</td><td>9 / 18 / 30</td><td>CompradorDireto.asset · 9 / 18 / 30</td></tr>
+      <tr><td>Capital inicial</td><td>R$50</td><td>GameManager.StartingBalance · 50</td></tr>
+      <tr><td>Custo fixo diário</td><td>R$2</td><td>GameManager.DailyCost · 2</td></tr>
+      <tr><td>Duração do ciclo</td><td>15 dias</td><td>GameManager.TotalDays · 15</td></tr>
+      <tr><td>Stamina diária</td><td>20 pontos</td><td>StaminaSystem.MaxStamina · 20</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Adições desta sessão</h2>
+
+  <p>
+    Quatro mudanças cirúrgicas, todas voltadas a fechar lacunas do EDD identificadas em auditoria habilidade-a-habilidade. Cada uma está documentada por commit no repositório.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Mudança</th><th>Habilidades atendidas</th><th>Arquivos</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Resumo Noturno</strong> · modal com tabela de vendas, receita, custo fixo e saldo entre o mercado e o avanço do dia</td>
+        <td>EF04MA27, EF05MA07</td>
+        <td>MarketUIController.cs, EndScreenController.cs</td>
+      </tr>
+      <tr>
+        <td><strong>Venda em quantidade</strong> · slider e total dinâmico <em>N × R$X = R$Y</em> ao vender</td>
+        <td>EF05MA08</td>
+        <td>MarketUIController.cs, BuyerSystem.cs</td>
+      </tr>
+      <tr>
+        <td><strong>Pré-visualização de plantio</strong> · HUD mostra custo, dias e R$/dia da cultura selecionada</td>
+        <td>EF04MA05</td>
+        <td>HUDController.cs, ToolbarController.cs</td>
+      </tr>
+      <tr>
+        <td><strong>Indicador de proporcionalidade</strong> · HUD mostra <em>Plantando: N× Crop · Investimento R$X · Receita ~R$Y</em></td>
+        <td>EF05MA12</td>
+        <td>HUDController.cs, CropSystem.cs, CropSlot.cs</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    Todas as adições têm fallback de construção em runtime: se o usuário não rodar os <em>builders</em> do Editor, a UI ainda assim aparece, com layout funcional. Em fase de polimento, os <em>builders</em> serão atualizados para gerar a UI definitiva.
+  </div>
+</section>
+
+<!-- Chapter 03 -->
+<section class="chapter">
+  <div class="chapter-num">03 · Mapeamento BNCC × Mecânica</div>
+  <h1>Mapeamento BNCC × Mecânica</h1>
+
+  <p class="lead">
+    Para cada habilidade do EDD, abaixo: o código BNCC, a descrição oficial paráfraseada, a mecânica do jogo que a exercita e o estado da implementação no protótipo.
+  </p>
+
+  <h2>4º Ano · Anos Iniciais</h2>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF04MA03</span><span class="habilidade-title">Adição e subtração com naturais</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Resolver e elaborar problemas com números naturais envolvendo adição e subtração.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> a cada compra de semente o saldo do HUD cai em tempo real; ao fim de cada dia, o custo fixo de R$2 é debitado pelo <code>GameManager.AdvanceDay()</code>. O <em>Resumo Noturno</em> agora explicita a operação: <em>Receita − Custo fixo = Saldo</em>. O aluno vê a subtração acontecer e lê o resultado.
+    </div>
+  </div>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF04MA05</span><span class="habilidade-title">Estratégias de cálculo mental</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Utilizar as propriedades das operações para desenvolver estratégias de cálculo.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> ao selecionar uma cultura no toolbar, o HUD exibe <em>Próxima: Cacau · −R$6 · 4d · ~R$2,50/dia</em>. O aluno é forçado a comparar mentalmente as três culturas (R$2/dia, R$2,50/dia, R$3/dia) antes de plantar. A operação que o EDD §4.3 prevê — divisão lucro / dias — está agora visível no HUD.
+    </div>
+  </div>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF04MA25</span><span class="habilidade-title">Compra e venda</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Resolver e elaborar problemas que envolvam situações de compra e venda e formas de pagamento, enfatizando consumo ético e responsável.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> a cena MarketScene é integralmente uma situação de venda. O aluno escolhe comprador, define preço pelo slider, e recebe aceite ou rejeição com fala curta do NPC. A tensão GDD entre Atravessador (compra fácil, preço baixo) e Comprador Direto (preço alto, raro) reproduz a discussão de consumo ético em escala de criança.
+    </div>
+  </div>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF04MA27</span><span class="habilidade-title">Leitura de tabelas e gráficos de barras</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Analisar dados apresentados em tabelas simples ou de dupla entrada e em gráficos de barras.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> o <em>Resumo Noturno</em> renderiza, ao fim de cada dia de mercado, uma tabela de dupla entrada — cultura × quantidade × preço × total — seguida das linhas de Receita, Custo fixo e Saldo. Sem essa adição, o EDD reivindicava a habilidade mas o jogo não exercitava: o aluno passava direto do mercado para o próximo dia sem ler tabela alguma.
+    </div>
+  </div>
+
+  <h2>5º Ano · Anos Iniciais</h2>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF05MA06</span><span class="habilidade-title">Porcentagens canônicas</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Associar 10 %, 25 %, 50 %, 75 % e 100 % à fração correspondente, para calcular porcentagens.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> ao mover o slider de preço no mercado, o HUD atualiza ao vivo <em>Margem: R$Z (+W%)</em>. O aluno observa o sinal mudar de vermelho para verde ao cruzar o custo. A leitura intuitiva de margem positiva, negativa e canônica (50 %, 100 %, 150 %) ocorre antes de qualquer formalização escolar.
+    </div>
+  </div>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF05MA07</span><span class="habilidade-title">Operações com naturais e racionais</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Resolver e elaborar problemas de adição e subtração com números naturais e racionais.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> o <em>Resumo Noturno</em> apresenta a operação completa em formato de demonstrativo financeiro: <em>Receita R$43 − Custo fixo R$2 = Saldo R$41</em>. O aluno lê e interpreta a expressão inteira, não apenas o resultado.
+    </div>
+  </div>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF05MA08</span><span class="habilidade-title">Multiplicação e divisão</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Resolver problemas de multiplicação e divisão com números naturais e decimais.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> a venda em quantidade exibe <em>4 × R$7 = R$28</em> ao vivo enquanto o slider de quantidade se move. Antes desta sessão, vendas eram unitárias e a multiplicação ficava implícita. Agora o aluno opera a tabuada antes de confirmar a venda.
+    </div>
+  </div>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF05MA12</span><span class="habilidade-title">Proporcionalidade direta</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Resolver problemas que envolvam variação de proporcionalidade direta entre duas quantidades.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> o HUD mostra, ao plantar a segunda unidade da mesma cultura, <em>Plantando: 2× Cacau · Investimento R$12 · Receita ~R$32</em>. Dobrar plantio dobra investimento e receita esperada — a relação se materializa em números visíveis no HUD em vez de ficar como exercício implícito.
+    </div>
+  </div>
+
+  <div class="habilidade">
+    <div class="habilidade-head">
+      <span><span class="habilidade-code">EF05MA24</span><span class="habilidade-title">Interpretação de gráficos</span></span>
+      <span class="tag green">Implementado</span>
+    </div>
+    <div class="habilidade-bncc">Interpretar dados estatísticos apresentados em textos, tabelas e gráficos sobre temas de interesse.</div>
+    <div class="habilidade-mech">
+      <strong>Mecânica:</strong> a EndScreen, ao fim do dia 15, renderiza um gráfico de barras do saldo dia a dia construído por <code>EndScreenController.BuildBalanceChart()</code>. Barras verdes para saldos positivos, vermelhas para negativos. O aluno lê a trajetória financeira do ciclo inteiro em uma única figura.
+    </div>
+  </div>
+
+  <h2>Resumo consolidado</h2>
+
+  <table class="compact">
+    <thead>
+      <tr><th>Habilidade</th><th>Unidade temática</th><th>Mecânica entregadora</th><th>Estado</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>EF04MA03</td><td>Números</td><td>Saldo do HUD em tempo real + Resumo Noturno</td><td>OK</td></tr>
+      <tr><td>EF04MA05</td><td>Números</td><td>Pré-visualização de plantio (R$/dia no HUD)</td><td>OK</td></tr>
+      <tr><td>EF04MA25</td><td>Números</td><td>MarketScene completa (slider + buyer)</td><td>OK</td></tr>
+      <tr><td>EF04MA27</td><td>Probabilidade e Estatística</td><td>Resumo Noturno · tabela de dupla entrada</td><td>OK</td></tr>
+      <tr><td>EF05MA06</td><td>Números</td><td>Margem (R$ + %) ao mover slider de preço</td><td>OK</td></tr>
+      <tr><td>EF05MA07</td><td>Números</td><td>Resumo Noturno · linha Receita − Custo fixo = Saldo</td><td>OK</td></tr>
+      <tr><td>EF05MA08</td><td>Números</td><td>Venda em quantidade · N × R$Y = R$Z</td><td>OK</td></tr>
+      <tr><td>EF05MA12</td><td>Álgebra</td><td>Indicador de proporcionalidade no HUD</td><td>OK</td></tr>
+      <tr><td>EF05MA24</td><td>Probabilidade e Estatística</td><td>EndScreen · gráfico de barras saldo × dia</td><td>OK</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Chapter 04 -->
+<section class="chapter">
+  <div class="chapter-num">04 · Janela de Polimento</div>
+  <h1>Janela de Polimento (10 dias)</h1>
+
+  <p class="lead">
+    Este capítulo é honesto sobre o que <em>não</em> é trabalho pedagógico mas trabalho de produto. As nove habilidades já estão atendidas; o que segue abaixo é polimento de fidelidade Stardew-like, equilíbrio fino e arremate de UX.
+  </p>
+
+  <h2>Frentes de polimento</h2>
+
+  <table>
+    <thead>
+      <tr><th>Frente</th><th>Itens</th><th>Prioridade</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Arte</strong></td>
+        <td>Frames adicionais para <code>walkUp</code> e <code>walkSide</code> (atualmente 1 frame, animação estática); revisão dos sprites de crescimento por estágio; afinação de paleta para ficar mais Stardew; retratos finais dos compradores.</td>
+        <td>Alta</td>
+      </tr>
+      <tr>
+        <td><strong>Áudio</strong></td>
+        <td>Trilha ambiente da roça (loop curto), sons de ação (plantar, regar, colher, venda confirmada / recusada), música do mercado noturno. Diretórios <code>Assets/Audio/Music</code> e <code>Assets/Audio/SFX</code> existem vazios.</td>
+        <td>Média</td>
+      </tr>
+      <tr>
+        <td><strong>Balanceamento</strong></td>
+        <td>Decidir se os custos de stamina <strong>3 / 2 / 3</strong> dos assets prevalecem ou se voltamos para o GDD original <strong>1 / 1 / 1</strong>. A diferença muda o tempo médio de partida e a pressão sobre Açaí.</td>
+        <td>Alta</td>
+      </tr>
+      <tr>
+        <td><strong>UX do mercado</strong></td>
+        <td>Substituir <code>TMP_Dropdown</code> por três botões Mandioca / Cacau / Açaí (mais fiel ao Stardew, sem aviso de template no console). Ajustes de espaçamento da nova quantidade no painel.</td>
+        <td>Alta</td>
+      </tr>
+      <tr>
+        <td><strong>Tela final</strong></td>
+        <td>Adicionar mensagem educacional contextualizada (já presente em três variantes), gráfico mais cuidado, transição com fade.</td>
+        <td>Média</td>
+      </tr>
+      <tr>
+        <td><strong>Plataforma</strong></td>
+        <td>Build WebGL para distribuição em Chromebooks da rede pública (sem instalação). Build PC standalone como redundância.</td>
+        <td>Alta</td>
+      </tr>
+      <tr>
+        <td><strong>Editor builders</strong></td>
+        <td>Atualizar <code>HUDBuilder</code> e <code>MarketSceneBuilder</code> para gerar nativamente os novos elementos (atualmente vivem como <em>fallback</em> em runtime).</td>
+        <td>Baixa</td>
+      </tr>
+      <tr>
+        <td><strong>Persistência</strong></td>
+        <td>Histórico de Resumos Noturnos no save (atualmente só o saldo histórico é persistido). Útil para a EndScreen exibir o melhor e o pior dia.</td>
+        <td>Baixa</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Fora do escopo do MVP</h2>
+  <p>
+    Conforme o GDD §10: atravessador como NPC negociador, expansão do grid além de 6×6, múltiplos saves, sistema de NPCs com diálogo, deterioração de estoque, clima. Nada disso é necessário para o argumento educacional do EDD.
+  </p>
+
+  <div class="callout">
+    Decisão pedagógica relevante: o EDD reivindica uma <em>mensagem educacional contextualizada</em> ao final do ciclo (EDD §4.4). Isso já está presente nas três variantes da EndScreen (Falência, Lucro, Sobrevivência). Refinar a redação dessas mensagens é a forma mais barata de aprofundar o link com a BNCC sem mexer em mecânica.
+  </div>
+</section>
+
+<!-- Chapter 05 -->
+<section class="chapter">
+  <div class="chapter-num">05 · Anexo</div>
+  <h1>Anexo</h1>
+
+  <h2>A. Referências</h2>
+  <ul>
+    <li>BRASIL. <strong>Base Nacional Comum Curricular</strong>. Brasília: MEC, 2018.</li>
+    <li>FREIRE, Paulo. <strong>Pedagogia da Autonomia</strong>: saberes necessários à prática educativa. São Paulo: Paz e Terra, 1996.</li>
+    <li>GEE, James Paul. <strong>What Video Games Have to Teach Us About Learning and Literacy</strong>. New York: Palgrave Macmillan, 2007.</li>
+    <li>PRENSKY, Marc. <strong>Digital Game-Based Learning</strong>. New York: McGraw-Hill, 2001.</li>
+    <li>Florestia · GDD.md (v0.1, 2026).</li>
+    <li>Florestia · EDD.md (v0.1, 2026).</li>
+  </ul>
+
+  <h2>B. Glossário</h2>
+  <p><strong>Habilidade BNCC</strong> · unidade mínima de competência prevista pela Base Nacional Comum Curricular, identificada pelo código EF[ano][componente][número] (e.g. EF05MA06 = 5º ano · Matemática · habilidade 6).</p>
+  <p><strong>Protótipo</strong> · estado em que o loop completo do jogo é executável e as mecânicas centrais funcionam, mas a fidelidade visual, sonora e de balanceamento ainda é provisória.</p>
+  <p><strong>MVP</strong> · <em>Minimum Viable Product</em>, a versão entregável capaz de sustentar a apresentação ao público pedagógico. Exige a janela de polimento descrita no Capítulo 04.</p>
+  <p><strong>Resumo Noturno</strong> · modal exibido entre a venda no mercado e o avanço do dia, contendo a tabela de vendas, receita, custo fixo e saldo do dia. Especificado em GDD §7.</p>
+  <p><strong>EDD / GDD</strong> · Educational Design Document e Game Design Document, respectivamente, do Florestia.</p>
+
+  <h2>C. Créditos</h2>
+  <p>Equipe Florestia (CC7NA · CESUPA · 2026): Carlos Eduardo, Gabriel Mattos, Giovanni Braga (responsável pelo EDD e pela camada educacional), Gustavo Teixeira, Luiz Eduardo, Pedro Miguel.</p>
+  <p>Documento gerado para auditoria pedagógica do protótipo do Florestia, projeto-candidato ao Amazon Hacking 2026 (eixo Educação Comunitária / Vila Jutaí, Moju-PA).</p>
+</section>
+
+</body>
+</html>
