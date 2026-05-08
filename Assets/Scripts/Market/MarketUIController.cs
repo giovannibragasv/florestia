@@ -76,7 +76,9 @@ public class MarketUIController : MonoBehaviour
     {
         _selectedBuyer = buyer;
         buyerPortrait.sprite = buyer.portrait;
-        buyerDialogueLine.text = "";
+        buyerPortrait.preserveAspect = true;
+        buyerDialogueLine.color = new Color(0.96f, 0.88f, 0.68f, 1f);
+        buyerDialogueLine.text = buyer.buyerName;
     }
 
     void OnSellClicked()
@@ -87,6 +89,9 @@ public class MarketUIController : MonoBehaviour
             _selectedBuyer, _selectedCrop, 1,
             PricingSystem.Instance.GetAskingPrice(_selectedCrop));
 
+        buyerDialogueLine.color = sold
+            ? new Color(0.55f, 0.9f, 0.45f, 1f)
+            : new Color(1f, 0.48f, 0.36f, 1f);
         buyerDialogueLine.text = sold ? _selectedBuyer.acceptLine : _selectedBuyer.rejectLine;
         HUDController.Instance?.RefreshBalance(GameManager.Instance.Balance);
         RefreshStockLabel();
