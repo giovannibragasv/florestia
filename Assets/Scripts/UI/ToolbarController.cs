@@ -32,6 +32,7 @@ public class ToolbarController : MonoBehaviour
     {
         Selected = tool;
         RefreshHighlight();
+        HUDController.Instance?.RefreshCropPreview(tool);
     }
 
     public void SelectMandioca() => Select(ToolType.Mandioca);

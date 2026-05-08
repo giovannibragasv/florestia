@@ -138,21 +138,33 @@ public class CropSlot : MonoBehaviour
     {
         if (ToolbarController.Instance == null) return;
 
+        bool plantingChanged = false;
+
         switch (ToolbarController.Instance.Selected)
         {
             case ToolType.Mandioca:
             case ToolType.Cacau:
             case ToolType.Acai:
                 CropData crop = CropSystem.Instance?.GetCropData(ToolbarController.Instance.Selected);
-                if (crop != null) TryPlant(crop);
+                if (crop != null && TryPlant(crop)) plantingChanged = true;
                 break;
             case ToolType.Water:
                 TryWater();
                 break;
             case ToolType.Harvest:
                 CropData harvested = TryHarvest();
-                if (harvested != null) InventorySystem.Instance?.AddCrop(harvested.cropName);
+                if (harvested != null)
+                {
+                    InventorySystem.Instance?.AddCrop(harvested.cropName);
+                    plantingChanged = true;
+                }
                 break;
+        }
+
+        if (plantingChanged)
+        {
+            HUDController.Instance?.RefreshBalance(GameManager.Instance.Balance);
+            HUDController.Instance?.RefreshProportionalityCue();
         }
     }
 

@@ -39,6 +39,17 @@ public class CropSystem : MonoBehaviour
                 slot.OnDayEnd();
     }
 
+    public int CountPlantedByCrop(string cropName)
+    {
+        if (slots == null || string.IsNullOrEmpty(cropName)) return 0;
+        int count = 0;
+        foreach (var slot in slots)
+            if (slot != null && slot.Crop != null
+                && string.Equals(slot.Crop.cropName, cropName, System.StringComparison.OrdinalIgnoreCase))
+                count++;
+        return count;
+    }
+
     public CropSlotSaveData[] GetSaveData()
     {
         var data = new CropSlotSaveData[slots.Length];
