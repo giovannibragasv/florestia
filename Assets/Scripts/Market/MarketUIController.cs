@@ -93,7 +93,6 @@ public class MarketUIController : MonoBehaviour
     {
         CropSystem.Instance.OnDayEnd();
         StaminaSystem.Instance.ResetForNewDay();
-        EndScreenController.Instance?.RecordDayBalance(GameManager.Instance.Balance);
         GameManager.Instance.AdvanceDay();
     }
 }

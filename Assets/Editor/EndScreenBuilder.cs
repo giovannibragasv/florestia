@@ -60,8 +60,12 @@ public static class EndScreenBuilder
         var outcome = MakeLabel("OutcomeLabel", ct, "—",
             new Vector2(0, 120), new Vector2(400, 45), 32);
 
+        var educational = MakeLabel("EducationalLabel", ct, "",
+            new Vector2(0, 80), new Vector2(520, 40), 18);
+        educational.color = new Color(0.9f, 0.86f, 0.68f);
+
         var bestCrop = MakeLabel("BestCropLabel", ct, "",
-            new Vector2(0, 70), new Vector2(400, 40), 22);
+            new Vector2(0, 40), new Vector2(400, 40), 22);
         bestCrop.color = new Color(0.8f, 0.8f, 0.8f);
 
         // Chart container
@@ -102,6 +106,7 @@ public static class EndScreenBuilder
                 SerializedObject so = new SerializedObject(esc);
                 so.FindProperty("finalBalanceLabel").objectReferenceValue = finalBalance;
                 so.FindProperty("outcomeLabel").objectReferenceValue      = outcome;
+                so.FindProperty("educationalLabel").objectReferenceValue  = educational;
                 so.FindProperty("bestCropLabel").objectReferenceValue     = bestCrop;
                 so.FindProperty("chartContainer").objectReferenceValue    = chartRT;
                 so.FindProperty("barPrefab").objectReferenceValue         = barPrefab;
