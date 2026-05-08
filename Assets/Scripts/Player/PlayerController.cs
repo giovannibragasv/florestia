@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float interactionRange = 1.0f;
     [SerializeField] KeyCode interactKey = KeyCode.E;
     [SerializeField] SpriteRenderer tileHighlight;
+    [SerializeField] Sprite[] walkDown;
+    [SerializeField] Sprite[] walkUp;
+    [SerializeField] Sprite[] walkSide;
 
     // 0=up  1=right  2=down  3=left  (Stardew convention)
     public int FacingDirection { get; private set; } = 2;
@@ -19,6 +22,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D _rb;
     SpriteRenderer _sr;
     Vector2 _input;
+    float _animTimer;
+    int _animFrame;
 
     void Awake()
     {
@@ -36,6 +41,7 @@ public class PlayerController : MonoBehaviour
         ).normalized;
 
         UpdateFacing();
+        UpdateWalkAnimation();
         UpdateTileHighlight();
 
         if (Input.GetKeyDown(interactKey))
@@ -64,7 +70,30 @@ public class PlayerController : MonoBehaviour
         else
         {
             FacingDirection = _input.y > 0 ? 0 : 2;
+            _sr.flipX = false;
         }
+    }
+
+    void UpdateWalkAnimation()
+    {
+        if (_input == Vector2.zero)
+        {
+            _animTimer = 0f;
+            _animFrame = 0;
+        }
+        else
+        {
+            _animTimer += Time.deltaTime;
+            if (_animTimer >= 0.2f)
+            {
+                _animTimer = 0f;
+                _animFrame = (_animFrame + 1) % 2;
+            }
+        }
+
+        Sprite[] frames = FacingDirection == 0 ? walkUp : FacingDirection == 2 ? walkDown : walkSide;
+        if (frames != null && frames.Length > _animFrame && frames[_animFrame] != null)
+            _sr.sprite = frames[_animFrame];
     }
 
     void UpdateTileHighlight()
@@ -77,9 +106,11 @@ public class PlayerController : MonoBehaviour
         CropSlot found = FindSlotNear(targetPos);
         tileHighlight.gameObject.SetActive(found != null);
         if (found != null)
+        {
             tileHighlight.transform.position = new Vector3(
                 found.transform.position.x,
                 found.transform.position.y, 0f);
+        }
     }
 
     void TryInteract()

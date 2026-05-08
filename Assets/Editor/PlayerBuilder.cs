@@ -22,7 +22,9 @@ public static class PlayerBuilder
         col.size = new Vector2(0.55f, 0.55f);
 
         var sr = playerGO.AddComponent<SpriteRenderer>();
-        sr.color = new Color(0.45f, 0.72f, 1f); // blue placeholder
+        sr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(
+            "Assets/Sprites/Player/player_walk_down_0.png");
+        sr.color = Color.white;
         sr.sortingOrder = 10;
 
         // Tile highlight child
@@ -41,11 +43,28 @@ public static class PlayerBuilder
         var pc = playerGO.AddComponent<PlayerController>();
         SerializedObject so = new SerializedObject(pc);
         so.FindProperty("tileHighlight").objectReferenceValue = hlSR;
+        AssignSprites(so.FindProperty("walkDown"),
+            "Assets/Sprites/Player/player_walk_down_0.png",
+            "Assets/Sprites/Player/player_walk_down_1.png");
+        AssignSprites(so.FindProperty("walkUp"),
+            "Assets/Sprites/Player/player_walk_up_0.png",
+            "Assets/Sprites/Player/player_walk_up_0.png");
+        AssignSprites(so.FindProperty("walkSide"),
+            "Assets/Sprites/Player/player_walk_side_0.png",
+            "Assets/Sprites/Player/player_walk_side_0.png");
         so.ApplyModifiedPropertiesWithoutUndo();
 
         Selection.activeGameObject = playerGO;
         Debug.Log(
-            "Player built. Assign your player sprite to the SpriteRenderer. " +
-            "WASD to move, E to interact with the highlighted tile.");
+            "Player built. WASD to move, E to interact with the highlighted tile.");
+    }
+
+    static void AssignSprites(SerializedProperty prop, string frame0, string frame1)
+    {
+        prop.arraySize = 2;
+        prop.GetArrayElementAtIndex(0).objectReferenceValue =
+            AssetDatabase.LoadAssetAtPath<Sprite>(frame0);
+        prop.GetArrayElementAtIndex(1).objectReferenceValue =
+            AssetDatabase.LoadAssetAtPath<Sprite>(frame1);
     }
 }
