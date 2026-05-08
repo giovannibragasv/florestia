@@ -71,7 +71,7 @@ public static class MarketSceneBuilder
         var portraitRT = MakeRect("BuyerPortrait", leftPanel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
             new Vector2(0.5f, 1f), new Vector2(0f, -28f), new Vector2(170f, 220f));
         var portrait = portraitRT.gameObject.AddComponent<Image>();
-        portrait.color = new Color(0.08f, 0.07f, 0.06f, 1f);
+        portrait.color = Color.white;
         portrait.preserveAspect = true;
 
         var dialogueLabel = MakeLabel("BuyerDialogueLine", leftPanel, "Escolha um comprador.",
@@ -111,7 +111,7 @@ public static class MarketSceneBuilder
 
         var sliderRT = MakeRect("PriceSlider", tradePanel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
             new Vector2(0.5f, 0.5f), new Vector2(110f, 118f), new Vector2(300f, 34f));
-        var slider = sliderRT.gameObject.AddComponent<Slider>();
+        var slider = MakeSlider(sliderRT);
         slider.minValue = 1f;
         slider.maxValue = 50f;
         slider.value = 7f;
@@ -155,6 +155,7 @@ public static class MarketSceneBuilder
         muicBuyerSO.ApplyModifiedPropertiesWithoutUndo();
 
         Selection.activeGameObject = panel.gameObject;
+        FontAssigner.Assign();
         Debug.Log("Polished Market Scene UI built and wired.");
     }
 
@@ -197,6 +198,35 @@ public static class MarketSceneBuilder
         var label = MakeLabel(name + "_Text", rt, text, Vector2.zero,
             new Vector2(190f, 38f), 19, TextAlignmentOptions.Center, Cream);
         return label;
+    }
+
+    static Slider MakeSlider(RectTransform root)
+    {
+        var slider = root.gameObject.AddComponent<Slider>();
+        slider.direction = Slider.Direction.LeftToRight;
+        slider.wholeNumbers = false;
+
+        var background = MakeRect("Background", root, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f),
+            new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(-18f, 12f));
+        background.gameObject.AddComponent<Image>().color = new Color(0.24f, 0.17f, 0.11f, 1f);
+
+        var fillArea = MakeRect("Fill Area", root, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f),
+            new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(-28f, 16f));
+        var fill = MakeRect("Fill", fillArea, new Vector2(0f, 0f), new Vector2(1f, 1f),
+            new Vector2(0f, 0.5f), Vector2.zero, Vector2.zero);
+        fill.gameObject.AddComponent<Image>().color = Gold;
+
+        var handleArea = MakeRect("Handle Slide Area", root, new Vector2(0f, 0f), new Vector2(1f, 1f),
+            new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(-28f, 0f));
+        var handle = MakeRect("Handle", handleArea, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f),
+            new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(28f, 34f));
+        var handleImage = handle.gameObject.AddComponent<Image>();
+        handleImage.color = new Color(1f, 0.79f, 0.26f, 1f);
+
+        slider.fillRect = fill;
+        slider.handleRect = handle;
+        slider.targetGraphic = handleImage;
+        return slider;
     }
 
     static Button MakeButton(string name, string label, Transform parent,

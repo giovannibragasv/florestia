@@ -14,6 +14,7 @@ public class CropSlot : MonoBehaviour
 
     SpriteRenderer _soilRenderer;  // on this GO — soil / watered soil
     SpriteRenderer _cropRenderer;  // child GO — crop growth stage
+    SpriteRenderer _waterOverlayRenderer; // child GO — clear watered feedback above growth art
 
     public bool IsEmpty  => _crop == null;
     public bool IsReady  => _crop != null && _daysPlanted >= _crop.growthDays;
@@ -33,7 +34,13 @@ public class CropSlot : MonoBehaviour
         var cropGO = new GameObject("CropSprite");
         cropGO.transform.SetParent(transform, false);
         _cropRenderer = cropGO.AddComponent<SpriteRenderer>();
-        _cropRenderer.sortingOrder = _soilRenderer.sortingOrder + 1;
+        _cropRenderer.sortingOrder = _soilRenderer.sortingOrder + 2;
+
+        var waterGO = new GameObject("WateredOverlay");
+        waterGO.transform.SetParent(transform, false);
+        _waterOverlayRenderer = waterGO.AddComponent<SpriteRenderer>();
+        _waterOverlayRenderer.sortingOrder = _soilRenderer.sortingOrder + 3;
+        _waterOverlayRenderer.color = new Color(0.85f, 0.95f, 1f, 0.62f);
 
         if (!TryGetComponent(out BoxCollider2D col) || col == null)
             col = gameObject.AddComponent<BoxCollider2D>();
@@ -103,6 +110,13 @@ public class CropSlot : MonoBehaviour
         {
             bool showWatered = _wateredToday && soilWateredSprite != null;
             _soilRenderer.sprite = showWatered ? soilWateredSprite : soilSprite;
+        }
+
+        if (_waterOverlayRenderer != null)
+        {
+            bool showOverlay = _wateredToday && soilWateredSprite != null;
+            _waterOverlayRenderer.sprite = showOverlay ? soilWateredSprite : null;
+            _waterOverlayRenderer.gameObject.SetActive(showOverlay);
         }
 
         // Crop layer

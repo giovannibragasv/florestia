@@ -76,6 +76,7 @@ public class MarketUIController : MonoBehaviour
     {
         _selectedBuyer = buyer;
         buyerPortrait.sprite = buyer.portrait;
+        buyerPortrait.color = Color.white;
         buyerPortrait.preserveAspect = true;
         buyerDialogueLine.color = new Color(0.96f, 0.88f, 0.68f, 1f);
         buyerDialogueLine.text = buyer.buyerName;

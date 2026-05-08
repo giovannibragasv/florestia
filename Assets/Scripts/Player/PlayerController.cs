@@ -15,8 +15,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Vector2 mapMin = new Vector2(-3.5f, -2.45f);
     [SerializeField] Vector2 mapMax = new Vector2(7.5f, 7.45f);
     [SerializeField] float forwardSelectDistance = 1.45f;
-    [SerializeField] float lateralSelectTolerance = 0.75f;
-    [SerializeField] float backwardSelectTolerance = 0.3f;
+    [SerializeField] float lateralSelectTolerance = 0.62f;
+    [SerializeField] float backwardSelectTolerance = 0.05f;
+    [SerializeField] float waterRepeatInterval = 0.16f;
 
     // 0=up  1=right  2=down  3=left  (Stardew convention)
     public int FacingDirection { get; private set; } = 2;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
     CropSlot[] _cachedSlots;
     Vector2 _input;
     float _animTimer;
+    float _nextWaterUseTime;
     int _animFrame;
 
     void Awake()
@@ -50,8 +52,19 @@ public class PlayerController : MonoBehaviour
         UpdateWalkAnimation();
         UpdateTileHighlight();
 
-        if (Input.GetKeyDown(interactKey))
+        bool pressedUse = Input.GetKeyDown(interactKey) || Input.GetKeyDown(KeyCode.Space);
+        bool holdingWater = ToolbarController.Instance != null
+            && ToolbarController.Instance.Selected == ToolType.Water
+            && Input.GetKey(interactKey)
+            && Time.time >= _nextWaterUseTime;
+
+        if (pressedUse || holdingWater)
+        {
             TryInteract();
+            if (ToolbarController.Instance != null &&
+                ToolbarController.Instance.Selected == ToolType.Water)
+                _nextWaterUseTime = Time.time + waterRepeatInterval;
+        }
     }
 
     void FixedUpdate()
@@ -137,11 +150,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void TryInteract()
+    bool TryInteract()
     {
-        if (ToolbarController.Instance == null) return;
+        if (ToolbarController.Instance == null) return false;
 
-        FindSlotInFacingDirection()?.Interact();
+        CropSlot slot = FindSlotInFacingDirection();
+        if (slot == null) return false;
+        slot.Interact();
+        return true;
     }
 
     CropSlot FindSlotInFacingDirection()
@@ -150,7 +166,7 @@ public class PlayerController : MonoBehaviour
 
         Vector2 origin = transform.position;
         Vector2 forward = FacingOffset[FacingDirection];
-        Vector2 target = origin + forward * interactionRange;
+        float targetForwardDistance = Mathf.Clamp(interactionRange, 0.75f, forwardSelectDistance);
         CropSlot best = null;
         float bestScore = float.MaxValue;
 
@@ -169,9 +185,9 @@ public class PlayerController : MonoBehaviour
             if (lateralDistance > lateralSelectTolerance)
                 continue;
 
-            float distanceToTarget = Vector2.Distance(slot.transform.position, target);
-            float behindPenalty = forwardDistance < 0f ? 1f : 0f;
-            float score = distanceToTarget + lateralDistance * 0.5f + behindPenalty;
+            float forwardError = Mathf.Abs(forwardDistance - targetForwardDistance);
+            float behindPenalty = forwardDistance < 0f ? 3f : 0f;
+            float score = forwardError + lateralDistance * 1.35f + behindPenalty;
             if (score < bestScore)
             {
                 bestScore = score;
