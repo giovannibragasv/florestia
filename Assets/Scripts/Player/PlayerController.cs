@@ -110,6 +110,10 @@ public class PlayerController : MonoBehaviour
             tileHighlight.transform.position = new Vector3(
                 found.transform.position.x,
                 found.transform.position.y, 0f);
+            float alpha = 0.3f + 0.15f * Mathf.Sin(Time.time * 4f);
+            Color c = tileHighlight.color;
+            c.a = alpha;
+            tileHighlight.color = c;
         }
     }
 
