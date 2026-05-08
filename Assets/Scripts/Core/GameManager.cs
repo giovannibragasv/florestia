@@ -24,6 +24,16 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     void OnDestroy()
     {
         if (Instance == this) Instance = null;
@@ -31,6 +41,14 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        SaveData loaded = SaveSystem.Load();
+        if (loaded != null) ApplySave(loaded);
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != "FarmScene") return;
+
         SaveData loaded = SaveSystem.Load();
         if (loaded != null) ApplySave(loaded);
     }
@@ -78,17 +96,34 @@ public class GameManager : MonoBehaviour
 
     public void GoToMarket()
     {
+        if (CropSystem.Instance != null)
+            CropSystem.Instance.OnDayEnd();
+
+        if (StaminaSystem.Instance != null)
+            StaminaSystem.Instance.ResetForNewDay();
+
+        SaveSystem.Save(BuildSaveData());
         SceneManager.LoadScene("MarketScene");
     }
 
     SaveData BuildSaveData()
     {
+        SaveData existing = SaveSystem.Load();
+        InventorySaveData inventory = existing?.inventory;
+        CropSlotSaveData[] cropSlots = existing?.cropSlots;
+
+        if (InventorySystem.Instance != null)
+            inventory = InventorySystem.Instance.GetSaveData();
+
+        if (CropSystem.Instance != null)
+            cropSlots = CropSystem.Instance.GetSaveData();
+
         return new SaveData
         {
             day = CurrentDay,
             balance = Balance,
-            inventory = InventorySystem.Instance.GetSaveData(),
-            cropSlots = CropSystem.Instance.GetSaveData(),
+            inventory = inventory,
+            cropSlots = cropSlots,
             dailyBalanceHistory = DailyBalances.ToArray()
         };
     }

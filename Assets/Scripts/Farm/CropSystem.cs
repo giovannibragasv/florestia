@@ -13,6 +13,11 @@ public class CropSystem : MonoBehaviour
         Instance = this;
     }
 
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
+
     public CropData GetCropData(ToolType tool)
     {
         if (cropCatalog == null) return null;
@@ -28,7 +33,10 @@ public class CropSystem : MonoBehaviour
 
     public void OnDayEnd()
     {
-        foreach (var slot in slots) slot.OnDayEnd();
+        if (slots == null) return;
+        foreach (var slot in slots)
+            if (slot != null)
+                slot.OnDayEnd();
     }
 
     public CropSlotSaveData[] GetSaveData()

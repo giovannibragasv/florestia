@@ -23,6 +23,11 @@ public class DayNightCycle : MonoBehaviour
         Instance = this;
     }
 
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
+
     void Update()
     {
         if (_paused) return;
@@ -33,13 +38,15 @@ public class DayNightCycle : MonoBehaviour
         if (!_warningShown && TimeRemaining <= warningThreshold)
         {
             _warningShown = true;
-            nightWarningPanel?.SetActive(true);
+            if (nightWarningPanel != null)
+                nightWarningPanel.SetActive(true);
         }
 
         if (_elapsed >= GameManager.DayDurationSeconds)
         {
             _paused = true;
-            nightWarningPanel?.SetActive(false);
+            if (nightWarningPanel != null)
+                nightWarningPanel.SetActive(false);
             GameManager.Instance.GoToMarket();
         }
     }
@@ -72,7 +79,8 @@ public class DayNightCycle : MonoBehaviour
         _elapsed = 0f;
         _warningShown = false;
         _paused = false;
-        nightWarningPanel?.SetActive(false);
+        if (nightWarningPanel != null)
+            nightWarningPanel.SetActive(false);
         UpdateSkyColor();
     }
 }

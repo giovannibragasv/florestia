@@ -94,9 +94,6 @@ public class MarketUIController : MonoBehaviour
 
     void OnEndDayClicked()
     {
-        CropSystem.Instance.OnDayEnd();
-        StaminaSystem.Instance.ResetForNewDay();
-        DayNightCycle.Instance?.ResetDay();
         GameManager.Instance.AdvanceDay();
     }
 }

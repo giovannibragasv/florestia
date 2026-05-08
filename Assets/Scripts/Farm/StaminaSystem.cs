@@ -13,6 +13,11 @@ public class StaminaSystem : MonoBehaviour
         Instance = this;
     }
 
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
+
     public bool TrySpend(int amount)
     {
         if (Current < amount) return false;
