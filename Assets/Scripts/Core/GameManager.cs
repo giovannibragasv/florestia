@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +13,9 @@ public class GameManager : MonoBehaviour
 
     public int CurrentDay { get; private set; } = 1;
     public float Balance { get; private set; } = StartingBalance;
-    public bool IsGameOver => CurrentDay > TotalDays;
+    public bool IsLoss { get; private set; }
+    public List<float> DailyBalances { get; private set; } = new();
+    public bool IsGameOver => CurrentDay > TotalDays || IsLoss;
 
     void Awake()
     {
@@ -53,6 +56,15 @@ public class GameManager : MonoBehaviour
     {
         CurrentDay++;
         ApplyDailyFixedCost();
+        DailyBalances.Add(Balance);
+
+        if (Balance < 0)
+        {
+            IsLoss = true;
+            SceneManager.LoadScene("EndScreen");
+            return;
+        }
+
         SaveSystem.Save(BuildSaveData());
 
         if (IsGameOver)
@@ -77,9 +89,7 @@ public class GameManager : MonoBehaviour
             balance = Balance,
             inventory = InventorySystem.Instance.GetSaveData(),
             cropSlots = CropSystem.Instance.GetSaveData(),
-            dailyBalanceHistory = EndScreenController.Instance != null
-                ? EndScreenController.Instance.GetBalanceHistory()
-                : new float[0]
+            dailyBalanceHistory = DailyBalances.ToArray()
         };
     }
 
@@ -87,6 +97,9 @@ public class GameManager : MonoBehaviour
     {
         CurrentDay = data.day;
         Balance = data.balance;
+        DailyBalances = data.dailyBalanceHistory != null
+            ? new List<float>(data.dailyBalanceHistory)
+            : new List<float>();
         InventorySystem.Instance?.LoadSaveData(data.inventory);
         CropSystem.Instance?.LoadSaveData(data.cropSlots);
     }
