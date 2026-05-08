@@ -10,7 +10,7 @@ public static class MarketSceneBuilder
     {
         // --- Systems ---
         var buyerSystem = new GameObject("_BuyerSystem");
-        buyerSystem.AddComponent<BuyerSystem>();
+        var buyerSystemComponent = buyerSystem.AddComponent<BuyerSystem>();
         Undo.RegisterCreatedObjectUndo(buyerSystem, "Build Market Scene");
 
         var marketUI = new GameObject("_MarketUI");
@@ -149,8 +149,26 @@ public static class MarketSceneBuilder
 
         // --- Wire BuyerSelector ---
         var bs = buyerSelector.AddComponent<BuyerSelector>();
+        BuyerData[] buyers =
+        {
+            AssetDatabase.LoadAssetAtPath<BuyerData>("Assets/Data/Buyers/Atravessador.asset"),
+            AssetDatabase.LoadAssetAtPath<BuyerData>("Assets/Data/Buyers/Feirante.asset"),
+            AssetDatabase.LoadAssetAtPath<BuyerData>("Assets/Data/Buyers/CompradorDireto.asset")
+        };
+
+        SerializedObject buyerSystemSO = new SerializedObject(buyerSystemComponent);
+        var buyersProp = buyerSystemSO.FindProperty("buyers");
+        buyersProp.arraySize = buyers.Length;
+        for (int i = 0; i < buyers.Length; i++)
+            buyersProp.GetArrayElementAtIndex(i).objectReferenceValue = buyers[i];
+        buyerSystemSO.ApplyModifiedPropertiesWithoutUndo();
+
         SerializedObject bsSO = new SerializedObject(bs);
         bsSO.FindProperty("marketUI").objectReferenceValue = muic;
+        var selectorBuyersProp = bsSO.FindProperty("buyers");
+        selectorBuyersProp.arraySize = buyers.Length;
+        for (int i = 0; i < buyers.Length; i++)
+            selectorBuyersProp.GetArrayElementAtIndex(i).objectReferenceValue = buyers[i];
         var btnsProp = bsSO.FindProperty("buyerButtons");
         btnsProp.arraySize = 3;
         btnsProp.GetArrayElementAtIndex(0).objectReferenceValue = btn0;
@@ -158,6 +176,10 @@ public static class MarketSceneBuilder
         btnsProp.GetArrayElementAtIndex(2).objectReferenceValue = btn2;
         bsSO.ApplyModifiedPropertiesWithoutUndo();
 
-        Debug.Log("Market Scene UI built. Assign BuyerData to _BuyerSystem → Buyers in the Inspector.");
+        SerializedObject muicBuyerSO = new SerializedObject(muic);
+        muicBuyerSO.FindProperty("buyerSelector").objectReferenceValue = bs;
+        muicBuyerSO.ApplyModifiedPropertiesWithoutUndo();
+
+        Debug.Log("Market Scene UI built.");
     }
 }
