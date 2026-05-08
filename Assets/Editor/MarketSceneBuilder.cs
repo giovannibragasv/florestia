@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using UnityEngine.EventSystems;
 using TMPro;
 
 public static class MarketSceneBuilder
@@ -26,6 +27,14 @@ public static class MarketSceneBuilder
         canvasGO.AddComponent<CanvasScaler>();
         canvasGO.AddComponent<GraphicRaycaster>();
         Undo.RegisterCreatedObjectUndo(canvasGO, "Build Market Scene");
+
+        if (Object.FindFirstObjectByType<EventSystem>() == null)
+        {
+            var eventSystem = new GameObject("EventSystem");
+            eventSystem.AddComponent<EventSystem>();
+            eventSystem.AddComponent<StandaloneInputModule>();
+            Undo.RegisterCreatedObjectUndo(eventSystem, "Build Market Scene");
+        }
 
         // helper
         RectTransform MakeRect(string name, Transform parent,

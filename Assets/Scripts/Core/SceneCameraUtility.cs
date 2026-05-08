@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public static class SceneCameraUtility
 {
@@ -24,5 +25,16 @@ public static class SceneCameraUtility
             cameraGO.AddComponent<AudioListener>();
 
         return camera;
+    }
+
+    public static EventSystem EnsureEventSystem()
+    {
+        EventSystem eventSystem = Object.FindAnyObjectByType<EventSystem>();
+        if (eventSystem != null) return eventSystem;
+
+        var eventSystemGO = new GameObject("EventSystem");
+        eventSystem = eventSystemGO.AddComponent<EventSystem>();
+        eventSystemGO.AddComponent<StandaloneInputModule>();
+        return eventSystem;
     }
 }
