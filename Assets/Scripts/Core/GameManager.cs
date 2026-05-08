@@ -42,7 +42,15 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         SaveData loaded = SaveSystem.Load();
-        if (loaded != null) ApplySave(loaded);
+        if (IsPlayableSave(loaded))
+        {
+            ApplySave(loaded);
+        }
+        else if (loaded != null)
+        {
+            SaveSystem.Delete();
+            ResetRunState();
+        }
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -94,6 +102,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("FarmScene");
     }
 
+    public void ResetRun()
+    {
+        SaveSystem.Delete();
+        ResetRunState();
+    }
+
     public void GoToMarket()
     {
         if (CropSystem.Instance != null)
@@ -132,10 +146,27 @@ public class GameManager : MonoBehaviour
     {
         CurrentDay = data.day;
         Balance = data.balance;
+        IsLoss = false;
         DailyBalances = data.dailyBalanceHistory != null
             ? new List<float>(data.dailyBalanceHistory)
             : new List<float>();
         InventorySystem.Instance?.LoadSaveData(data.inventory);
         CropSystem.Instance?.LoadSaveData(data.cropSlots);
+    }
+
+    static bool IsPlayableSave(SaveData data)
+    {
+        return data != null
+            && data.day >= 1
+            && data.day <= TotalDays
+            && data.balance >= 0f;
+    }
+
+    void ResetRunState()
+    {
+        CurrentDay = 1;
+        Balance = StartingBalance;
+        IsLoss = false;
+        DailyBalances = new List<float>();
     }
 }
