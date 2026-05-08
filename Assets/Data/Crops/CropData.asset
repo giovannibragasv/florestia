@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e38f6469ed974dfda747e1d8ea8680a, type: 3}
+  m_Name: CropData
+  m_EditorClassIdentifier: Assembly-CSharp::CropData
+  cropName: Mandioca
+  growthDays: 2
+  seedCost: 3
+  baseMarketValue: 7
+  growthStageSprites:
+  - {fileID: 21300000, guid: bc6b8b9a866a842049173c82b2c49167, type: 3}
+  - {fileID: 21300000, guid: 64166be7a09394bf48df442d5f02439c, type: 3}
+  - {fileID: 21300000, guid: 464ffad82cf5b4af295c18c379044d31, type: 3}
+  staminaCostToPlant: 3
+  staminaCostToWater: 2
+  staminaCostToHarvest: 3

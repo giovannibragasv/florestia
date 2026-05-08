@@ -17,5 +17,5 @@ MonoBehaviour:
   maxPriceMandioca: 7
   maxPriceCacau: 15
   maxPriceAcai: 26
-  rejectLine: Não tenho esse dinheiro não.
+  rejectLine: "N\xE3o tenho esse dinheiro n\xE3o."
   acceptLine: Trato feito! Boa mercadoria.

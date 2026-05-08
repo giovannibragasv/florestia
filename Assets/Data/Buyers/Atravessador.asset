@@ -17,5 +17,5 @@ MonoBehaviour:
   maxPriceMandioca: 5
   maxPriceCacau: 12
   maxPriceAcai: 20
-  rejectLine: Tá caro demais, amigo.
+  rejectLine: "T\xE1 caro demais, amigo."
   acceptLine: Feito! Vendo logo.
