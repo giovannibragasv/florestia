@@ -620,6 +620,10 @@
     Este capítulo é honesto sobre o que <em>não</em> é trabalho pedagógico mas trabalho de produto. As nove habilidades já estão atendidas; o que segue abaixo é polimento de fidelidade Stardew-like, equilíbrio fino e arremate de UX.
   </p>
 
+  <div class="callout">
+    <strong>Princípio reitor desta janela.</strong> O público é a criança de 8–11 anos em sala de aula, não o playtester adulto nem o revisor pedagógico. Densidade de informação, notação percentual, telas de planilha financeira e tom clínico são padrões anti-criança e precisam sair antes da entrega. As mecânicas educacionais já existem; o que falta é a interface que torna essas mecânicas legíveis para o público real.
+  </div>
+
   <h2>Frentes de polimento</h2>
 
   <table>
@@ -627,6 +631,20 @@
       <tr><th>Frente</th><th>Itens</th><th>Prioridade</th></tr>
     </thead>
     <tbody>
+      <tr>
+        <td><strong>UX do mercado · crítica</strong></td>
+        <td>
+          Refazer a tela do <em>Mercado Noturno</em> em layout amigável a criança: substituir os dois sliders empilhados por um <em>stepper</em> grande <code>◀ [4] ▶</code> de quantidade; remover a notação percentual do HUD (a margem se comunica por cor verde / vermelho, não por <em>+426 %</em>); rótulo do botão de venda atualiza dinamicamente para <em>"Vender 4 mandiocas"</em>; retrato do comprador domina o terço esquerdo com balão de fala; substituir o <code>TMP_Dropdown</code> por três botões grandes Mandioca / Cacau / Açaí. Os <em>fallbacks</em> em runtime introduzidos nesta sessão estão sobrepondo elementos do <code>MarketSceneBuilder</code> e precisam ser substituídos pelo <em>builder</em> definitivo.
+        </td>
+        <td>Crítica</td>
+      </tr>
+      <tr>
+        <td><strong>UX da tela final · crítica</strong></td>
+        <td>
+          A EndScreen atual é clínica para uma criança que acabou de perder. Trocar por: ilustração-herói grande conforme o desfecho (rosto compreensivo na falência, pilha de moedas no lucro), frase única encorajadora ("<em>Você quebrou no dia 9. Tenta de novo!</em>"), gráfico de barras com rótulos de dia, linha de zero horizontal, marca visual no dia da virada, e mensagem educacional <strong>contextualizada ao que a criança fez</strong> ("você vendeu mandioca por R$3, o mesmo preço da semente — tente cobrar mais") em vez do conselho genérico atual.
+        </td>
+        <td>Crítica</td>
+      </tr>
       <tr>
         <td><strong>Arte</strong></td>
         <td>Frames adicionais para <code>walkUp</code> e <code>walkSide</code> (atualmente 1 frame, animação estática); revisão dos sprites de crescimento por estágio; afinação de paleta para ficar mais Stardew; retratos finais dos compradores.</td>
@@ -643,24 +661,14 @@
         <td>Alta</td>
       </tr>
       <tr>
-        <td><strong>UX do mercado</strong></td>
-        <td>Substituir <code>TMP_Dropdown</code> por três botões Mandioca / Cacau / Açaí (mais fiel ao Stardew, sem aviso de template no console). Ajustes de espaçamento da nova quantidade no painel.</td>
-        <td>Alta</td>
-      </tr>
-      <tr>
-        <td><strong>Tela final</strong></td>
-        <td>Adicionar mensagem educacional contextualizada (já presente em três variantes), gráfico mais cuidado, transição com fade.</td>
-        <td>Média</td>
-      </tr>
-      <tr>
         <td><strong>Plataforma</strong></td>
         <td>Build WebGL para distribuição em Chromebooks da rede pública (sem instalação). Build PC standalone como redundância.</td>
         <td>Alta</td>
       </tr>
       <tr>
         <td><strong>Editor builders</strong></td>
-        <td>Atualizar <code>HUDBuilder</code> e <code>MarketSceneBuilder</code> para gerar nativamente os novos elementos (atualmente vivem como <em>fallback</em> em runtime).</td>
-        <td>Baixa</td>
+        <td>Atualizar <code>HUDBuilder</code> e <code>MarketSceneBuilder</code> para gerar nativamente os novos elementos no layout final amigável a criança (atualmente vivem como <em>fallback</em> em runtime e estão sobrepondo a UI existente).</td>
+        <td>Crítica</td>
       </tr>
       <tr>
         <td><strong>Persistência</strong></td>
@@ -669,6 +677,12 @@
       </tr>
     </tbody>
   </table>
+
+  <h2>Auditoria de UX por idade</h2>
+
+  <p>
+    Antes de declarar qualquer tela acabada, aplicar o teste de leitura de dez segundos: <em>uma criança de oito anos, em sala de aula, sem um adulto explicando, entende o que a tela está dizendo?</em> Se não, a tela ainda não está pronta — independentemente de quão correta esteja a matemática por trás. Esse teste vale especialmente para o Mercado Noturno e a EndScreen, que são os pontos de contato com a maior densidade de informação financeira.
+  </p>
 
   <h2>Fora do escopo do MVP</h2>
   <p>
