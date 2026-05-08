@@ -13,10 +13,17 @@ public class CropSystem : MonoBehaviour
         Instance = this;
     }
 
-    public CropData GetCropData(int index)
+    public CropData GetCropData(ToolType tool)
     {
-        if (cropCatalog == null || index < 0 || index >= cropCatalog.Length) return null;
-        return cropCatalog[index];
+        if (cropCatalog == null) return null;
+        // Try exact index first
+        int index = (int)tool;
+        if (index >= 0 && index < cropCatalog.Length && cropCatalog[index] != null)
+            return cropCatalog[index];
+        // Fallback: match by name (handles un-ordered or partially assigned catalogs)
+        string name = tool.ToString();
+        return System.Array.Find(cropCatalog,
+            c => c != null && string.Equals(c.cropName, name, System.StringComparison.OrdinalIgnoreCase));
     }
 
     public void OnDayEnd()

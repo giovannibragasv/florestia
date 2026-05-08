@@ -4,25 +4,38 @@ public class CropSlot : MonoBehaviour
 {
     public int SlotIndex;
 
+    [SerializeField] Sprite soilSprite;
+    [SerializeField] Sprite soilWateredSprite;
+
     CropData _crop;
     int _daysPlanted;
     bool _wateredToday;
-    SpriteRenderer _renderer;
 
-    public bool IsEmpty => _crop == null;
-    public bool IsReady => _crop != null && _daysPlanted >= _crop.growthDays;
+    SpriteRenderer _soilRenderer;  // on this GO — soil / watered soil
+    SpriteRenderer _cropRenderer;  // child GO — crop growth stage
+
+    public bool IsEmpty  => _crop == null;
+    public bool IsReady  => _crop != null && _daysPlanted >= _crop.growthDays;
     public bool NeedsWater => _crop != null && !_wateredToday && !IsReady;
     public CropData Crop => _crop;
 
     void Awake()
     {
-        _renderer = GetComponent<SpriteRenderer>();
+        _soilRenderer = GetComponent<SpriteRenderer>();
+
+        var cropGO = new GameObject("CropSprite");
+        cropGO.transform.SetParent(transform, false);
+        _cropRenderer = cropGO.AddComponent<SpriteRenderer>();
+        _cropRenderer.sortingOrder = _soilRenderer.sortingOrder + 1;
+
         if (GetComponent<Collider2D>() == null)
         {
             var col = gameObject.AddComponent<BoxCollider2D>();
-            col.isTrigger = true; // walkable — player passes through, OverlapCircle still detects
+            col.isTrigger = true;
         }
     }
+
+    void Start() => RefreshSprite();
 
     public bool TryPlant(CropData crop)
     {
@@ -44,6 +57,7 @@ public class CropSlot : MonoBehaviour
         if (!StaminaSystem.Instance.TrySpend(_crop.staminaCostToWater)) return false;
 
         _wateredToday = true;
+        RefreshSprite();
         return true;
     }
 
@@ -70,9 +84,26 @@ public class CropSlot : MonoBehaviour
 
     void RefreshSprite()
     {
-        if (_crop == null) { _renderer.sprite = null; return; }
-        int stage = Mathf.Min(_daysPlanted, _crop.growthStageSprites.Length - 1);
-        _renderer.sprite = _crop.growthStageSprites[stage];
+        // Soil layer — always visible; darken when watered
+        if (_soilRenderer != null)
+        {
+            bool showWatered = _wateredToday && _crop != null && soilWateredSprite != null;
+            _soilRenderer.sprite = showWatered ? soilWateredSprite : soilSprite;
+        }
+
+        // Crop layer
+        if (_cropRenderer != null)
+        {
+            if (_crop == null)
+            {
+                _cropRenderer.sprite = null;
+            }
+            else
+            {
+                int stage = Mathf.Min(_daysPlanted, _crop.growthStageSprites.Length - 1);
+                _cropRenderer.sprite = _crop.growthStageSprites[stage];
+            }
+        }
     }
 
     public void Interact()
@@ -84,7 +115,7 @@ public class CropSlot : MonoBehaviour
             case ToolType.Mandioca:
             case ToolType.Cacau:
             case ToolType.Acai:
-                CropData crop = CropSystem.Instance?.GetCropData((int)ToolbarController.Instance.Selected);
+                CropData crop = CropSystem.Instance?.GetCropData(ToolbarController.Instance.Selected);
                 if (crop != null) TryPlant(crop);
                 break;
             case ToolType.Water:
@@ -99,15 +130,15 @@ public class CropSlot : MonoBehaviour
 
     public CropSlotSaveData GetSaveData() => new CropSlotSaveData
     {
-        slotIndex = SlotIndex,
-        cropType = _crop != null ? _crop.cropName : "",
-        daysPlanted = _daysPlanted,
-        isWatered = _wateredToday
+        slotIndex    = SlotIndex,
+        cropType     = _crop != null ? _crop.cropName : "",
+        daysPlanted  = _daysPlanted,
+        isWatered    = _wateredToday
     };
 
     public void LoadSaveData(CropSlotSaveData data, CropData resolvedCrop)
     {
-        _crop = resolvedCrop;
+        _crop        = resolvedCrop;
         _daysPlanted = data.daysPlanted;
         _wateredToday = data.isWatered;
         RefreshSprite();

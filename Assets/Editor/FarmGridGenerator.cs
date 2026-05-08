@@ -6,21 +6,18 @@ public static class FarmGridGenerator
     [MenuItem("Florestia/Generate 6x6 Farm Grid")]
     static void GenerateGrid()
     {
-        // Remove any existing FarmGrid
         var existing = GameObject.Find("FarmGrid");
-        if (existing != null)
-        {
-            Undo.DestroyObjectImmediate(existing);
-        }
+        if (existing != null) Undo.DestroyObjectImmediate(existing);
 
         Sprite soilSprite = AssetDatabase.LoadAssetAtPath<Sprite>(
             "Assets/Sprites/Terrain/terrain_soil.png");
+        Sprite soilWateredSprite = AssetDatabase.LoadAssetAtPath<Sprite>(
+            "Assets/Sprites/Terrain/terrain_soil_watered.png");
 
         var cropSystem = GameObject.Find("_CropSystem");
         CropSystem cs = cropSystem != null ? cropSystem.GetComponent<CropSystem>() : null;
         SerializedObject csSO = cs != null ? new SerializedObject(cs) : null;
         SerializedProperty slotsProp = csSO?.FindProperty("slots");
-
         if (slotsProp != null) slotsProp.arraySize = 36;
 
         GameObject parent = new GameObject("FarmGrid");
@@ -36,13 +33,18 @@ public static class FarmGridGenerator
                 slot.transform.localPosition = new Vector3(col * 1.1f, row * 1.1f, 0f);
 
                 SpriteRenderer sr = slot.AddComponent<SpriteRenderer>();
-                if (soilSprite != null)
-                    sr.sprite = soilSprite;
-                else
-                    sr.color = new Color(0.55f, 0.35f, 0.15f, 1f);
+                sr.sprite = soilSprite != null ? soilSprite : null;
+                if (soilSprite == null) sr.color = new Color(0.55f, 0.35f, 0.15f, 1f);
+                sr.sortingOrder = 0;
 
                 CropSlot cropSlot = slot.AddComponent<CropSlot>();
                 cropSlot.SlotIndex = index;
+
+                // Assign soil sprites to CropSlot serialized fields
+                SerializedObject slotSO = new SerializedObject(cropSlot);
+                slotSO.FindProperty("soilSprite").objectReferenceValue = soilSprite;
+                slotSO.FindProperty("soilWateredSprite").objectReferenceValue = soilWateredSprite;
+                slotSO.ApplyModifiedPropertiesWithoutUndo();
 
                 if (slotsProp != null)
                     slotsProp.GetArrayElementAtIndex(index).objectReferenceValue = cropSlot;
@@ -56,8 +58,9 @@ public static class FarmGridGenerator
         Selection.activeGameObject = parent;
         EditorUtility.SetDirty(parent);
 
-        string spriteMsg = soilSprite != null ? "terrain_soil sprite assigned." : "No terrain_soil found — assign sprites manually.";
-        string csMsg = cs != null ? "_CropSystem Slots auto-wired." : "_CropSystem not found — assign slots manually.";
-        Debug.Log($"Farm grid generated: 36 CropSlot objects under FarmGrid. {spriteMsg} {csMsg}");
+        string soilMsg  = soilSprite        != null ? "soil sprite assigned."        : "No terrain_soil — assign manually.";
+        string waterMsg = soilWateredSprite != null ? "watered sprite assigned."     : "No terrain_soil_watered — assign manually.";
+        string csMsg    = cs               != null ? "_CropSystem slots auto-wired." : "_CropSystem not found — assign manually.";
+        Debug.Log($"Farm grid generated: 36 CropSlots. {soilMsg} {waterMsg} {csMsg}");
     }
 }

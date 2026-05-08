@@ -8,8 +8,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float moveSpeed = 3.5f;
     [SerializeField] float interactionRange = 1.0f;
     [SerializeField] KeyCode interactKey = KeyCode.E;
+    [SerializeField] SpriteRenderer tileHighlight;
 
-    // 0=up 1=right 2=down 3=left  (Stardew convention)
+    // 0=up  1=right  2=down  3=left  (Stardew convention)
     public int FacingDirection { get; private set; } = 2;
 
     static readonly Vector2[] FacingOffset =
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour
         ).normalized;
 
         UpdateFacing();
+        UpdateTileHighlight();
 
         if (Input.GetKeyDown(interactKey))
             TryInteract();
@@ -54,7 +56,6 @@ public class PlayerController : MonoBehaviour
     void UpdateFacing()
     {
         if (_input == Vector2.zero) return;
-
         if (Mathf.Abs(_input.x) >= Mathf.Abs(_input.y))
         {
             FacingDirection = _input.x > 0 ? 1 : 3;
@@ -66,6 +67,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void UpdateTileHighlight()
+    {
+        if (tileHighlight == null) return;
+
+        Vector2 targetPos = (Vector2)transform.position
+            + FacingOffset[FacingDirection] * interactionRange;
+
+        CropSlot found = FindSlotNear(targetPos);
+        tileHighlight.gameObject.SetActive(found != null);
+        if (found != null)
+            tileHighlight.transform.position = new Vector3(
+                found.transform.position.x,
+                found.transform.position.y, 0f);
+    }
+
     void TryInteract()
     {
         if (ToolbarController.Instance == null) return;
@@ -73,11 +89,17 @@ public class PlayerController : MonoBehaviour
         Vector2 targetPos = (Vector2)transform.position
             + FacingOffset[FacingDirection] * interactionRange;
 
-        foreach (var hit in Physics2D.OverlapCircleAll(targetPos, 0.45f))
+        FindSlotNear(targetPos)?.Interact();
+    }
+
+    CropSlot FindSlotNear(Vector2 pos)
+    {
+        foreach (var hit in Physics2D.OverlapCircleAll(pos, 0.45f))
         {
             var slot = hit.GetComponent<CropSlot>();
-            if (slot != null) { slot.Interact(); return; }
+            if (slot != null) return slot;
         }
+        return null;
     }
 
     void OnDrawGizmosSelected()
