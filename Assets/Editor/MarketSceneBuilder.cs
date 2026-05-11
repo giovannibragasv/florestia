@@ -94,20 +94,19 @@ public static class MarketSceneBuilder
         MakeLabel("PriceHeader", tradePanel, "Preço pedido", new Vector2(92f, 174f),
             new Vector2(220f, 30f), 18, TextAlignmentOptions.Left, Gold);
 
-        var dropdownRT = MakeRect("CropDropdown", tradePanel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-            new Vector2(0.5f, 0.5f), new Vector2(-170f, 124f), new Vector2(210f, 44f));
-        var dropdownBg = dropdownRT.gameObject.AddComponent<Image>();
-        dropdownBg.color = new Color(0.88f, 0.78f, 0.52f, 1f);
-        var dropdown = dropdownRT.gameObject.AddComponent<TMP_Dropdown>();
-        dropdown.options.Clear();
-        dropdown.options.Add(new TMP_Dropdown.OptionData("Mandioca"));
-        dropdown.options.Add(new TMP_Dropdown.OptionData("Cacau"));
-        dropdown.options.Add(new TMP_Dropdown.OptionData("Acai"));
-        dropdown.captionText = MakeLabel("CaptionText", dropdownRT, "Mandioca",
-            Vector2.zero, new Vector2(190f, 34f), 18, TextAlignmentOptions.Center, Ink);
+        // Three crop selector buttons (replaces the old TMP_Dropdown)
+        string[] cropNames = { "Mandioca", "Cacau", "Acai" };
+        string[] cropLabels = { "Mandioca", "Cacau", "Açaí" };
+        float[] cropYs = { 148f, 108f, 68f };
+        Button[] cropButtons = new Button[3];
+        for (int i = 0; i < 3; i++)
+        {
+            cropButtons[i] = MakeButton($"CropButton_{cropNames[i]}", cropLabels[i], tradePanel,
+                new Vector2(-170f, cropYs[i]), new Vector2(210f, 36f), false);
+        }
 
         var stockLabel = MakeLabel("StockLabel", tradePanel, "Estoque: 0",
-            new Vector2(-170f, 72f), new Vector2(220f, 30f), 19, TextAlignmentOptions.Center, Cream);
+            new Vector2(-170f, 22f), new Vector2(220f, 30f), 19, TextAlignmentOptions.Center, Cream);
 
         var sliderRT = MakeRect("PriceSlider", tradePanel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
             new Vector2(0.5f, 0.5f), new Vector2(110f, 118f), new Vector2(300f, 34f));
@@ -116,9 +115,9 @@ public static class MarketSceneBuilder
         slider.maxValue = 50f;
         slider.value = 7f;
 
-        var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: R$0", new Vector2(-130f, 10f));
-        var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: R$0", new Vector2(110f, 10f));
-        var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Margem: -", new Vector2(110f, -64f));
+        var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: R$0", new Vector2(-130f, -30f));
+        var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: R$0", new Vector2(110f, -30f));
+        var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Margem: -", new Vector2(110f, -90f));
 
         var sellBtn = MakeButton("SellButton", "Vender 1 unidade", tradePanel,
             new Vector2(-120f, -176f), new Vector2(210f, 58f), true);
@@ -127,7 +126,10 @@ public static class MarketSceneBuilder
 
         var muic = marketUI.AddComponent<MarketUIController>();
         SerializedObject so = new SerializedObject(muic);
-        so.FindProperty("cropDropdown").objectReferenceValue = dropdown;
+        var cropButtonsProp = so.FindProperty("cropButtons");
+        cropButtonsProp.arraySize = cropButtons.Length;
+        for (int i = 0; i < cropButtons.Length; i++)
+            cropButtonsProp.GetArrayElementAtIndex(i).objectReferenceValue = cropButtons[i];
         so.FindProperty("stockLabel").objectReferenceValue = stockLabel;
         so.FindProperty("priceSlider").objectReferenceValue = slider;
         so.FindProperty("costLabel").objectReferenceValue = costLabel;

@@ -6,8 +6,13 @@ using TMPro;
 public class MarketUIController : MonoBehaviour
 {
     [Header("Crop Selection")]
-    [SerializeField] TMP_Dropdown cropDropdown;
+    [SerializeField] Button[] cropButtons;
     [SerializeField] TMP_Text stockLabel;
+
+    static readonly string[] CropNames = { "Mandioca", "Cacau", "Acai" };
+    static readonly Color CropButtonNormal = new Color(0.25f, 0.20f, 0.16f, 1f);
+    static readonly Color CropButtonSelected = new Color(0.92f, 0.67f, 0.28f, 1f);
+    int _selectedCropIndex;
 
     [Header("Pricing")]
     [SerializeField] Slider priceSlider;
@@ -46,12 +51,14 @@ public class MarketUIController : MonoBehaviour
         SceneCameraUtility.EnsureUICamera();
         SceneCameraUtility.EnsureEventSystem();
 
-        if (cropDropdown == null) return;
-
+        DestroyLegacyCropDropdown();
+        EnsureCropButtons();
         EnsureQuantitySlider();
         EnsureDailySummaryPanel();
 
-        cropDropdown.onValueChanged.AddListener(_ => OnCropChanged());
+        if (priceSlider == null || sellButton == null || endDayButton == null) return;
+
+        WireCropButtons();
         priceSlider.onValueChanged.AddListener(_ => RefreshPriceDisplay());
         if (quantitySlider != null)
             quantitySlider.onValueChanged.AddListener(_ => RefreshQuantityDisplay());
@@ -60,17 +67,44 @@ public class MarketUIController : MonoBehaviour
         if (summaryContinueButton != null)
             summaryContinueButton.onClick.AddListener(OnSummaryContinue);
 
-        OnCropChanged();
+        SelectCropByIndex(0);
     }
 
-    void OnCropChanged()
+    void WireCropButtons()
     {
-        _selectedCrop = cropDropdown.options[cropDropdown.value].text;
-        float asking = PricingSystem.Instance.GetAskingPrice(_selectedCrop);
-        priceSlider.value = asking;
+        if (cropButtons == null) return;
+        for (int i = 0; i < cropButtons.Length && i < CropNames.Length; i++)
+        {
+            int idx = i;
+            if (cropButtons[i] == null) continue;
+            cropButtons[i].onClick.RemoveAllListeners();
+            cropButtons[i].onClick.AddListener(() => SelectCropByIndex(idx));
+        }
+    }
+
+    public void SelectCropByIndex(int index)
+    {
+        if (index < 0 || index >= CropNames.Length) return;
+        _selectedCropIndex = index;
+        _selectedCrop = CropNames[index];
+        RefreshCropButtonHighlight();
+
+        if (PricingSystem.Instance != null)
+            priceSlider.value = PricingSystem.Instance.GetAskingPrice(_selectedCrop);
         RefreshStockLabel();
         RefreshQuantityRange();
         RefreshPriceDisplay();
+    }
+
+    void RefreshCropButtonHighlight()
+    {
+        if (cropButtons == null) return;
+        for (int i = 0; i < cropButtons.Length; i++)
+        {
+            if (cropButtons[i] == null) continue;
+            if (cropButtons[i].targetGraphic is Image img)
+                img.color = i == _selectedCropIndex ? CropButtonSelected : CropButtonNormal;
+        }
     }
 
     void RefreshStockLabel()
@@ -201,6 +235,70 @@ public class MarketUIController : MonoBehaviour
     }
 
     // ---------- Runtime fallback construction ----------
+
+    void DestroyLegacyCropDropdown()
+    {
+        var legacy = GameObject.Find("CropDropdown");
+        if (legacy != null) Destroy(legacy);
+    }
+
+    void EnsureCropButtons()
+    {
+        if (cropButtons != null && cropButtons.Length >= 3
+            && cropButtons[0] != null && cropButtons[1] != null && cropButtons[2] != null)
+            return;
+
+        Transform tradePanel = null;
+        var tradeGO = GameObject.Find("TradePanel");
+        if (tradeGO != null) tradePanel = tradeGO.transform;
+        if (tradePanel == null)
+        {
+            Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+            if (canvas == null) return;
+            tradePanel = canvas.transform;
+        }
+
+        var made = new Button[3];
+        float[] yPositions = { 148f, 108f, 68f };
+        for (int i = 0; i < 3; i++)
+        {
+            var go = new GameObject($"CropButton_{CropNames[i]}");
+            go.transform.SetParent(tradePanel, false);
+            var rt = go.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(-170f, yPositions[i]);
+            rt.sizeDelta = new Vector2(210f, 36f);
+
+            var img = go.AddComponent<Image>();
+            img.color = CropButtonNormal;
+            var btn = go.AddComponent<Button>();
+            btn.targetGraphic = img;
+
+            var labelGO = new GameObject("Label");
+            labelGO.transform.SetParent(go.transform, false);
+            var lrt = labelGO.AddComponent<RectTransform>();
+            lrt.anchorMin = Vector2.zero;
+            lrt.anchorMax = Vector2.one;
+            lrt.offsetMin = Vector2.zero;
+            lrt.offsetMax = Vector2.zero;
+            var label = labelGO.AddComponent<TextMeshProUGUI>();
+            label.text = LabelForCrop(CropNames[i]);
+            label.fontSize = 18;
+            label.alignment = TextAlignmentOptions.Center;
+            label.color = new Color(0.96f, 0.88f, 0.68f, 1f);
+            label.raycastTarget = false;
+            TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+            if (font != null) label.font = font;
+
+            made[i] = btn;
+        }
+
+        cropButtons = made;
+    }
+
+    static string LabelForCrop(string cropName) => cropName == "Acai" ? "Açaí" : cropName;
 
     void EnsureQuantitySlider()
     {
