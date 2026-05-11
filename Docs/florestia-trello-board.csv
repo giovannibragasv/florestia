@@ -1,390 +1,266 @@
 "List","Card Name","Description","Labels","Members","Due Date"
-"🎯 Sprint MVP (11-19/05)","A01 · Audit + reescrita de todos os textos do jogo","Audit dos strings da UI e reescrita para faixa 8-11 anos. Pré-requisito para A02.
-
-**Subtasks:**
-- [ ] Listar todos os strings da UI (HUD, botões, modais, EndScreen)
-- [ ] Reescrever conceitos adultos: 'margem', 'estoque', 'saldo', 'custo fixo'
-- [ ] Reescrever mensagens educacionais da EndScreen
-- [ ] Reescrever feedback do mercado (acceptLine / rejectLine atuais)
-- [ ] Validar com o teste de 10 segundos da auditoria de UX por idade","mentor,kid-friendly,conteúdo,educação","biel,kadu","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","A02 · Refactor de textos no código","Aplicar os strings novos de A01 no código do jogo.
-
-**Depende de:** A01
-
-**Subtasks:**
-- [ ] Aplicar strings novas em HUDController, MarketUIController, EndScreenController
-- [ ] Trocar 'ADMIN' → 'intermediadora' em todo o código e docs
-- [ ] Remover notação % do HUD do mercado (manter sinal por cor)
-- [ ] Renomear SerializedFields para nomes mais legíveis se ajudar leitura do código","mentor,kid-friendly,código","vanni","2026-05-15"
-"🎯 Sprint MVP (11-19/05)","A03 · Tutorial inicial in-game","Tutorial novo para primeiro launch do jogo, baseado no roteiro de C01.
-
-**Depende de:** A01, C01
-
-**Subtasks:**
-- [ ] Tela de boas-vindas no primeiro launch
-- [ ] Tooltips contextuais nas primeiras ações de cada tipo (plantar, regar, colher, mercado)
-- [ ] Botão 'pular tutorial' sempre disponível
-- [ ] Flag de 'tutorial completo' no save
-- [ ] Implementar com base no roteiro de C01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
-"🎯 Sprint MVP (11-19/05)","A04 · MarketScene kid-first","Adaptar a tela do mercado para criança. Substituir slider, remover %, retrato dominante.
-
-**Depende de:** A01, C02
-
-**Subtasks:**
-- [ ] Substituir TMP_Dropdown por 3 botões de cultura [já feito]
-- [ ] Substituir slider de quantidade por stepper ◀ [N] ▶
-- [ ] Remover percentual da margem (manter R$ + cor)
-- [ ] Botão vender com label dinâmico ('Vender 4 mandiocas')
-- [ ] Retrato do comprador dominando 1/3 esquerdo com balão de fala
-- [ ] Animação thumbs-up/down no resultado da venda
-- [ ] Pilha de moedas visual para o total
-- [ ] Eliminar runtime fallback EnsureQuantitySlider","mentor,kid-friendly,código","vanni","2026-05-16"
-"🎯 Sprint MVP (11-19/05)","A05 · EndScreen kid-first","Adaptar a tela final para criança. Hero zone, gráfico legível, tip contextual.
-
-**Depende de:** A01, C03, C09
-
-**Subtasks:**
-- [ ] Hero zone: 3 estados visuais (Falência / Sobreviveu / Lucrou)
-- [ ] Frase única encorajadora (de C03)
-- [ ] Gráfico de barras com rótulos de dia (1-15) e linha horizontal de zero
-- [ ] Marker visual no dia da virada (quando saldo cruzou para negativo)
-- [ ] Barras coloridas por sinal (vermelho < 0, verde ≥ 0)
-- [ ] Tip contextual baseado em comportamento do aluno (ver A06)
-- [ ] Botão 'JOGAR DE NOVO' grande e dominante
-- [ ] Remover 'Falência! O saldo chegou a zero' em vermelho-sobre-preto","mentor,kid-friendly,código","vanni","2026-05-17"
-"🎯 Sprint MVP (11-19/05)","A06 · Insights e dicas in-game","Pop-ups curtos com aprendizado durante o jogo, não só no final.
-
-**Depende de:** C05
-
-**Subtasks:**
-- [ ] Pop-up curto após primeira venda lucrativa
-- [ ] Pop-up curto após primeira venda no prejuízo
-- [ ] Pop-up no início de cada dia com dica do dia anterior
-- [ ] Tip contextual na EndScreen baseado em padrão de comportamento","mentor,kid-friendly,código,educação","vanni","2026-05-18"
-"🎯 Sprint MVP (11-19/05)","A07 · Visualização da progressão do dia","Indicadores visuais claros de manhã / tarde / fim de tarde, complementando o sky gradient.
-
-**Subtasks:**
-- [ ] Indicador visual de fase do dia além do sky gradient
-- [ ] Texto curto no HUD: 'Manhã' / 'Tarde' / 'Anoitecer'
-- [ ] Sino ou som quando se aproxima da noite (asset por luiz na Feira)","mentor,kid-friendly,código","vanni","2026-05-18"
-"🎯 Sprint MVP (11-19/05)","B01 · Save persistente por aluno","Estrutura de save por aluno para alimentar perguntas adaptativas e dashboard ADMIN.
-
-**Subtasks:**
-- [ ] Identificação simples de aluno (nome digitado no boot, sem login)
-- [ ] Estrutura de dados por aluno: plantios, vendas, perguntas, decisões, dia atual
-- [ ] Salvar a cada ação relevante (extensão do SaveSystem)
-- [ ] Carregar ao iniciar; menu pra trocar de aluno
-- [ ] Reset functionality","mentor,kid-friendly,código,educação","vanni","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","B02 · Pergunta diária no fim do dia (versão hardcoded)","MVP-do-MVP: uma pergunta por dia, conteúdo de C08, banco hardcoded sem geração procedural.
-
-**Depende de:** B01, C07, C08
-
-**Subtasks:**
-- [ ] Hook no fim do dia (modal antes do AdvanceDay)
-- [ ] Banco de perguntas hardcoded por cultura (vem de C08)
-- [ ] UI da pergunta: enunciado + 3 alternativas, ou input numérico
-- [ ] Feedback visual: certo (verde + parabéns) / errado (sem punição, mostra a certa)
-- [ ] Salvar resposta no histórico do aluno
-- [ ] Escolha simples: pergunta baseada na última cultura plantada/vendida","mentor,kid-friendly,código,educação","vanni","2026-05-16"
-"🎯 Sprint MVP (11-19/05)","B03 · Fallback de histórico","Se o aluno não plantou no dia, mostrar revisão histórica em vez de pergunta nova.
-
-**Depende de:** B01
-
-**Subtasks:**
-- [ ] Detectar 'não plantou hoje'
-- [ ] Mostrar revisão histórica: mini-gráfico, melhor venda da semana","mentor,kid-friendly,código,educação","vanni","2026-05-17"
-"🎯 Sprint MVP (11-19/05)","B04 · Dia como fase com encerramento educacional","Fluxo único de fim de dia: Resumo + Pergunta + dica.
-
-**Depende de:** B02
-
-**Subtasks:**
-- [ ] Encadeamento: Resumo Noturno → Pergunta (B02) → dica contextual → fechar fase
-- [ ] Tela 'Dia X concluído!' antes do resumo, com mood encorajador
-- [ ] Transição visual de fim de dia → início do próximo dia","kid-friendly,código,educação","vanni","2026-05-17"
-"🎯 Sprint MVP (11-19/05)","C01 · Roteiro do tutorial inicial","Roteiro de 4-6 passos cobrindo plantar / regar / colher / mercado / vender / encerrar, em linguagem 8-11.
-
-**Subtasks:**
-- [ ] Passo 1: chegar à roça e plantar
-- [ ] Passo 2: regar a plantação
-- [ ] Passo 3: colher
-- [ ] Passo 4: ir ao mercado pela ponte
-- [ ] Passo 5: vender com slider de preço
-- [ ] Passo 6: encerrar o dia + pergunta","conteúdo,educação","kadu,biel","2026-05-13"
-"🎯 Sprint MVP (11-19/05)","C02 · Reescrita dos diálogos dos compradores (v1 MVP)","Versão MVP dos diálogos: remover tom pretensioso, manter três personalidades distintas. Versão profunda com representatividade plena vem na Feira (FA01).
-
-**Subtasks:**
-- [ ] Atravessador: tom rápido, ofertas baixas mas certas
-- [ ] Feirante Local: tom amigável, preços medianos
-- [ ] Comprador Direto: tom respeitoso, paga bem mas raro
-- [ ] Sem jargão financeiro, vocabulário 8-11","mentor,conteúdo,educação","kadu","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","C03 · Mensagens educacionais da EndScreen","Três variantes encorajadoras para Falência / Sobreviveu / Lucrou. Sem clinical tone.
-
-**Subtasks:**
-- [ ] Variante Falência: encorajadora, sugere uma estratégia
-- [ ] Variante Sobreviveu: validador, sugere upgrade
-- [ ] Variante Lucrou: parabéns + próximo desafio implícito","mentor,conteúdo,educação,kid-friendly","biel","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","C04 · Audit + glossário de termos do HUD","Lista de cada string atual do jogo com substituto kid-friendly proposto.
-
-**Subtasks:**
-- [ ] Listar todos os strings do HUDController
-- [ ] Listar strings do MarketUIController
-- [ ] Listar strings da EndScreenController
-- [ ] Para cada, propor substituto 8-11","mentor,conteúdo,kid-friendly","biel","2026-05-13"
-"🎯 Sprint MVP (11-19/05)","C05 · Roteiro de insights pop-up in-game","Define quando dispara cada pop-up, o que diz, qual mood.
-
-**Subtasks:**
-- [ ] Pop-up primeira venda lucrativa: parabéns + nome do conceito (lucro)
-- [ ] Pop-up primeira venda no prejuízo: sem culpa + explicação curta
-- [ ] Pop-up início do dia 2+: dica do dia anterior baseada em comportamento","mentor,conteúdo,educação","biel","2026-05-15"
-"🎯 Sprint MVP (11-19/05)","C06 · Spec + wireframe do dashboard ADMIN","Métricas a exibir + layout em papel para vanni implementar mock em E01.
-
-**Subtasks:**
-- [ ] Listar métricas relevantes para a professora
-- [ ] Wireframe em papel ou Figma simples
-- [ ] Definir hierarquia de informação
-- [ ] Output: doc + imagem do wireframe","mentor,conteúdo,educação","pm","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","C07 · Spec do mecanismo de pergunta diária","Define formato (múltipla escolha vs aberta), distribuição por cultura, política de feedback.
-
-**Subtasks:**
-- [ ] Múltipla escolha (3 alternativas) ou input numérico?
-- [ ] Como escolher a pergunta: random vs adaptativo
-- [ ] Política de feedback: o que mostrar em acerto / erro
-- [ ] Estrutura do banco de perguntas (campos)","mentor,conteúdo,educação","biel,vanni","2026-05-13"
-"🎯 Sprint MVP (11-19/05)","C08 · Banco inicial de perguntas hardcoded","5 perguntas por cultura para o MVP. Sem lógica adaptativa ainda (essa vem na Feira).
-
-**Subtasks:**
-- [ ] 5 perguntas Mandioca (variando tema: custo, margem, multiplicação)
-- [ ] 5 perguntas Cacau
-- [ ] 5 perguntas Açaí
-- [ ] Cada pergunta: enunciado + 3 alternativas + resposta correta + explicação curta","mentor,conteúdo,educação","biel,luiz","2026-05-15"
-"🎯 Sprint MVP (11-19/05)","C09 · Ilustrações da Hero zone da EndScreen","3 ilustrações em estilo Stardew para os desfechos. Pode usar imagegen.
-
-**Subtasks:**
-- [ ] Falência: agricultor pensativo ao pôr-do-sol, sem desespero
-- [ ] Sobreviveu: agricultor neutro com colheita modesta
-- [ ] Lucrou: agricultor com pilha de moedas e colheita farta","kid-friendly,polimento","kadu","2026-05-16"
-"🎯 Sprint MVP (11-19/05)","D01 · Modelo C v2 · Cliente","Atualizar campo Cliente: professora intermediadora + dashboard ADMIN como cliente técnico paralelo.
-
-**Subtasks:**
-- [ ] Revisar texto atual do campo Cliente
-- [ ] Articular dois clientes técnicos (criança jogador + professora dashboard)
-- [ ] Atualizar Modelo C v2 no formato visual do canvas","modelo-c","pm","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","D02 · Modelo C v2 · Mecanismos de Receita","Steam vs Governo vs empresas de jogos. Recomendação argumentada.
-
-**Subtasks:**
-- [ ] Analisar viabilidade Steam (monetização direta)
-- [ ] Analisar viabilidade Governo (Sec. Municipal, Prefeitura, MEC)
-- [ ] Analisar viabilidade empresas de jogos (parceria)
-- [ ] Escrever recomendação argumentada","modelo-c","pm","2026-05-15"
-"🎯 Sprint MVP (11-19/05)","D03 · Modelo C v2 · Acompanhamento do Impacto","Indicadores automáticos do jogo + indicadores pedagógicos.
-
-**Subtasks:**
-- [ ] Listar indicadores automáticos: tempo por decisão, % margem alcançada, padrão de comprador, perguntas certas/erradas
-- [ ] Listar indicadores pedagógicos: provas antes/depois, participação, feedback
-- [ ] Definir critérios de sucesso
-- [ ] Atualizar canvas","modelo-c,educação","pm","2026-05-16"
-"🎯 Sprint MVP (11-19/05)","D04 · Modelo C v2 · Foco do Impacto / Ações","Incluir representatividade cultural brasileira/jutaí explicitamente.
-
-**Subtasks:**
-- [ ] Revisar texto atual de Foco do Impacto
-- [ ] Adicionar representatividade brasileira/jutaí
-- [ ] Revisar Ações de Impacto Positivo correspondentes
-- [ ] Atualizar canvas","modelo-c,educação","pm","2026-05-17"
-"🎯 Sprint MVP (11-19/05)","E01 · Mock do dashboard ADMIN","Tela visual estática para mentor ver. Dados dummy. Funcional vem na Feira (FA03).
-
-**Depende de:** C06, D01
-
-**Subtasks:**
-- [ ] Tela acessível por flag ou senha simples
-- [ ] Layout estático com dados dummy: aluno, dia, saldo, melhor cultura, % acerto
-- [ ] Reaproveitar componente de gráfico de barras da EndScreen
-- [ ] Header 'visão da intermediadora'
-- [ ] Sem persistência real","mentor,kid-friendly,código,educação","vanni","2026-05-18"
-"🎯 Sprint MVP (11-19/05)","F01 · Estudo histórico/cultural Vila Jutaí · preliminar","Output: 1-2 páginas com fatos utilizáveis em diálogos. Versão profunda na Feira (FC01).
-
-**Subtasks:**
-- [ ] Perfil quilombola/ribeirinho da Vila Jutaí
-- [ ] Cultivos locais e práticas agrícolas
-- [ ] Dinâmicas econômicas (atravessadores, feiras)
-- [ ] Output em doc curto","pesquisa","tex,kadu","2026-05-17"
-"🎯 Sprint MVP (11-19/05)","F02 · Estudo do formato do resumo do dia","Referências de jogos educativos com feedback diário. Valida B02 e B04.
-
-**Subtasks:**
-- [ ] Pesquisar pelo menos 3 jogos com feedback diário
-- [ ] Anotar o que funciona e o que não funciona
-- [ ] Output curto com recomendações","pesquisa,educação","vanni,biel","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","F03 · Pesquisa em educação financeira infantil · preliminar","Artigos e materiais 8-11. Output: lista de conceitos válidos para a faixa etária.
-
-**Subtasks:**
-- [ ] Pelo menos 3 artigos sobre educação financeira infantil
-- [ ] Listar conceitos adequados 8-11
-- [ ] Listar conceitos a evitar
-- [ ] Output em doc curto","pesquisa,educação","luiz,pm","2026-05-17"
-"🎯 Sprint MVP (11-19/05)","G01 · Barra 'life' de tempo de plantação","Feedback visual de quanto falta para a cultura amadurecer.
-
-**Subtasks:**
-- [ ] Barra fina sobre cada CropSlot ocupado
-- [ ] Preenchimento conforme daysPlanted / growthDays
-- [ ] Esconde quando crop está ready","kid-friendly,código","vanni","2026-05-13"
-"🎯 Sprint MVP (11-19/05)","G02 · Painel de vendas com vendedor (refinamento)","Refinar baseado nos screenshots que mostraram o painel travado.
-
-**Subtasks:**
-- [ ] Garantir update do painel após SelectCropByIndex
-- [ ] Sell button label dinâmico (relacionado com A04)
-- [ ] Bloquear vender 0 unidades","kid-friendly,código","vanni","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","H01 · Slide para apresentação do MVP (mentor-facing)","Gifs do jogo + sprites + fundamentação BNCC + Modelo C v2 resumo + preview da Feira.
-
-**Subtasks:**
-- [ ] Gifs das mecânicas novas: plantio, mercado kid-first, pergunta diária, EndScreen
-- [ ] Sprites e ilustrações da Hero zone
-- [ ] Slide de fundamentação BNCC (referenciar EDD compliance PDF)
-- [ ] Slide do Modelo C v2 (4 campos atualizados)
-- [ ] Slide do preview da Feira","mentor,apresentação","kadu,tex","2026-05-18"
-"🌳 Sprint Feira (20/05-07/06)","FA01 · Diálogos dos compradores v2 — representatividade plena","Versão profunda com representatividade brasileira/jutaí, depende de FC01 (estudo histórico).
-
-**Depende de:** FC01","mentor,conteúdo,educação,feira","kadu,vanni","2026-06-01"
-"🌳 Sprint Feira (20/05-07/06)","FA02 · Pergunta diária v2 — adaptativa","Banco expandido + lógica adaptativa baseada em desempenho passado.
-
-**Subtasks:**
-- [ ] Banco expandido (10+ perguntas por cultura)
-- [ ] Lógica adaptativa: dificuldade sobe com acertos
-- [ ] Insights culturais alternando com matemáticos
-- [ ] Persistir desempenho por aluno","código,educação,feira","vanni","2026-06-03"
-"🌳 Sprint Feira (20/05-07/06)","FA03 · Dashboard ADMIN funcional","Implementação real da spec C06, com dados reais do save B01.
-
-**Subtasks:**
-- [ ] Conectar com save persistente B01
-- [ ] Métricas reais por aluno
-- [ ] Visualizações: gráfico de saldo, % acerto, padrão de compradores
-- [ ] Exportação simples (CSV ou imprimir)","mentor,código,educação,feira","vanni","2026-06-05"
-"🌳 Sprint Feira (20/05-07/06)","FA04 · Histórico longitudinal por aluno","Extensão do save B01 para múltiplas sessões.
-
-**Subtasks:**
-- [ ] Estrutura de dados para múltiplas runs por aluno
-- [ ] Agregação de métricas ao longo do tempo
-- [ ] Visualização no dashboard ADMIN","código,educação,feira","vanni","2026-06-04"
-"🌳 Sprint Feira (20/05-07/06)","FA05 · Hero zone EndScreen v2 — ilustrações finais","Substituir ilustrações MVP por versão final polida.
-
-**Depende de:** C09","polimento,feira","kadu,vanni","2026-06-02"
-"🌳 Sprint Feira (20/05-07/06)","FB01 · Build WebGL para Chromebook","Testar em hardware real (Chromebook). Sem isso não dá pra demo no estande.
-
-**Subtasks:**
-- [ ] Configurar Build Profile WebGL
-- [ ] Resolver issues de compatibility
-- [ ] Testar em Chromebook real
-- [ ] Upload em URL acessível","código,feira","vanni","2026-05-30"
-"🌳 Sprint Feira (20/05-07/06)","FB02 · Integração de audio","Audio assets de luiz, integração no Unity.
-
-**Subtasks:**
-- [ ] Ambient da roça (loop curto)
-- [ ] SFX: plant, water, harvest, sell, reject
-- [ ] Música mercado noturno
-- [ ] Volume controls básicos","código,polimento,feira","vanni,luiz","2026-06-01"
-"🌳 Sprint Feira (20/05-07/06)","FB03 · Frames adicionais walkUp e walkSide","Atualmente animação estática nessas direções. Kadu produz sprites, vanni integra.
-
-**Subtasks:**
-- [ ] Sprites walkUp 2-frame (kadu)
-- [ ] Sprites walkSide 2-frame (kadu)
-- [ ] Integrar no PlayerController","polimento,feira","kadu,vanni","2026-05-28"
-"🌳 Sprint Feira (20/05-07/06)","FB04 · Decisão e implementação de balanceamento de stamina","3/2/3 vs 1/1/1 do GDD. Atualizar GDD se mudar.
-
-**Subtasks:**
-- [ ] Decisão pm + vanni sobre balanço final
-- [ ] Atualizar CropData assets se mudar
-- [ ] Atualizar GDD para refletir","código,educação,feira","vanni,pm","2026-05-25"
-"🌳 Sprint Feira (20/05-07/06)","FB05 · Smoke test de 1 partida completa","Jogar 15 dias seguidos, anotar bugs encontrados.
-
-**Subtasks:**
-- [ ] Iniciar run nova
-- [ ] Jogar até o fim
-- [ ] Anotar todos os bugs e issues
-- [ ] Priorizar fixes","código,feira","vanni","2026-06-05"
-"🌳 Sprint Feira (20/05-07/06)","FC01 · Estudo histórico/cultural v2 profundo","Fontes primárias se possível, parcerias com lideranças locais.
-
-**Subtasks:**
-- [ ] Contatar lideranças da Vila Jutaí
-- [ ] Pesquisa em fontes primárias se viável
-- [ ] Output em doc estendido","pesquisa,feira","tex,kadu","2026-05-28"
-"🌳 Sprint Feira (20/05-07/06)","FC02 · Pesquisa educação financeira infantil v2 profundo","Review sistemático, output em artigo curto.
-
-**Subtasks:**
-- [ ] Pelo menos 8 artigos revisados
-- [ ] Análise crítica
-- [ ] Output em artigo curto (~2-3 páginas)","pesquisa,educação,feira","luiz,pm","2026-05-30"
-"🌳 Sprint Feira (20/05-07/06)","FC03 · Reunião com profissional pedagogo","Validação do modelo de ensino + captura de feedback.
-
-**Subtasks:**
-- [ ] Identificar pedagogo (CESUPA?)
-- [ ] Marcar reunião
-- [ ] Apresentar o jogo e Modelo C
-- [ ] Capturar feedback
-- [ ] Iterar com base no feedback","pesquisa,mentor,feira","grupo todo","2026-05-25"
-"🌳 Sprint Feira (20/05-07/06)","FC04 · Aplicação piloto curta na escola Vila Jutaí","Se logisticamente viável antes da Feira.
-
-**Subtasks:**
-- [ ] Contatar a escola
-- [ ] Marcar visita
-- [ ] Aplicar com pelo menos 1 turma
-- [ ] Capturar dados","pesquisa,educação,feira","grupo todo","2026-06-04"
-"🌳 Sprint Feira (20/05-07/06)","FD01 · Abordagem a empresas de jogos","Listar potenciais parceiros + draft de proposta.
-
-**Subtasks:**
-- [ ] Listar pelo menos 5 empresas potencialmente alinhadas
-- [ ] Draft de proposta (1 página)
-- [ ] Pesquisar canais de contato","modelo-c,mentor,feira","pm","2026-06-02"
-"🌳 Sprint Feira (20/05-07/06)","FD02 · Plano de continuidade pós-Amazon Hacking","Sec. Municipal Educação Moju, Prefeitura, próximos passos institucionais.
-
-**Subtasks:**
-- [ ] Definir 3 cenários de continuidade
-- [ ] Para cada, listar próximos passos
-- [ ] Output em doc para júri da Feira","modelo-c,feira","pm","2026-06-04"
-"🌳 Sprint Feira (20/05-07/06)","FE01 · Plano de demonstração presencial","Fluxo de 2-5 min para visitante + demo aprofundada para júri.
-
-**Subtasks:**
-- [ ] Roteiro demo curta (2-5 min)
-- [ ] Roteiro demo júri (10-15 min)
-- [ ] Ensaio interno","apresentação,feira","tex,vanni","2026-05-30"
-"🌳 Sprint Feira (20/05-07/06)","FE02 · Materiais visuais do estande","Banner, folder, identidade gráfica (paleta Florestia já existe).
-
-**Subtasks:**
-- [ ] Banner principal
-- [ ] Folder explicativo
-- [ ] Identidade visual coesa","apresentação,feira","kadu,biel","2026-06-02"
-"🌳 Sprint Feira (20/05-07/06)","FE03 · Setup técnico do estande","Laptops, energia, conectividade, save anônimo por visitante.
-
-**Subtasks:**
-- [ ] Laptops com build WebGL/standalone
-- [ ] Energia e cabeamento
-- [ ] Conectividade redundante
-- [ ] Save anônimo por visitante (resetável)","feira","tex,vanni","2026-05-31"
-"🌳 Sprint Feira (20/05-07/06)","FE04 · Q&A prep para o júri","Antecipar perguntas (impacto, escalabilidade, sustentabilidade, BNCC) e treinar respostas.
-
-**Subtasks:**
-- [ ] Listar 15 perguntas prováveis
-- [ ] Respostas escritas
-- [ ] Ensaio interno tipo arguição","apresentação,feira","grupo todo","2026-06-04"
-"🌳 Sprint Feira (20/05-07/06)","FE05 · Iteração com feedback do mentor pós-19/05","Priorizar 3 ajustes de maior retorno antes da Feira.
-
-**Subtasks:**
-- [ ] Capturar feedback completo na sala 19/05
-- [ ] Priorizar 3 ajustes
-- [ ] Atribuir donos e due dates","feira,mentor","grupo todo","2026-05-21"
-"🌳 Sprint Feira (20/05-07/06)","FE06 · Slide para o júri Amazon Hacking","Narrativa diferente do mentor: contexto territorial, impacto, ODS 1 e 4, próximos passos.
-
-**Subtasks:**
-- [ ] Slide de abertura: tensão observada na Vila Jutaí
-- [ ] Slide do produto: demo de mecânicas
-- [ ] Slide de fundamentação: BNCC + EDD + Modelo C
-- [ ] Slide de impacto: indicadores + ODS 1 e 4
-- [ ] Slide de continuidade: plano pós-Amazon","mentor,apresentação,feira","kadu,tex,vanni","2026-06-03"
+"🎯 Sprint MVP (11-19/05)","A01.1 · Listar todos os strings da UI (HUD, botões, modais, EndScreen)","Cluster A01 · Audit + reescrita de todos os textos do jogo.","mentor,kid-friendly,conteúdo,educação","biel,kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","A01.2 · Reescrever conceitos adultos: 'margem', 'estoque', 'saldo', 'custo fixo'","Cluster A01 · Audit + reescrita de todos os textos do jogo.","mentor,kid-friendly,conteúdo,educação","biel,kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","A01.3 · Reescrever mensagens educacionais da EndScreen","Cluster A01 · Audit + reescrita de todos os textos do jogo.","mentor,kid-friendly,conteúdo,educação","biel,kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","A01.4 · Reescrever feedback do mercado (acceptLine / rejectLine atuais)","Cluster A01 · Audit + reescrita de todos os textos do jogo.","mentor,kid-friendly,conteúdo,educação","biel,kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","A01.5 · Validar com o teste de 10 segundos da auditoria de UX por idade","Cluster A01 · Audit + reescrita de todos os textos do jogo.","mentor,kid-friendly,conteúdo,educação","biel,kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","A02.1 · Aplicar strings novas em HUDController, MarketUIController, EndScreenController","Cluster A02 · Refactor de textos no código.
+**Depende de:** A01","mentor,kid-friendly,código","vanni","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","A02.2 · Trocar 'ADMIN' → 'intermediadora' em todo o código e docs","Cluster A02 · Refactor de textos no código.
+**Depende de:** A01","mentor,kid-friendly,código","vanni","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","A02.3 · Remover notação % do HUD do mercado (manter sinal por cor)","Cluster A02 · Refactor de textos no código.
+**Depende de:** A01","mentor,kid-friendly,código","vanni","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","A02.4 · Renomear SerializedFields para nomes mais legíveis se ajudar leitura do código","Cluster A02 · Refactor de textos no código.
+**Depende de:** A01","mentor,kid-friendly,código","vanni","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","A03.1 · Tela de boas-vindas no primeiro launch","Cluster A03 · Tutorial inicial in-game.
+**Depende de:** A01, C01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A03.2 · Tooltip contextual primeira ação de plantar","Cluster A03 · Tutorial inicial in-game.
+**Depende de:** A01, C01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A03.3 · Tooltip contextual primeira ação de regar","Cluster A03 · Tutorial inicial in-game.
+**Depende de:** A01, C01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A03.4 · Tooltip contextual primeira ação de colher","Cluster A03 · Tutorial inicial in-game.
+**Depende de:** A01, C01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A03.5 · Tooltip contextual primeira ida ao mercado","Cluster A03 · Tutorial inicial in-game.
+**Depende de:** A01, C01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A03.6 · Botão 'pular tutorial' sempre disponível","Cluster A03 · Tutorial inicial in-game.
+**Depende de:** A01, C01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A03.7 · Flag de 'tutorial completo' no save","Cluster A03 · Tutorial inicial in-game.
+**Depende de:** A01, C01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A04.1 · Substituir slider de quantidade por stepper ◀ [N] ▶","Cluster A04 · MarketScene kid-first.
+**Depende de:** A01, C02","mentor,kid-friendly,código","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","A04.2 · Remover percentual da margem (manter R$ + cor)","Cluster A04 · MarketScene kid-first.
+**Depende de:** A01, C02","mentor,kid-friendly,código","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","A04.3 · Botão vender com label dinâmico ('Vender 4 mandiocas')","Cluster A04 · MarketScene kid-first.
+**Depende de:** A01, C02","mentor,kid-friendly,código","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","A04.4 · Retrato do comprador dominando 1/3 esquerdo com balão de fala","Cluster A04 · MarketScene kid-first.
+**Depende de:** A01, C02","mentor,kid-friendly,código","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","A04.5 · Animação thumbs-up/down no resultado da venda","Cluster A04 · MarketScene kid-first.
+**Depende de:** A01, C02","mentor,kid-friendly,código","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","A04.6 · Pilha de moedas visual para o total","Cluster A04 · MarketScene kid-first.
+**Depende de:** A01, C02","mentor,kid-friendly,código","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","A04.7 · Eliminar runtime fallback EnsureQuantitySlider","Cluster A04 · MarketScene kid-first.
+**Depende de:** A01, C02","mentor,kid-friendly,código","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","A05.1 · Hero zone: 3 estados visuais (Falência / Sobreviveu / Lucrou) com ilustração","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A05.2 · Frase única encorajadora por desfecho (de C03)","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A05.3 · Gráfico de barras com rótulos de dia (1-15)","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A05.4 · Linha horizontal de zero no gráfico","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A05.5 · Marker visual no dia da virada (saldo cruzou para negativo)","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A05.6 · Barras coloridas por sinal (vermelho < 0, verde ≥ 0)","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A05.7 · Tip contextual baseado em comportamento do aluno","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A05.8 · Botão 'JOGAR DE NOVO' grande e dominante","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A05.9 · Remover 'Falência! O saldo chegou a zero' em vermelho-sobre-preto","Cluster A05 · EndScreen kid-first.
+**Depende de:** A01, C03, C09","mentor,kid-friendly,código","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","A06.1 · Pop-up curto após primeira venda lucrativa","Cluster A06 · Insights e dicas in-game.
+**Depende de:** C05","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","A06.2 · Pop-up curto após primeira venda no prejuízo","Cluster A06 · Insights e dicas in-game.
+**Depende de:** C05","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","A06.3 · Pop-up no início de cada dia com dica do dia anterior","Cluster A06 · Insights e dicas in-game.
+**Depende de:** C05","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","A06.4 · Tip contextual na EndScreen baseado em padrão de comportamento","Cluster A06 · Insights e dicas in-game.
+**Depende de:** C05","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","A07.1 · Indicador visual de fase do dia além do sky gradient","Cluster A07 · Visualização da progressão do dia.","mentor,kid-friendly,código","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","A07.2 · Texto curto no HUD: 'Manhã' / 'Tarde' / 'Anoitecer'","Cluster A07 · Visualização da progressão do dia.","mentor,kid-friendly,código","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","B01.1 · Identificação simples de aluno (nome digitado no boot, sem login)","Cluster B01 · Save persistente por aluno.","mentor,kid-friendly,código,educação","vanni","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","B01.2 · Estrutura de dados por aluno: plantios, vendas, perguntas, decisões, dia atual","Cluster B01 · Save persistente por aluno.","mentor,kid-friendly,código,educação","vanni","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","B01.3 · Salvar a cada ação relevante (extensão do SaveSystem)","Cluster B01 · Save persistente por aluno.","mentor,kid-friendly,código,educação","vanni","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","B01.4 · Carregar ao iniciar; menu pra trocar de aluno","Cluster B01 · Save persistente por aluno.","mentor,kid-friendly,código,educação","vanni","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","B01.5 · Reset functionality","Cluster B01 · Save persistente por aluno.","mentor,kid-friendly,código,educação","vanni","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","B02.1 · Hook no fim do dia (modal antes do AdvanceDay)","Cluster B02 · Pergunta diária no fim do dia (versão hardcoded).
+**Depende de:** B01, C07, C08","mentor,kid-friendly,código,educação","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","B02.2 · Carregar banco de perguntas hardcoded por cultura (de C08)","Cluster B02 · Pergunta diária no fim do dia (versão hardcoded).
+**Depende de:** B01, C07, C08","mentor,kid-friendly,código,educação","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","B02.3 · UI da pergunta: enunciado + 3 alternativas, ou input numérico","Cluster B02 · Pergunta diária no fim do dia (versão hardcoded).
+**Depende de:** B01, C07, C08","mentor,kid-friendly,código,educação","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","B02.4 · Feedback visual: certo (verde + parabéns) / errado (mostra a certa, sem punição)","Cluster B02 · Pergunta diária no fim do dia (versão hardcoded).
+**Depende de:** B01, C07, C08","mentor,kid-friendly,código,educação","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","B02.5 · Salvar resposta no histórico do aluno","Cluster B02 · Pergunta diária no fim do dia (versão hardcoded).
+**Depende de:** B01, C07, C08","mentor,kid-friendly,código,educação","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","B02.6 · Escolha simples: pergunta baseada na última cultura plantada/vendida","Cluster B02 · Pergunta diária no fim do dia (versão hardcoded).
+**Depende de:** B01, C07, C08","mentor,kid-friendly,código,educação","vanni","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","B03.1 · Detectar 'não plantou hoje'","Cluster B03 · Fallback de histórico se não plantou.
+**Depende de:** B01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","B03.2 · Mostrar revisão histórica: mini-gráfico, melhor venda da semana","Cluster B03 · Fallback de histórico se não plantou.
+**Depende de:** B01","mentor,kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","B04.1 · Encadeamento: Resumo Noturno → Pergunta → dica → fechar fase","Cluster B04 · Dia como fase com encerramento educacional.
+**Depende de:** B02","kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","B04.2 · Tela 'Dia X concluído!' antes do resumo, com mood encorajador","Cluster B04 · Dia como fase com encerramento educacional.
+**Depende de:** B02","kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","B04.3 · Transição visual de fim de dia → início do próximo dia","Cluster B04 · Dia como fase com encerramento educacional.
+**Depende de:** B02","kid-friendly,código,educação","vanni","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","C01.1 · Roteiro passo 1: chegar à roça e plantar","Cluster C01 · Roteiro do tutorial inicial.","conteúdo,educação","kadu,biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C01.2 · Roteiro passo 2: regar a plantação","Cluster C01 · Roteiro do tutorial inicial.","conteúdo,educação","kadu,biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C01.3 · Roteiro passo 3: colher","Cluster C01 · Roteiro do tutorial inicial.","conteúdo,educação","kadu,biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C01.4 · Roteiro passo 4: ir ao mercado pela ponte","Cluster C01 · Roteiro do tutorial inicial.","conteúdo,educação","kadu,biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C01.5 · Roteiro passo 5: vender com slider de preço","Cluster C01 · Roteiro do tutorial inicial.","conteúdo,educação","kadu,biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C01.6 · Roteiro passo 6: encerrar o dia + pergunta","Cluster C01 · Roteiro do tutorial inicial.","conteúdo,educação","kadu,biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C02.1 · Escrever Atravessador: tom rápido, ofertas baixas mas certas","Cluster C02 · Diálogos dos compradores (v1 MVP).","mentor,conteúdo,educação","kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C02.2 · Escrever Feirante Local: tom amigável, preços medianos","Cluster C02 · Diálogos dos compradores (v1 MVP).","mentor,conteúdo,educação","kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C02.3 · Escrever Comprador Direto: tom respeitoso, paga bem mas raro","Cluster C02 · Diálogos dos compradores (v1 MVP).","mentor,conteúdo,educação","kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C02.4 · Validar vocabulário 8-11, sem jargão financeiro","Cluster C02 · Diálogos dos compradores (v1 MVP).","mentor,conteúdo,educação","kadu","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C03.1 · Escrever variante Falência: encorajadora, sugere estratégia","Cluster C03 · Mensagens educacionais da EndScreen.","mentor,conteúdo,educação,kid-friendly","biel","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C03.2 · Escrever variante Sobreviveu: validador, sugere upgrade","Cluster C03 · Mensagens educacionais da EndScreen.","mentor,conteúdo,educação,kid-friendly","biel","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C03.3 · Escrever variante Lucrou: parabéns + próximo desafio implícito","Cluster C03 · Mensagens educacionais da EndScreen.","mentor,conteúdo,educação,kid-friendly","biel","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C04.1 · Listar todos os strings do HUDController","Cluster C04 · Audit + glossário de termos do HUD.","mentor,conteúdo,kid-friendly","biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C04.2 · Listar strings do MarketUIController","Cluster C04 · Audit + glossário de termos do HUD.","mentor,conteúdo,kid-friendly","biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C04.3 · Listar strings da EndScreenController","Cluster C04 · Audit + glossário de termos do HUD.","mentor,conteúdo,kid-friendly","biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C04.4 · Para cada string, propor substituto kid-friendly 8-11","Cluster C04 · Audit + glossário de termos do HUD.","mentor,conteúdo,kid-friendly","biel","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C05.1 · Pop-up primeira venda lucrativa: parabéns + nome do conceito (lucro)","Cluster C05 · Roteiro de insights pop-up in-game.","mentor,conteúdo,educação","biel","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","C05.2 · Pop-up primeira venda no prejuízo: sem culpa + explicação curta","Cluster C05 · Roteiro de insights pop-up in-game.","mentor,conteúdo,educação","biel","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","C05.3 · Pop-up início do dia 2+: dica do dia anterior baseada em comportamento","Cluster C05 · Roteiro de insights pop-up in-game.","mentor,conteúdo,educação","biel","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","C06.1 · Listar métricas relevantes para a professora","Cluster C06 · Spec + wireframe do dashboard ADMIN.","mentor,conteúdo,educação","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C06.2 · Wireframe em papel ou Figma simples","Cluster C06 · Spec + wireframe do dashboard ADMIN.","mentor,conteúdo,educação","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C06.3 · Definir hierarquia de informação","Cluster C06 · Spec + wireframe do dashboard ADMIN.","mentor,conteúdo,educação","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C06.4 · Entregar doc + imagem do wireframe","Cluster C06 · Spec + wireframe do dashboard ADMIN.","mentor,conteúdo,educação","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C07.1 · Decidir formato: múltipla escolha (3 alternativas) ou input numérico","Cluster C07 · Spec do mecanismo de pergunta diária.","mentor,conteúdo,educação","biel,vanni","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C07.2 · Definir política de escolha da pergunta (random vs adaptativo)","Cluster C07 · Spec do mecanismo de pergunta diária.","mentor,conteúdo,educação","biel,vanni","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C07.3 · Definir política de feedback: certo / errado","Cluster C07 · Spec do mecanismo de pergunta diária.","mentor,conteúdo,educação","biel,vanni","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C07.4 · Definir estrutura do banco de perguntas (campos)","Cluster C07 · Spec do mecanismo de pergunta diária.","mentor,conteúdo,educação","biel,vanni","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","C08.1 · 5 perguntas Mandioca (custo, margem, multiplicação)","Cluster C08 · Banco inicial de perguntas hardcoded.","mentor,conteúdo,educação","biel,luiz","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","C08.2 · 5 perguntas Cacau","Cluster C08 · Banco inicial de perguntas hardcoded.","mentor,conteúdo,educação","biel,luiz","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","C08.3 · 5 perguntas Açaí","Cluster C08 · Banco inicial de perguntas hardcoded.","mentor,conteúdo,educação","biel,luiz","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","C08.4 · Estruturar cada pergunta: enunciado + 3 alternativas + correta + explicação","Cluster C08 · Banco inicial de perguntas hardcoded.","mentor,conteúdo,educação","biel,luiz","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","C09.1 · Ilustração Falência: agricultor pensativo, sem desespero","Cluster C09 · Ilustrações da Hero zone da EndScreen.","kid-friendly,polimento","kadu","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","C09.2 · Ilustração Sobreviveu: agricultor neutro com colheita modesta","Cluster C09 · Ilustrações da Hero zone da EndScreen.","kid-friendly,polimento","kadu","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","C09.3 · Ilustração Lucrou: agricultor com pilha de moedas e colheita farta","Cluster C09 · Ilustrações da Hero zone da EndScreen.","kid-friendly,polimento","kadu","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","D01.1 · Revisar texto atual do campo Cliente","Cluster D01 · Modelo C v2 · Cliente.","modelo-c","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","D01.2 · Articular dois clientes técnicos (criança jogador + professora dashboard)","Cluster D01 · Modelo C v2 · Cliente.","modelo-c","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","D01.3 · Atualizar Modelo C v2 no formato visual do canvas","Cluster D01 · Modelo C v2 · Cliente.","modelo-c","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","D02.1 · Analisar viabilidade Steam (monetização direta)","Cluster D02 · Modelo C v2 · Mecanismos de Receita.","modelo-c","pm","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","D02.2 · Analisar viabilidade Governo (Sec. Municipal, Prefeitura, MEC)","Cluster D02 · Modelo C v2 · Mecanismos de Receita.","modelo-c","pm","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","D02.3 · Analisar viabilidade empresas de jogos (parceria)","Cluster D02 · Modelo C v2 · Mecanismos de Receita.","modelo-c","pm","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","D02.4 · Escrever recomendação argumentada","Cluster D02 · Modelo C v2 · Mecanismos de Receita.","modelo-c","pm","2026-05-15"
+"🎯 Sprint MVP (11-19/05)","D03.1 · Listar indicadores automáticos do jogo (tempo, margem, padrão de comprador, % acerto)","Cluster D03 · Modelo C v2 · Acompanhamento do Impacto.","modelo-c,educação","pm","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","D03.2 · Listar indicadores pedagógicos (provas antes/depois, participação, feedback)","Cluster D03 · Modelo C v2 · Acompanhamento do Impacto.","modelo-c,educação","pm","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","D03.3 · Definir critérios de sucesso","Cluster D03 · Modelo C v2 · Acompanhamento do Impacto.","modelo-c,educação","pm","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","D03.4 · Atualizar canvas Modelo C","Cluster D03 · Modelo C v2 · Acompanhamento do Impacto.","modelo-c,educação","pm","2026-05-16"
+"🎯 Sprint MVP (11-19/05)","D04.1 · Revisar texto atual de Foco do Impacto","Cluster D04 · Modelo C v2 · Foco do Impacto / Ações.","modelo-c,educação","pm","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","D04.2 · Adicionar representatividade brasileira/jutaí","Cluster D04 · Modelo C v2 · Foco do Impacto / Ações.","modelo-c,educação","pm","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","D04.3 · Revisar Ações de Impacto Positivo correspondentes","Cluster D04 · Modelo C v2 · Foco do Impacto / Ações.","modelo-c,educação","pm","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","D04.4 · Atualizar canvas Modelo C","Cluster D04 · Modelo C v2 · Foco do Impacto / Ações.","modelo-c,educação","pm","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","E01.1 · Tela acessível por flag ou senha simples","Cluster E01 · Mock do dashboard ADMIN.
+**Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","E01.2 · Layout estático com dados dummy: aluno, dia, saldo, melhor cultura, % acerto","Cluster E01 · Mock do dashboard ADMIN.
+**Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","E01.3 · Reaproveitar componente de gráfico de barras da EndScreen","Cluster E01 · Mock do dashboard ADMIN.
+**Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","E01.4 · Header 'visão da intermediadora'","Cluster E01 · Mock do dashboard ADMIN.
+**Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","E01.5 · Sem persistência real (funcional vem na Feira)","Cluster E01 · Mock do dashboard ADMIN.
+**Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","F01.1 · Perfil quilombola/ribeirinho da Vila Jutaí","Cluster F01 · Estudo histórico/cultural Vila Jutaí · preliminar.","pesquisa","tex,kadu","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","F01.2 · Cultivos locais e práticas agrícolas","Cluster F01 · Estudo histórico/cultural Vila Jutaí · preliminar.","pesquisa","tex,kadu","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","F01.3 · Dinâmicas econômicas (atravessadores, feiras)","Cluster F01 · Estudo histórico/cultural Vila Jutaí · preliminar.","pesquisa","tex,kadu","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","F01.4 · Entregar doc curto (1-2 páginas)","Cluster F01 · Estudo histórico/cultural Vila Jutaí · preliminar.","pesquisa","tex,kadu","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","F02.1 · Pesquisar pelo menos 3 jogos com feedback diário","Cluster F02 · Estudo do formato do resumo do dia.","pesquisa,educação","vanni,biel","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","F02.2 · Anotar o que funciona e o que não funciona","Cluster F02 · Estudo do formato do resumo do dia.","pesquisa,educação","vanni,biel","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","F02.3 · Entregar doc curto com recomendações","Cluster F02 · Estudo do formato do resumo do dia.","pesquisa,educação","vanni,biel","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","F03.1 · Ler pelo menos 3 artigos sobre educação financeira infantil","Cluster F03 · Pesquisa em educação financeira infantil · preliminar.","pesquisa,educação","luiz,pm","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","F03.2 · Listar conceitos adequados 8-11","Cluster F03 · Pesquisa em educação financeira infantil · preliminar.","pesquisa,educação","luiz,pm","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","F03.3 · Listar conceitos a evitar","Cluster F03 · Pesquisa em educação financeira infantil · preliminar.","pesquisa,educação","luiz,pm","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","F03.4 · Entregar doc curto","Cluster F03 · Pesquisa em educação financeira infantil · preliminar.","pesquisa,educação","luiz,pm","2026-05-17"
+"🎯 Sprint MVP (11-19/05)","G01.1 · Barra fina sobre cada CropSlot ocupado","Cluster G01 · Barra 'life' de tempo de plantação.","kid-friendly,código","vanni","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","G01.2 · Preenchimento conforme daysPlanted / growthDays","Cluster G01 · Barra 'life' de tempo de plantação.","kid-friendly,código","vanni","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","G01.3 · Esconde quando crop está ready","Cluster G01 · Barra 'life' de tempo de plantação.","kid-friendly,código","vanni","2026-05-13"
+"🎯 Sprint MVP (11-19/05)","G02.1 · Garantir update do painel após SelectCropByIndex","Cluster G02 · Painel de vendas com vendedor (refinamento).","kid-friendly,código","vanni","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","G02.2 · Sell button label dinâmico (relacionado com A04)","Cluster G02 · Painel de vendas com vendedor (refinamento).","kid-friendly,código","vanni","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","G02.3 · Bloquear vender 0 unidades","Cluster G02 · Painel de vendas com vendedor (refinamento).","kid-friendly,código","vanni","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","H01.1 · Gravar gifs das mecânicas novas (plantio, mercado, pergunta, EndScreen)","Cluster H01 · Slide para apresentação do MVP (mentor-facing).","mentor,apresentação","kadu,tex","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","H01.2 · Coletar sprites e ilustrações da Hero zone","Cluster H01 · Slide para apresentação do MVP (mentor-facing).","mentor,apresentação","kadu,tex","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","H01.3 · Slide de fundamentação BNCC (referenciar EDD compliance PDF)","Cluster H01 · Slide para apresentação do MVP (mentor-facing).","mentor,apresentação","kadu,tex","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","H01.4 · Slide do Modelo C v2 (resumo dos 4 campos)","Cluster H01 · Slide para apresentação do MVP (mentor-facing).","mentor,apresentação","kadu,tex","2026-05-18"
+"🎯 Sprint MVP (11-19/05)","H01.5 · Slide do preview da Feira","Cluster H01 · Slide para apresentação do MVP (mentor-facing).","mentor,apresentação","kadu,tex","2026-05-18"
+"🌳 Sprint Feira (20/05-07/06)","FA01 · Diálogos dos compradores v2 — representatividade plena","Versão profunda com representatividade brasileira/jutaí. Depende de FC01 (estudo histórico profundo).","mentor,conteúdo,educação,feira","kadu,vanni","2026-06-01"
+"🌳 Sprint Feira (20/05-07/06)","FA02.1 · Banco expandido (10+ perguntas por cultura)","Cluster FA02 · Pergunta diária v2 — adaptativa.","código,educação,feira","vanni","2026-06-03"
+"🌳 Sprint Feira (20/05-07/06)","FA02.2 · Lógica adaptativa: dificuldade sobe com acertos","Cluster FA02 · Pergunta diária v2 — adaptativa.","código,educação,feira","vanni","2026-06-03"
+"🌳 Sprint Feira (20/05-07/06)","FA02.3 · Insights culturais alternando com matemáticos","Cluster FA02 · Pergunta diária v2 — adaptativa.","código,educação,feira","vanni","2026-06-03"
+"🌳 Sprint Feira (20/05-07/06)","FA02.4 · Persistir desempenho por aluno","Cluster FA02 · Pergunta diária v2 — adaptativa.","código,educação,feira","vanni","2026-06-03"
+"🌳 Sprint Feira (20/05-07/06)","FA03.1 · Conectar com save persistente B01","Cluster FA03 · Dashboard ADMIN funcional.","mentor,código,educação,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FA03.2 · Métricas reais por aluno","Cluster FA03 · Dashboard ADMIN funcional.","mentor,código,educação,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FA03.3 · Visualizações: gráfico saldo, % acerto, padrão de compradores","Cluster FA03 · Dashboard ADMIN funcional.","mentor,código,educação,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FA03.4 · Exportação simples (CSV ou imprimir)","Cluster FA03 · Dashboard ADMIN funcional.","mentor,código,educação,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FA04.1 · Estrutura de dados para múltiplas runs por aluno","Cluster FA04 · Histórico longitudinal por aluno.","código,educação,feira","vanni","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FA04.2 · Agregação de métricas ao longo do tempo","Cluster FA04 · Histórico longitudinal por aluno.","código,educação,feira","vanni","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FA04.3 · Visualização no dashboard ADMIN","Cluster FA04 · Histórico longitudinal por aluno.","código,educação,feira","vanni","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FA05 · Hero zone EndScreen v2 — ilustrações finais","Substituir ilustrações MVP (C09) por versão final polida.","polimento,feira","kadu,vanni","2026-06-02"
+"🌳 Sprint Feira (20/05-07/06)","FB01.1 · Configurar Build Profile WebGL","Cluster FB01 · Build WebGL para Chromebook.","código,feira","vanni","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FB01.2 · Resolver issues de compatibility","Cluster FB01 · Build WebGL para Chromebook.","código,feira","vanni","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FB01.3 · Testar em Chromebook real","Cluster FB01 · Build WebGL para Chromebook.","código,feira","vanni","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FB01.4 · Upload em URL acessível","Cluster FB01 · Build WebGL para Chromebook.","código,feira","vanni","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FB02.1 · Ambient da roça (loop curto)","Cluster FB02 · Integração de audio.","código,polimento,feira","vanni,luiz","2026-06-01"
+"🌳 Sprint Feira (20/05-07/06)","FB02.2 · SFX plant","Cluster FB02 · Integração de audio.","código,polimento,feira","vanni,luiz","2026-06-01"
+"🌳 Sprint Feira (20/05-07/06)","FB02.3 · SFX water","Cluster FB02 · Integração de audio.","código,polimento,feira","vanni,luiz","2026-06-01"
+"🌳 Sprint Feira (20/05-07/06)","FB02.4 · SFX harvest","Cluster FB02 · Integração de audio.","código,polimento,feira","vanni,luiz","2026-06-01"
+"🌳 Sprint Feira (20/05-07/06)","FB02.5 · SFX sell + reject","Cluster FB02 · Integração de audio.","código,polimento,feira","vanni,luiz","2026-06-01"
+"🌳 Sprint Feira (20/05-07/06)","FB02.6 · Música mercado noturno","Cluster FB02 · Integração de audio.","código,polimento,feira","vanni,luiz","2026-06-01"
+"🌳 Sprint Feira (20/05-07/06)","FB02.7 · Volume controls básicos","Cluster FB02 · Integração de audio.","código,polimento,feira","vanni,luiz","2026-06-01"
+"🌳 Sprint Feira (20/05-07/06)","FB03.1 · Sprites walkUp 2-frame (kadu)","Cluster FB03 · Frames adicionais walkUp e walkSide.","polimento,feira","kadu,vanni","2026-05-28"
+"🌳 Sprint Feira (20/05-07/06)","FB03.2 · Sprites walkSide 2-frame (kadu)","Cluster FB03 · Frames adicionais walkUp e walkSide.","polimento,feira","kadu,vanni","2026-05-28"
+"🌳 Sprint Feira (20/05-07/06)","FB03.3 · Integrar no PlayerController (vanni)","Cluster FB03 · Frames adicionais walkUp e walkSide.","polimento,feira","kadu,vanni","2026-05-28"
+"🌳 Sprint Feira (20/05-07/06)","FB04.1 · Decisão pm + vanni sobre balanço final (3/2/3 vs 1/1/1)","Cluster FB04 · Decisão e implementação de balanceamento de stamina.","código,educação,feira","vanni,pm","2026-05-25"
+"🌳 Sprint Feira (20/05-07/06)","FB04.2 · Atualizar CropData assets se mudar","Cluster FB04 · Decisão e implementação de balanceamento de stamina.","código,educação,feira","vanni,pm","2026-05-25"
+"🌳 Sprint Feira (20/05-07/06)","FB04.3 · Atualizar GDD para refletir","Cluster FB04 · Decisão e implementação de balanceamento de stamina.","código,educação,feira","vanni,pm","2026-05-25"
+"🌳 Sprint Feira (20/05-07/06)","FB05.1 · Iniciar run nova","Cluster FB05 · Smoke test de 1 partida completa.","código,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FB05.2 · Jogar até o fim (15 dias)","Cluster FB05 · Smoke test de 1 partida completa.","código,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FB05.3 · Anotar todos os bugs e issues","Cluster FB05 · Smoke test de 1 partida completa.","código,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FB05.4 · Priorizar fixes pré-Feira","Cluster FB05 · Smoke test de 1 partida completa.","código,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FC01.1 · Contatar lideranças da Vila Jutaí","Cluster FC01 · Estudo histórico/cultural v2 profundo.","pesquisa,feira","tex,kadu","2026-05-28"
+"🌳 Sprint Feira (20/05-07/06)","FC01.2 · Pesquisa em fontes primárias se viável","Cluster FC01 · Estudo histórico/cultural v2 profundo.","pesquisa,feira","tex,kadu","2026-05-28"
+"🌳 Sprint Feira (20/05-07/06)","FC01.3 · Entregar doc estendido","Cluster FC01 · Estudo histórico/cultural v2 profundo.","pesquisa,feira","tex,kadu","2026-05-28"
+"🌳 Sprint Feira (20/05-07/06)","FC02.1 · Ler pelo menos 8 artigos","Cluster FC02 · Pesquisa educação financeira infantil v2 profundo.","pesquisa,educação,feira","luiz,pm","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FC02.2 · Análise crítica dos achados","Cluster FC02 · Pesquisa educação financeira infantil v2 profundo.","pesquisa,educação,feira","luiz,pm","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FC02.3 · Entregar artigo curto (~2-3 páginas)","Cluster FC02 · Pesquisa educação financeira infantil v2 profundo.","pesquisa,educação,feira","luiz,pm","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FC03.1 · Identificar pedagogo (CESUPA?)","Cluster FC03 · Reunião com profissional pedagogo.","pesquisa,mentor,feira","grupo todo","2026-05-25"
+"🌳 Sprint Feira (20/05-07/06)","FC03.2 · Marcar reunião","Cluster FC03 · Reunião com profissional pedagogo.","pesquisa,mentor,feira","grupo todo","2026-05-25"
+"🌳 Sprint Feira (20/05-07/06)","FC03.3 · Apresentar o jogo e Modelo C","Cluster FC03 · Reunião com profissional pedagogo.","pesquisa,mentor,feira","grupo todo","2026-05-25"
+"🌳 Sprint Feira (20/05-07/06)","FC03.4 · Capturar feedback","Cluster FC03 · Reunião com profissional pedagogo.","pesquisa,mentor,feira","grupo todo","2026-05-25"
+"🌳 Sprint Feira (20/05-07/06)","FC03.5 · Iterar com base no feedback","Cluster FC03 · Reunião com profissional pedagogo.","pesquisa,mentor,feira","grupo todo","2026-05-25"
+"🌳 Sprint Feira (20/05-07/06)","FC04.1 · Contatar a escola","Cluster FC04 · Aplicação piloto curta na escola Vila Jutaí.","pesquisa,educação,feira","grupo todo","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FC04.2 · Marcar visita","Cluster FC04 · Aplicação piloto curta na escola Vila Jutaí.","pesquisa,educação,feira","grupo todo","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FC04.3 · Aplicar com pelo menos 1 turma","Cluster FC04 · Aplicação piloto curta na escola Vila Jutaí.","pesquisa,educação,feira","grupo todo","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FC04.4 · Capturar dados","Cluster FC04 · Aplicação piloto curta na escola Vila Jutaí.","pesquisa,educação,feira","grupo todo","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FD01.1 · Listar pelo menos 5 empresas potencialmente alinhadas","Cluster FD01 · Abordagem a empresas de jogos.","modelo-c,mentor,feira","pm","2026-06-02"
+"🌳 Sprint Feira (20/05-07/06)","FD01.2 · Draft de proposta (1 página)","Cluster FD01 · Abordagem a empresas de jogos.","modelo-c,mentor,feira","pm","2026-06-02"
+"🌳 Sprint Feira (20/05-07/06)","FD01.3 · Pesquisar canais de contato","Cluster FD01 · Abordagem a empresas de jogos.","modelo-c,mentor,feira","pm","2026-06-02"
+"🌳 Sprint Feira (20/05-07/06)","FD02.1 · Definir 3 cenários de continuidade","Cluster FD02 · Plano de continuidade pós-Amazon Hacking.","modelo-c,feira","pm","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FD02.2 · Para cada cenário, listar próximos passos","Cluster FD02 · Plano de continuidade pós-Amazon Hacking.","modelo-c,feira","pm","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FD02.3 · Entregar doc para júri da Feira","Cluster FD02 · Plano de continuidade pós-Amazon Hacking.","modelo-c,feira","pm","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FE01.1 · Roteiro demo curta (2-5 min) para visitante casual","Cluster FE01 · Plano de demonstração presencial.","apresentação,feira","tex,vanni","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FE01.2 · Roteiro demo júri (10-15 min)","Cluster FE01 · Plano de demonstração presencial.","apresentação,feira","tex,vanni","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FE01.3 · Ensaio interno","Cluster FE01 · Plano de demonstração presencial.","apresentação,feira","tex,vanni","2026-05-30"
+"🌳 Sprint Feira (20/05-07/06)","FE02.1 · Banner principal","Cluster FE02 · Materiais visuais do estande.","apresentação,feira","kadu,biel","2026-06-02"
+"🌳 Sprint Feira (20/05-07/06)","FE02.2 · Folder explicativo","Cluster FE02 · Materiais visuais do estande.","apresentação,feira","kadu,biel","2026-06-02"
+"🌳 Sprint Feira (20/05-07/06)","FE02.3 · Identidade visual coesa (usar paleta Florestia)","Cluster FE02 · Materiais visuais do estande.","apresentação,feira","kadu,biel","2026-06-02"
+"🌳 Sprint Feira (20/05-07/06)","FE03.1 · Laptops com build WebGL/standalone","Cluster FE03 · Setup técnico do estande.","feira","tex,vanni","2026-05-31"
+"🌳 Sprint Feira (20/05-07/06)","FE03.2 · Energia e cabeamento","Cluster FE03 · Setup técnico do estande.","feira","tex,vanni","2026-05-31"
+"🌳 Sprint Feira (20/05-07/06)","FE03.3 · Conectividade redundante","Cluster FE03 · Setup técnico do estande.","feira","tex,vanni","2026-05-31"
+"🌳 Sprint Feira (20/05-07/06)","FE03.4 · Save anônimo por visitante (resetável)","Cluster FE03 · Setup técnico do estande.","feira","tex,vanni","2026-05-31"
+"🌳 Sprint Feira (20/05-07/06)","FE04.1 · Listar 15 perguntas prováveis","Cluster FE04 · Q&A prep para o júri.","apresentação,feira","grupo todo","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FE04.2 · Respostas escritas","Cluster FE04 · Q&A prep para o júri.","apresentação,feira","grupo todo","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FE04.3 · Ensaio interno tipo arguição","Cluster FE04 · Q&A prep para o júri.","apresentação,feira","grupo todo","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FE05.1 · Capturar feedback completo na sala 19/05","Cluster FE05 · Iteração com feedback do mentor pós-19/05.","feira,mentor","grupo todo","2026-05-21"
+"🌳 Sprint Feira (20/05-07/06)","FE05.2 · Priorizar 3 ajustes de maior retorno","Cluster FE05 · Iteração com feedback do mentor pós-19/05.","feira,mentor","grupo todo","2026-05-21"
+"🌳 Sprint Feira (20/05-07/06)","FE05.3 · Atribuir donos e due dates","Cluster FE05 · Iteração com feedback do mentor pós-19/05.","feira,mentor","grupo todo","2026-05-21"
+"🌳 Sprint Feira (20/05-07/06)","FE06.1 · Slide de abertura: tensão observada na Vila Jutaí","Cluster FE06 · Slide para o júri Amazon Hacking.","mentor,apresentação,feira","kadu,tex,vanni","2026-06-03"
+"🌳 Sprint Feira (20/05-07/06)","FE06.2 · Slide do produto: demo de mecânicas","Cluster FE06 · Slide para o júri Amazon Hacking.","mentor,apresentação,feira","kadu,tex,vanni","2026-06-03"
+"🌳 Sprint Feira (20/05-07/06)","FE06.3 · Slide de fundamentação: BNCC + EDD + Modelo C","Cluster FE06 · Slide para o júri Amazon Hacking.","mentor,apresentação,feira","kadu,tex,vanni","2026-06-03"
+"🌳 Sprint Feira (20/05-07/06)","FE06.4 · Slide de impacto: indicadores + ODS 1 e 4","Cluster FE06 · Slide para o júri Amazon Hacking.","mentor,apresentação,feira","kadu,tex,vanni","2026-06-03"
+"🌳 Sprint Feira (20/05-07/06)","FE06.5 · Slide de continuidade: plano pós-Amazon","Cluster FE06 · Slide para o júri Amazon Hacking.","mentor,apresentação,feira","kadu,tex,vanni","2026-06-03"
 "📋 Backlog","BL01 · Sistema de NPCs com diálogo (GDD §10)","Fora de escopo MVP e Feira. Pós-Feira.","código,polimento","",""
 "📋 Backlog","BL02 · Expansão do grid além de 6x6","Pós-Feira.","código,polimento","",""
 "📋 Backlog","BL03 · Múltiplas save slots por dispositivo","Pós-Feira. O save-por-aluno do MVP cobre o caso principal.","código","",""
 "📋 Backlog","BL04 · Deterioração de estoque","Pós-Feira.","código","",""
 "📋 Backlog","BL05 · Sistema de clima","Pós-Feira.","código","",""
 "📋 Backlog","BL06 · Implementação em escolas além da Vila Jutaí","Depende do resultado da Feira.","educação","",""
-"✅ Concluído","✓ TMP_Dropdown → 3 botões de cultura","Código + builder atualizados. Eliminou o erro de SetupTemplate.","código,kid-friendly,mentor","vanni",""
-"✅ Concluído","✓ Resumo Noturno modal versão básica","Modal entre mercado e AdvanceDay. Perguntas serão adicionadas em B02.","código,educação","vanni",""
-"✅ Concluído","✓ Multi-quantity sell (slider)","Slider de quantidade funciona. Vira stepper em A04.","código,educação","vanni",""
-"✅ Concluído","✓ HUD math coaching labels","Preview + proporcionalidade. Vai ser revisto em A02 para remover %.","código,educação","vanni",""
-"✅ Concluído","✓ EDD compliance PDF","12 páginas via Kami. Auditoria das 9 habilidades BNCC.","modelo-c,educação","vanni",""
+"✅ Concluído","✓ · TMP_Dropdown → 3 botões de cultura","Código + builder atualizados. Eliminou o erro de SetupTemplate.","código,kid-friendly,mentor","vanni",""
+"✅ Concluído","✓ · Resumo Noturno modal versão básica","Modal entre mercado e AdvanceDay. Perguntas serão adicionadas em B02.","código,educação","vanni",""
+"✅ Concluído","✓ · Multi-quantity sell (slider)","Slider de quantidade funciona. Vira stepper em A04.","código,educação","vanni",""
+"✅ Concluído","✓ · HUD math coaching labels","Preview + proporcionalidade. Vai ser revisto em A02 para remover %.","código,educação","vanni",""
+"✅ Concluído","✓ · EDD compliance PDF","12 páginas via Kami. Auditoria das 9 habilidades BNCC.","modelo-c,educação","vanni",""
