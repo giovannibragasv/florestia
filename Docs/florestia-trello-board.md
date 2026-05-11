@@ -321,6 +321,7 @@ Empate → vence o card que mais conecta o jogo ao contexto educacional da Vila 
 | FB03 | **Frames adicionais de walkUp e walkSide** | `polimento` `feira` | kadu (sprites) + vanni (integra) | Atualmente 1 frame, animação estática |
 | FB04 | **Decisão e implementação de balanceamento de stamina** | `código` `educação` `feira` | pm + vanni (decisão) → vanni (asset edit) | 3/2/3 vs 1/1/1; atualizar GDD se mudar |
 | FB05 | **Smoke test de 1 partida completa** | `código` `feira` | vanni | Jogar 15 dias seguidos, anotar bugs |
+| FB06 | **Suporte completo a mouse para interação** — jogo atualmente é WASD + E; criança 8–11 em Chromebook se dá melhor com mouse. Mantém WASD para movimento, mouse passa a controlar plantio/rega/colheita | `kid-friendly` `código` `feira` | vanni | Subtasks: hover destaca tile, click interage, cursor muda por ferramenta, testar touchpad Chromebook |
 
 ### Bloco F-C · Pesquisa avançada e validação externa
 
