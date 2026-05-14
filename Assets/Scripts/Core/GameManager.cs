@@ -15,7 +15,12 @@ public class GameManager : MonoBehaviour
     public float Balance { get; private set; } = StartingBalance;
     public bool IsLoss { get; private set; }
     public List<float> DailyBalances { get; private set; } = new();
+    public List<PlantingRecord> Plantings { get; private set; } = new();
+    public List<DailySaleRecord> Sales { get; private set; } = new();
+    public List<QuestionAnswerRecord> Questions { get; private set; } = new();
+
     public bool IsGameOver => CurrentDay > TotalDays || IsLoss;
+    public StudentProfile ActiveProfile => SaveSystem.ActiveProfile;
 
     void Awake()
     {
@@ -24,23 +29,13 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    void OnDestroy()
-    {
-        if (Instance == this) Instance = null;
-    }
+    void OnEnable() { SceneManager.sceneLoaded += OnSceneLoaded; }
+    void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
+    void OnDestroy() { if (Instance == this) Instance = null; }
 
     void Start()
     {
+        EnsureActiveProfile();
         SaveData loaded = SaveSystem.Load();
         if (IsPlayableSave(loaded))
         {
@@ -56,27 +51,48 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name != "FarmScene") return;
-
         SaveData loaded = SaveSystem.Load();
         if (loaded != null) ApplySave(loaded);
     }
 
-    public void ApplyDailyFixedCost()
-    {
-        Balance -= DailyCost;
-    }
-
-    public void AddRevenue(float amount)
-    {
-        Balance += amount;
-    }
-
-    public void SpendBalance(float amount)
-    {
-        Balance -= amount;
-    }
-
+    public void ApplyDailyFixedCost() { Balance -= DailyCost; }
+    public void AddRevenue(float amount) { Balance += amount; }
+    public void SpendBalance(float amount) { Balance -= amount; }
     public bool CanAfford(float amount) => Balance >= amount;
+
+    public void RecordPlanting(int slotIndex, string cropName)
+    {
+        Plantings.Add(new PlantingRecord
+        {
+            day = CurrentDay,
+            cropName = cropName,
+            slotIndex = slotIndex
+        });
+    }
+
+    public void RecordSale(string cropName, int quantity, float pricePerUnit, string buyerName)
+    {
+        Sales.Add(new DailySaleRecord
+        {
+            day = CurrentDay,
+            cropName = cropName,
+            quantity = quantity,
+            pricePerUnit = pricePerUnit,
+            total = quantity * pricePerUnit,
+            buyerName = buyerName
+        });
+    }
+
+    public void RecordQuestionAnswer(string cropName, string questionId, bool correct)
+    {
+        Questions.Add(new QuestionAnswerRecord
+        {
+            day = CurrentDay,
+            cropName = cropName,
+            questionId = questionId,
+            correct = correct
+        });
+    }
 
     public void AdvanceDay()
     {
@@ -110,14 +126,25 @@ public class GameManager : MonoBehaviour
 
     public void GoToMarket()
     {
-        if (CropSystem.Instance != null)
-            CropSystem.Instance.OnDayEnd();
-
-        if (StaminaSystem.Instance != null)
-            StaminaSystem.Instance.ResetForNewDay();
+        if (CropSystem.Instance != null) CropSystem.Instance.OnDayEnd();
+        if (StaminaSystem.Instance != null) StaminaSystem.Instance.ResetForNewDay();
 
         SaveSystem.Save(BuildSaveData());
         SceneManager.LoadScene("MarketScene");
+    }
+
+    void EnsureActiveProfile()
+    {
+        if (SaveSystem.ActiveProfile != null) return;
+
+        var profiles = SaveSystem.ListProfiles();
+        if (profiles.Count > 0)
+        {
+            SaveSystem.SetActiveProfile(profiles[0]);
+            return;
+        }
+        var fallback = SaveSystem.FindOrCreateProfile("Aluno");
+        SaveSystem.SetActiveProfile(fallback);
     }
 
     SaveData BuildSaveData()
@@ -138,7 +165,10 @@ public class GameManager : MonoBehaviour
             balance = Balance,
             inventory = inventory,
             cropSlots = cropSlots,
-            dailyBalanceHistory = DailyBalances.ToArray()
+            dailyBalanceHistory = DailyBalances.ToArray(),
+            plantings = Plantings.ToArray(),
+            sales = Sales.ToArray(),
+            questions = Questions.ToArray()
         };
     }
 
@@ -150,6 +180,15 @@ public class GameManager : MonoBehaviour
         DailyBalances = data.dailyBalanceHistory != null
             ? new List<float>(data.dailyBalanceHistory)
             : new List<float>();
+        Plantings = data.plantings != null
+            ? new List<PlantingRecord>(data.plantings)
+            : new List<PlantingRecord>();
+        Sales = data.sales != null
+            ? new List<DailySaleRecord>(data.sales)
+            : new List<DailySaleRecord>();
+        Questions = data.questions != null
+            ? new List<QuestionAnswerRecord>(data.questions)
+            : new List<QuestionAnswerRecord>();
         InventorySystem.Instance?.LoadSaveData(data.inventory);
         CropSystem.Instance?.LoadSaveData(data.cropSlots);
     }
@@ -168,5 +207,8 @@ public class GameManager : MonoBehaviour
         Balance = StartingBalance;
         IsLoss = false;
         DailyBalances = new List<float>();
+        Plantings = new List<PlantingRecord>();
+        Sales = new List<DailySaleRecord>();
+        Questions = new List<QuestionAnswerRecord>();
     }
 }

@@ -22,6 +22,7 @@ public class BuyerSystem : MonoBehaviour
 
         float revenue = askingPricePerUnit * quantity;
         GameManager.Instance.AddRevenue(revenue);
+        GameManager.Instance.RecordSale(cropName, quantity, askingPricePerUnit, buyer.buyerName);
         EndScreenController.Instance?.RecordSale(cropName, revenue, quantity, askingPricePerUnit);
         return true;
     }

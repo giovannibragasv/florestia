@@ -74,6 +74,7 @@ public class CropSlot : MonoBehaviour
         if (!GameManager.Instance.CanAfford(crop.seedCost)) return false;
 
         GameManager.Instance.SpendBalance(crop.seedCost);
+        GameManager.Instance.RecordPlanting(SlotIndex, crop.cropName);
         _crop = crop;
         _daysPlanted = 0;
         RefreshSprite();
