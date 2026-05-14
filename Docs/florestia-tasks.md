@@ -81,13 +81,13 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [ ] **A07.2** Texto curto no HUD: 'Manhã' / 'Tarde' / 'Anoitecer'
 
 ### B01 · Save persistente por aluno
-> **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-14
+> **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Status:** ✅ Concluído · commits `5c83754` (fundação) + `b235a49` (picker)
 
-- [ ] **B01.1** Identificação simples de aluno (nome digitado no boot, sem login)
-- [ ] **B01.2** Estrutura de dados por aluno: plantios, vendas, perguntas, decisões, dia atual
-- [ ] **B01.3** Salvar a cada ação relevante (extensão do SaveSystem)
-- [ ] **B01.4** Carregar ao iniciar; menu pra trocar de aluno
-- [ ] **B01.5** Reset functionality
+- [x] **B01.1** Identificação simples de aluno (nome digitado no boot, sem login)
+- [x] **B01.2** Estrutura de dados por aluno: plantios, vendas, perguntas, decisões, dia atual
+- [x] **B01.3** Salvar a cada ação relevante (extensão do SaveSystem)
+- [x] **B01.4** Carregar ao iniciar; menu pra trocar de aluno
+- [x] **B01.5** Reset functionality
 
 ### B02 · Pergunta diária no fim do dia (versão hardcoded)
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-16 | **Depende:** B01, C07, C08
@@ -247,18 +247,18 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [ ] **F03.4** Entregar doc curto
 
 ### G01 · Barra 'life' de tempo de plantação
-> **Labels:** kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-13
+> **Labels:** kid-friendly · código | **Dono:** vanni | **Status:** ✅ Concluído · commit `178b384`
 
-- [ ] **G01.1** Barra fina sobre cada CropSlot ocupado
-- [ ] **G01.2** Preenchimento conforme daysPlanted / growthDays
-- [ ] **G01.3** Esconde quando crop está ready
+- [x] **G01.1** Barra fina sobre cada CropSlot ocupado
+- [x] **G01.2** Preenchimento conforme daysPlanted / growthDays
+- [x] **G01.3** Esconde quando crop está ready
 
 ### G02 · Painel de vendas com vendedor (refinamento)
-> **Labels:** kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-14
+> **Labels:** kid-friendly · código | **Dono:** vanni | **Status:** ✅ Concluído · commit `9fb758a`
 
-- [ ] **G02.1** Garantir update do painel após SelectCropByIndex
-- [ ] **G02.2** Sell button label dinâmico (relacionado com A04)
-- [ ] **G02.3** Bloquear vender 0 unidades
+- [x] **G02.1** Garantir update do painel após SelectCropByIndex
+- [x] **G02.2** Sell button label dinâmico (relacionado com A04)
+- [x] **G02.3** Bloquear vender 0 unidades
 
 ### H01 · Slide para apresentação do MVP (mentor-facing)
 > **Labels:** mentor · apresentação | **Dono:** kadu,tex | **Due:** 2026-05-18
