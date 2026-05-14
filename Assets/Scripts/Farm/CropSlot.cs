@@ -15,6 +15,13 @@ public class CropSlot : MonoBehaviour
     SpriteRenderer _soilRenderer;  // on this GO — soil / watered soil
     SpriteRenderer _cropRenderer;  // child GO — crop growth stage
     SpriteRenderer _waterOverlayRenderer; // child GO — clear watered feedback above growth art
+    SpriteRenderer _growthBarBg;    // child GO — dark background of life bar
+    SpriteRenderer _growthBarFill;  // child GO — colored fill scaled by progress
+
+    const float BarWidth = 0.72f;
+    const float BarHeight = 0.10f;
+    const float BarYOffset = 0.42f;
+    static Sprite _whitePixel;
 
     public bool IsEmpty  => _crop == null;
     public bool IsReady  => _crop != null && _daysPlanted >= _crop.growthDays;
@@ -41,6 +48,8 @@ public class CropSlot : MonoBehaviour
         _waterOverlayRenderer = waterGO.AddComponent<SpriteRenderer>();
         _waterOverlayRenderer.sortingOrder = _soilRenderer.sortingOrder + 3;
         _waterOverlayRenderer.color = new Color(0.85f, 0.95f, 1f, 0.62f);
+
+        BuildGrowthBar();
 
         if (!TryGetComponent(out BoxCollider2D col) || col == null)
             col = gameObject.AddComponent<BoxCollider2D>();
@@ -132,6 +141,62 @@ public class CropSlot : MonoBehaviour
                 _cropRenderer.sprite = _crop.growthStageSprites[stage];
             }
         }
+
+        RefreshGrowthBar();
+    }
+
+    void BuildGrowthBar()
+    {
+        var bgGO = new GameObject("GrowthBarBg");
+        bgGO.transform.SetParent(transform, false);
+        bgGO.transform.localPosition = new Vector3(0f, BarYOffset, 0f);
+        bgGO.transform.localScale = new Vector3(BarWidth, BarHeight, 1f);
+        _growthBarBg = bgGO.AddComponent<SpriteRenderer>();
+        _growthBarBg.sprite = GetWhitePixel();
+        _growthBarBg.color = new Color(0.08f, 0.06f, 0.04f, 0.78f);
+        _growthBarBg.sortingOrder = _soilRenderer.sortingOrder + 4;
+
+        var fillGO = new GameObject("GrowthBarFill");
+        fillGO.transform.SetParent(transform, false);
+        fillGO.transform.localPosition = new Vector3(-BarWidth * 0.5f, BarYOffset, 0f);
+        fillGO.transform.localScale = new Vector3(0f, BarHeight * 0.85f, 1f);
+        _growthBarFill = fillGO.AddComponent<SpriteRenderer>();
+        _growthBarFill.sprite = GetWhitePixel();
+        _growthBarFill.color = new Color(0.55f, 0.85f, 0.35f, 1f);
+        _growthBarFill.sortingOrder = _soilRenderer.sortingOrder + 5;
+    }
+
+    void RefreshGrowthBar()
+    {
+        if (_growthBarBg == null || _growthBarFill == null) return;
+
+        bool visible = _crop != null && !IsReady && _crop.growthDays > 0;
+        _growthBarBg.gameObject.SetActive(visible);
+        _growthBarFill.gameObject.SetActive(visible);
+        if (!visible) return;
+
+        float progress = Mathf.Clamp01((float)_daysPlanted / _crop.growthDays);
+        float fillWidth = BarWidth * progress;
+
+        var fillT = _growthBarFill.transform;
+        fillT.localScale = new Vector3(fillWidth, BarHeight * 0.85f, 1f);
+        // Left-anchored growth: position the centered sprite so its left edge is fixed.
+        fillT.localPosition = new Vector3(-BarWidth * 0.5f + fillWidth * 0.5f, BarYOffset, 0f);
+
+        _growthBarFill.color = Color.Lerp(
+            new Color(0.55f, 0.85f, 0.35f, 1f),  // verde
+            new Color(0.95f, 0.75f, 0.20f, 1f),  // dourado
+            progress);
+    }
+
+    static Sprite GetWhitePixel()
+    {
+        if (_whitePixel != null) return _whitePixel;
+        var tex = Texture2D.whiteTexture;
+        _whitePixel = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height),
+            new Vector2(0.5f, 0.5f), 1f);
+        _whitePixel.name = "CropSlot_WhitePixel";
+        return _whitePixel;
     }
 
     public void Interact()
