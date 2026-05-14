@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        EnsureProfilePickerExists();
         EnsureActiveProfile();
         SaveData loaded = SaveSystem.Load();
         if (IsPlayableSave(loaded))
@@ -46,6 +47,13 @@ public class GameManager : MonoBehaviour
             SaveSystem.Delete();
             ResetRunState();
         }
+    }
+
+    static void EnsureProfilePickerExists()
+    {
+        if (StudentProfilePicker.Instance != null) return;
+        var go = new GameObject("_StudentProfilePicker");
+        go.AddComponent<StudentProfilePicker>();
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -139,12 +147,8 @@ public class GameManager : MonoBehaviour
 
         var profiles = SaveSystem.ListProfiles();
         if (profiles.Count > 0)
-        {
             SaveSystem.SetActiveProfile(profiles[0]);
-            return;
-        }
-        var fallback = SaveSystem.FindOrCreateProfile("Aluno");
-        SaveSystem.SetActiveProfile(fallback);
+        // If no profiles exist, deixar null e o picker aparece automaticamente.
     }
 
     SaveData BuildSaveData()
