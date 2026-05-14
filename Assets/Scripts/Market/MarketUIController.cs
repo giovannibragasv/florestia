@@ -32,6 +32,7 @@ public class MarketUIController : MonoBehaviour
 
     [Header("Action")]
     [SerializeField] Button sellButton;
+    [SerializeField] TMP_Text sellButtonLabel;
     [SerializeField] Button endDayButton;
 
     [Header("Daily Summary Modal")]
@@ -94,6 +95,7 @@ public class MarketUIController : MonoBehaviour
         RefreshStockLabel();
         RefreshQuantityRange();
         RefreshPriceDisplay();
+        UpdateSellButtonState();
     }
 
     void RefreshCropButtonHighlight()
@@ -131,6 +133,53 @@ public class MarketUIController : MonoBehaviour
         float price = priceSlider.value;
         if (quantityLabel != null) quantityLabel.text = $"Qtd: {qty}";
         if (totalLabel != null) totalLabel.text = $"{qty} × R${price:F2} = R${qty * price:F2}";
+        UpdateSellButtonState();
+    }
+
+    void UpdateSellButtonState()
+    {
+        if (sellButton == null) return;
+        if (sellButtonLabel == null)
+            sellButtonLabel = sellButton.GetComponentInChildren<TMP_Text>();
+
+        int stock = string.IsNullOrEmpty(_selectedCrop)
+            ? 0
+            : InventorySystem.Instance != null
+                ? InventorySystem.Instance.GetCount(_selectedCrop)
+                : 0;
+
+        int qty = quantitySlider != null
+            ? Mathf.Clamp(Mathf.RoundToInt(quantitySlider.value), 0, Mathf.Max(stock, 0))
+            : (stock > 0 ? 1 : 0);
+
+        bool canSell = _selectedBuyer != null && stock > 0 && qty > 0;
+        sellButton.interactable = canSell;
+
+        if (sellButtonLabel != null)
+        {
+            if (_selectedBuyer == null) sellButtonLabel.text = "Escolha um comprador";
+            else if (stock == 0) sellButtonLabel.text = "Sem estoque";
+            else sellButtonLabel.text = $"Vender {qty} {PluralizeCrop(_selectedCrop, qty)}";
+        }
+    }
+
+    static string PluralizeCrop(string crop, int qty)
+    {
+        string singular = crop switch
+        {
+            "Mandioca" => "mandioca",
+            "Cacau" => "cacau",
+            "Acai" => "açaí",
+            _ => crop != null ? crop.ToLower() : ""
+        };
+        if (qty == 1) return singular;
+        return crop switch
+        {
+            "Mandioca" => "mandiocas",
+            "Cacau" => "cacaus",
+            "Acai" => "açaís",
+            _ => singular + "s"
+        };
     }
 
     void RefreshPriceDisplay()
@@ -158,6 +207,7 @@ public class MarketUIController : MonoBehaviour
         buyerPortrait.preserveAspect = true;
         buyerDialogueLine.color = new Color(0.96f, 0.88f, 0.68f, 1f);
         buyerDialogueLine.text = buyer.buyerName;
+        UpdateSellButtonState();
     }
 
     void OnSellClicked()
@@ -180,6 +230,7 @@ public class MarketUIController : MonoBehaviour
         HUDController.Instance?.RefreshBalance(GameManager.Instance.Balance);
         RefreshStockLabel();
         RefreshQuantityRange();
+        UpdateSellButtonState();
     }
 
     void OnEndDayClicked()
