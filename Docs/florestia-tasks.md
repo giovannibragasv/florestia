@@ -102,8 +102,8 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### B03 · Fallback de histórico se não plantou
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-17 | **Depende:** B01
 
-- [ ] **B03.1** Detectar 'não plantou hoje'
-- [ ] **B03.2** Mostrar revisão histórica: mini-gráfico, melhor venda da semana
+- [x] **B03.1** Detectar 'não plantou hoje'
+- [x] **B03.2** Mostrar revisão histórica: mini-gráfico, melhor venda da semana
 
 ### B04 · Dia como fase com encerramento educacional
 > **Labels:** kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-17 | **Depende:** B02

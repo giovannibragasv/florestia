@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -26,8 +27,10 @@ public class DailyEducationFlow : MonoBehaviour
 
     List<DailyQuestion> _questions;
     DailyCuriosity _curiosity;
+    string _reviewText;
     int _stepIndex;
     bool _showingCuriosity;
+    bool _showingReview;
     bool _hasAnswered;
 
     void Awake()
@@ -46,10 +49,16 @@ public class DailyEducationFlow : MonoBehaviour
         BuildUI();
         var gm = GameManager.Instance;
         if (_root == null || gm == null) { Finish(); return; }
-        _questions = DailyEducationGenerator.GenerateQuestions(gm);
-        _curiosity = DailyEducationGenerator.PickCuriosity(gm);
+        _reviewText = DailyEducationGenerator.BuildReviewIfNoActivityToday(gm);
+        _questions = string.IsNullOrEmpty(_reviewText)
+            ? DailyEducationGenerator.GenerateQuestions(gm)
+            : new List<DailyQuestion>();
+        _curiosity = string.IsNullOrEmpty(_reviewText)
+            ? DailyEducationGenerator.PickCuriosity(gm)
+            : null;
         _stepIndex = 0;
         _showingCuriosity = false;
+        _showingReview = false;
         _hasAnswered = false;
         _root.SetActive(true);
         ShowCurrent();
@@ -65,9 +74,19 @@ public class DailyEducationFlow : MonoBehaviour
         {
             var q = _questions[_stepIndex];
             _showingCuriosity = false;
+            _showingReview = false;
             if (_stepLabel != null) _stepLabel.text = $"Pergunta {_stepIndex + 1} de {_questions.Count + 1} · {q.theme}";
             if (_bodyLabel != null) _bodyLabel.text = q.statement;
             ShowOptions(q);
+        }
+        else if (!_showingReview && !string.IsNullOrEmpty(_reviewText))
+        {
+            _showingReview = true;
+            if (_stepLabel != null) _stepLabel.text = "Revisão do dia";
+            if (_bodyLabel != null) _bodyLabel.text = _reviewText;
+            ShowOptions(null);
+            if (_continueLabel != null) _continueLabel.text = "Próximo dia";
+            if (_continueButton != null) _continueButton.gameObject.SetActive(true);
         }
         else if (!_showingCuriosity && _curiosity != null)
         {
@@ -130,6 +149,7 @@ public class DailyEducationFlow : MonoBehaviour
 
     void OnContinueClicked()
     {
+        if (_showingReview) { Finish(); return; }
         if (_showingCuriosity) { Finish(); return; }
         _stepIndex++;
         ShowCurrent();
@@ -356,6 +376,54 @@ public static class DailyEducationGenerator
             BuildSobraQuestion(focusCrop, totalCusto, totalReceita, sobra, hasSale)
         };
         return list;
+    }
+
+    public static string BuildReviewIfNoActivityToday(GameManager gm)
+    {
+        int day = gm.CurrentDay;
+        bool planted = gm.Plantings.Exists(p => p.day == day);
+        bool sold = gm.Sales.Exists(s => s.day == day);
+        if (planted || sold) return null;
+
+        var sb = new StringBuilder();
+        sb.AppendLine("Hoje você não plantou nem vendeu.");
+        sb.AppendLine("Vamos olhar sua jornada antes de começar outro dia.");
+        sb.AppendLine();
+
+        DailySaleRecord bestSale = null;
+        foreach (var sale in gm.Sales)
+        {
+            if (bestSale == null || sale.total > bestSale.total)
+                bestSale = sale;
+        }
+
+        if (bestSale != null)
+        {
+            sb.AppendLine($"Melhor venda até agora: {bestSale.quantity} × {bestSale.cropName} = R${bestSale.total:F2}.");
+        }
+        else
+        {
+            sb.AppendLine("Você ainda não fez uma venda. Amanhã tente colher e conversar com um comprador.");
+        }
+
+        if (gm.DailyBalances != null && gm.DailyBalances.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine("Dinheiro nos últimos dias:");
+            int start = Mathf.Max(0, gm.DailyBalances.Count - 5);
+            float max = Mathf.Max(1f, GameManager.StartingBalance);
+            for (int i = start; i < gm.DailyBalances.Count; i++)
+                if (gm.DailyBalances[i] > max) max = gm.DailyBalances[i];
+
+            for (int i = start; i < gm.DailyBalances.Count; i++)
+            {
+                float value = gm.DailyBalances[i];
+                int bars = Mathf.Clamp(Mathf.RoundToInt(value / max * 10f), 1, 10);
+                sb.AppendLine($"Dia {i + 1}: R${value:F0} {new string('#', bars)}");
+            }
+        }
+
+        return sb.ToString();
     }
 
     public static DailyCuriosity PickCuriosity(GameManager gm)
