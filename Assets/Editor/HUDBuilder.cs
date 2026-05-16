@@ -74,14 +74,31 @@ public static class HUDBuilder
         // ── Top-right: timer ────────────────────────────────
         var trPanel = MakeAnchoredRect("TopRight", hudGO.transform,
             new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1),
-            new Vector2(-16, -16), new Vector2(132, 46));
+            new Vector2(-16, -16), new Vector2(180, 92));
         trPanel.gameObject.AddComponent<Image>().color = new Color(0.08f, 0.055f, 0.035f, 0.78f);
         MakeIcon("SunIcon", trPanel, "Assets/Sprites/UI/ui_sun.png",
-            new Vector2(-118, -10), new Vector2(26, 26));
+            new Vector2(-166, -10), new Vector2(26, 26));
 
         var timerLabel = MakeLabel("TimerLabel", trPanel,
-            "05:00", new Vector2(-86, -10), new Vector2(74, 30), 22);
+            "05:00", new Vector2(-134, -10), new Vector2(74, 30), 22);
         timerLabel.alignment = TextAlignmentOptions.Right;
+
+        var phaseLabel = MakeLabel("PhaseLabel", trPanel,
+            "Manhã", new Vector2(-166, -42), new Vector2(150, 22), 16);
+        phaseLabel.alignment = TextAlignmentOptions.Center;
+        phaseLabel.color = new Color(0.98f, 0.84f, 0.45f, 1f);
+
+        var phaseBg = MakeAnchoredRect("PhaseProgressBg", trPanel,
+            new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
+            new Vector2(-166, -70), new Vector2(146, 8));
+        phaseBg.gameObject.AddComponent<Image>().color = new Color(0.28f, 0.20f, 0.12f, 1f);
+
+        var phaseFillRT = MakeAnchoredRect("PhaseProgressFill", phaseBg,
+            new Vector2(0, 0.5f), new Vector2(0, 0.5f), new Vector2(0, 0.5f),
+            Vector2.zero, new Vector2(146, 8));
+        phaseFillRT.localScale = new Vector3(0f, 1f, 1f);
+        var phaseProgressFill = phaseFillRT.gameObject.AddComponent<Image>();
+        phaseProgressFill.color = phaseLabel.color;
 
         // ── Wire HUDController ──────────────────────────────
         var hudCtrlGO = GameObject.Find("_HUD");
@@ -95,6 +112,8 @@ public static class HUDBuilder
         so.FindProperty("staminaBar").objectReferenceValue   = slider;
         so.FindProperty("staminaLabel").objectReferenceValue = staminaLabel;
         so.FindProperty("timerLabel").objectReferenceValue   = timerLabel;
+        so.FindProperty("phaseLabel").objectReferenceValue   = phaseLabel;
+        so.FindProperty("phaseProgressFill").objectReferenceValue = phaseProgressFill;
         so.ApplyModifiedPropertiesWithoutUndo();
 
         Selection.activeGameObject = hudGO;

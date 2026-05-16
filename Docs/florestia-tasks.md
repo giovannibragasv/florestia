@@ -77,8 +77,8 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### A07 · Visualização da progressão do dia
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-18
 
-- [ ] **A07.1** Indicador visual de fase do dia além do sky gradient
-- [ ] **A07.2** Texto curto no HUD: 'Manhã' / 'Tarde' / 'Anoitecer'
+- [x] **A07.1** Indicador visual de fase do dia além do sky gradient
+- [x] **A07.2** Texto curto no HUD: 'Manhã' / 'Tarde' / 'Anoitecer'
 
 ### B01 · Save persistente por aluno
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Status:** ✅ Concluído · commits `5c83754` (fundação) + `b235a49` (picker)
