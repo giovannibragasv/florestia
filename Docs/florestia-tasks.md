@@ -27,7 +27,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-15 | **Depende:** A01
 
 - [x] **A02.1** Aplicar strings novas em HUDController, MarketUIController, EndScreenController
-- [ ] **A02.2** Trocar 'ADMIN' → 'intermediadora' em todo o código e docs
+- [x] **A02.2** Usar 'intermediadora' em todo o código e docs
 - [x] **A02.3** Remover notação % do HUD do mercado (manter sinal por cor)
 - [ ] **A02.4** Renomear SerializedFields para nomes mais legíveis se ajudar leitura do código
 
@@ -152,7 +152,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [ ] **C05.2** Pop-up primeira venda no prejuízo: sem culpa + explicação curta
 - [ ] **C05.3** Pop-up início do dia 2+: dica do dia anterior baseada em comportamento
 
-### C06 · Spec + wireframe do dashboard ADMIN
+### C06 · Spec + wireframe do dashboard da intermediadora
 > **Labels:** mentor · conteúdo · educação | **Dono:** pm | **Due:** 2026-05-14
 
 - [ ] **C06.1** Listar métricas relevantes para a professora
@@ -214,7 +214,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [ ] **D04.3** Revisar Ações de Impacto Positivo correspondentes
 - [ ] **D04.4** Atualizar canvas Modelo C
 
-### E01 · Mock do dashboard ADMIN
+### E01 · Mock do dashboard da intermediadora
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-18 | **Depende:** C06, D01
 
 - [ ] **E01.1** Tela acessível por flag ou senha simples
@@ -287,7 +287,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [ ] **FA02.3** Insights culturais alternando com matemáticos
 - [ ] **FA02.4** Persistir desempenho por aluno
 
-### FA03 · Dashboard ADMIN funcional
+### FA03 · Dashboard da intermediadora funcional
 > **Labels:** mentor · código · educação · feira | **Dono:** vanni | **Due:** 2026-06-05
 
 - [ ] **FA03.1** Conectar com save persistente B01
@@ -300,7 +300,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 
 - [ ] **FA04.1** Estrutura de dados para múltiplas runs por aluno
 - [ ] **FA04.2** Agregação de métricas ao longo do tempo
-- [ ] **FA04.3** Visualização no dashboard ADMIN
+- [ ] **FA04.3** Visualização no dashboard da intermediadora
 
 ### FA05 · Hero zone EndScreen v2 — ilustrações finais
 > **Labels:** polimento · feira | **Dono:** kadu,vanni | **Due:** 2026-06-02

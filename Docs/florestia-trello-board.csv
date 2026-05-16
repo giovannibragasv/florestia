@@ -6,7 +6,7 @@
 "🎯 Sprint MVP (11-19/05)","A01.5 · Validar com o teste de 10 segundos da auditoria de UX por idade","Cluster A01 · Audit + reescrita de todos os textos do jogo.","mentor,kid-friendly,conteúdo,educação","biel,kadu","2026-05-14"
 "🎯 Sprint MVP (11-19/05)","A02.1 · Aplicar strings novas em HUDController, MarketUIController, EndScreenController","Cluster A02 · Refactor de textos no código.
 **Depende de:** A01","mentor,kid-friendly,código","vanni","2026-05-15"
-"🎯 Sprint MVP (11-19/05)","A02.2 · Trocar 'ADMIN' → 'intermediadora' em todo o código e docs","Cluster A02 · Refactor de textos no código.
+"🎯 Sprint MVP (11-19/05)","A02.2 · Usar 'intermediadora' em todo o código e docs","Cluster A02 · Refactor de textos no código.
 **Depende de:** A01","mentor,kid-friendly,código","vanni","2026-05-15"
 "🎯 Sprint MVP (11-19/05)","A02.3 · Remover notação % do HUD do mercado (manter sinal por cor)","Cluster A02 · Refactor de textos no código.
 **Depende de:** A01","mentor,kid-friendly,código","vanni","2026-05-15"
@@ -115,10 +115,10 @@
 "🎯 Sprint MVP (11-19/05)","C05.1 · Pop-up primeira venda lucrativa: parabéns + nome do conceito (lucro)","Cluster C05 · Roteiro de insights pop-up in-game.","mentor,conteúdo,educação","biel","2026-05-15"
 "🎯 Sprint MVP (11-19/05)","C05.2 · Pop-up primeira venda no prejuízo: sem culpa + explicação curta","Cluster C05 · Roteiro de insights pop-up in-game.","mentor,conteúdo,educação","biel","2026-05-15"
 "🎯 Sprint MVP (11-19/05)","C05.3 · Pop-up início do dia 2+: dica do dia anterior baseada em comportamento","Cluster C05 · Roteiro de insights pop-up in-game.","mentor,conteúdo,educação","biel","2026-05-15"
-"🎯 Sprint MVP (11-19/05)","C06.1 · Listar métricas relevantes para a professora","Cluster C06 · Spec + wireframe do dashboard ADMIN.","mentor,conteúdo,educação","pm","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","C06.2 · Wireframe em papel ou Figma simples","Cluster C06 · Spec + wireframe do dashboard ADMIN.","mentor,conteúdo,educação","pm","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","C06.3 · Definir hierarquia de informação","Cluster C06 · Spec + wireframe do dashboard ADMIN.","mentor,conteúdo,educação","pm","2026-05-14"
-"🎯 Sprint MVP (11-19/05)","C06.4 · Entregar doc + imagem do wireframe","Cluster C06 · Spec + wireframe do dashboard ADMIN.","mentor,conteúdo,educação","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C06.1 · Listar métricas relevantes para a professora","Cluster C06 · Spec + wireframe do dashboard da intermediadora.","mentor,conteúdo,educação","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C06.2 · Wireframe em papel ou Figma simples","Cluster C06 · Spec + wireframe do dashboard da intermediadora.","mentor,conteúdo,educação","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C06.3 · Definir hierarquia de informação","Cluster C06 · Spec + wireframe do dashboard da intermediadora.","mentor,conteúdo,educação","pm","2026-05-14"
+"🎯 Sprint MVP (11-19/05)","C06.4 · Entregar doc + imagem do wireframe","Cluster C06 · Spec + wireframe do dashboard da intermediadora.","mentor,conteúdo,educação","pm","2026-05-14"
 "🎯 Sprint MVP (11-19/05)","C07.1 · Decidir formato: múltipla escolha (3 alternativas) ou input numérico","Cluster C07 · Spec do mecanismo de pergunta diária.","mentor,conteúdo,educação","biel,vanni","2026-05-13"
 "🎯 Sprint MVP (11-19/05)","C07.2 · Definir política de escolha da pergunta (random vs adaptativo)","Cluster C07 · Spec do mecanismo de pergunta diária.","mentor,conteúdo,educação","biel,vanni","2026-05-13"
 "🎯 Sprint MVP (11-19/05)","C07.3 · Definir política de feedback: certo / errado","Cluster C07 · Spec do mecanismo de pergunta diária.","mentor,conteúdo,educação","biel,vanni","2026-05-13"
@@ -145,15 +145,15 @@
 "🎯 Sprint MVP (11-19/05)","D04.2 · Adicionar representatividade brasileira/jutaí","Cluster D04 · Modelo C v2 · Foco do Impacto / Ações.","modelo-c,educação","pm","2026-05-17"
 "🎯 Sprint MVP (11-19/05)","D04.3 · Revisar Ações de Impacto Positivo correspondentes","Cluster D04 · Modelo C v2 · Foco do Impacto / Ações.","modelo-c,educação","pm","2026-05-17"
 "🎯 Sprint MVP (11-19/05)","D04.4 · Atualizar canvas Modelo C","Cluster D04 · Modelo C v2 · Foco do Impacto / Ações.","modelo-c,educação","pm","2026-05-17"
-"🎯 Sprint MVP (11-19/05)","E01.1 · Tela acessível por flag ou senha simples","Cluster E01 · Mock do dashboard ADMIN.
+"🎯 Sprint MVP (11-19/05)","E01.1 · Tela acessível por flag ou senha simples","Cluster E01 · Mock do dashboard da intermediadora.
 **Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
-"🎯 Sprint MVP (11-19/05)","E01.2 · Layout estático com dados dummy: aluno, dia, saldo, melhor cultura, % acerto","Cluster E01 · Mock do dashboard ADMIN.
+"🎯 Sprint MVP (11-19/05)","E01.2 · Layout estático com dados dummy: aluno, dia, saldo, melhor cultura, % acerto","Cluster E01 · Mock do dashboard da intermediadora.
 **Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
-"🎯 Sprint MVP (11-19/05)","E01.3 · Reaproveitar componente de gráfico de barras da EndScreen","Cluster E01 · Mock do dashboard ADMIN.
+"🎯 Sprint MVP (11-19/05)","E01.3 · Reaproveitar componente de gráfico de barras da EndScreen","Cluster E01 · Mock do dashboard da intermediadora.
 **Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
-"🎯 Sprint MVP (11-19/05)","E01.4 · Header 'visão da intermediadora'","Cluster E01 · Mock do dashboard ADMIN.
+"🎯 Sprint MVP (11-19/05)","E01.4 · Header 'visão da intermediadora'","Cluster E01 · Mock do dashboard da intermediadora.
 **Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
-"🎯 Sprint MVP (11-19/05)","E01.5 · Sem persistência real (funcional vem na Feira)","Cluster E01 · Mock do dashboard ADMIN.
+"🎯 Sprint MVP (11-19/05)","E01.5 · Sem persistência real (funcional vem na Feira)","Cluster E01 · Mock do dashboard da intermediadora.
 **Depende de:** C06, D01","mentor,kid-friendly,código,educação","vanni","2026-05-18"
 "🎯 Sprint MVP (11-19/05)","F01.1 · Perfil quilombola/ribeirinho da Vila Jutaí","Cluster F01 · Estudo histórico/cultural Vila Jutaí · preliminar.","pesquisa","tex,kadu","2026-05-17"
 "🎯 Sprint MVP (11-19/05)","F01.2 · Cultivos locais e práticas agrícolas","Cluster F01 · Estudo histórico/cultural Vila Jutaí · preliminar.","pesquisa","tex,kadu","2026-05-17"
@@ -183,13 +183,13 @@
 "🌳 Sprint Feira (20/05-07/06)","FA02.2 · Lógica adaptativa: dificuldade sobe com acertos","Cluster FA02 · Pergunta diária v2 — adaptativa.","código,educação,feira","vanni","2026-06-03"
 "🌳 Sprint Feira (20/05-07/06)","FA02.3 · Insights culturais alternando com matemáticos","Cluster FA02 · Pergunta diária v2 — adaptativa.","código,educação,feira","vanni","2026-06-03"
 "🌳 Sprint Feira (20/05-07/06)","FA02.4 · Persistir desempenho por aluno","Cluster FA02 · Pergunta diária v2 — adaptativa.","código,educação,feira","vanni","2026-06-03"
-"🌳 Sprint Feira (20/05-07/06)","FA03.1 · Conectar com save persistente B01","Cluster FA03 · Dashboard ADMIN funcional.","mentor,código,educação,feira","vanni","2026-06-05"
-"🌳 Sprint Feira (20/05-07/06)","FA03.2 · Métricas reais por aluno","Cluster FA03 · Dashboard ADMIN funcional.","mentor,código,educação,feira","vanni","2026-06-05"
-"🌳 Sprint Feira (20/05-07/06)","FA03.3 · Visualizações: gráfico saldo, % acerto, padrão de compradores","Cluster FA03 · Dashboard ADMIN funcional.","mentor,código,educação,feira","vanni","2026-06-05"
-"🌳 Sprint Feira (20/05-07/06)","FA03.4 · Exportação simples (CSV ou imprimir)","Cluster FA03 · Dashboard ADMIN funcional.","mentor,código,educação,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FA03.1 · Conectar com save persistente B01","Cluster FA03 · Dashboard da intermediadora funcional.","mentor,código,educação,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FA03.2 · Métricas reais por aluno","Cluster FA03 · Dashboard da intermediadora funcional.","mentor,código,educação,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FA03.3 · Visualizações: gráfico saldo, % acerto, padrão de compradores","Cluster FA03 · Dashboard da intermediadora funcional.","mentor,código,educação,feira","vanni","2026-06-05"
+"🌳 Sprint Feira (20/05-07/06)","FA03.4 · Exportação simples (CSV ou imprimir)","Cluster FA03 · Dashboard da intermediadora funcional.","mentor,código,educação,feira","vanni","2026-06-05"
 "🌳 Sprint Feira (20/05-07/06)","FA04.1 · Estrutura de dados para múltiplas runs por aluno","Cluster FA04 · Histórico longitudinal por aluno.","código,educação,feira","vanni","2026-06-04"
 "🌳 Sprint Feira (20/05-07/06)","FA04.2 · Agregação de métricas ao longo do tempo","Cluster FA04 · Histórico longitudinal por aluno.","código,educação,feira","vanni","2026-06-04"
-"🌳 Sprint Feira (20/05-07/06)","FA04.3 · Visualização no dashboard ADMIN","Cluster FA04 · Histórico longitudinal por aluno.","código,educação,feira","vanni","2026-06-04"
+"🌳 Sprint Feira (20/05-07/06)","FA04.3 · Visualização no dashboard da intermediadora","Cluster FA04 · Histórico longitudinal por aluno.","código,educação,feira","vanni","2026-06-04"
 "🌳 Sprint Feira (20/05-07/06)","FA05 · Hero zone EndScreen v2 — ilustrações finais","Substituir ilustrações MVP (C09) por versão final polida.","polimento,feira","kadu,vanni","2026-06-02"
 "🌳 Sprint Feira (20/05-07/06)","FB01.1 · Configurar Build Profile WebGL","Cluster FB01 · Build WebGL para Chromebook.","código,feira","vanni","2026-05-30"
 "🌳 Sprint Feira (20/05-07/06)","FB01.2 · Resolver issues de compatibility","Cluster FB01 · Build WebGL para Chromebook.","código,feira","vanni","2026-05-30"

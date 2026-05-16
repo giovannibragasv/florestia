@@ -3,7 +3,7 @@
 Tradução do quadro de mentoria de 11/05/26 + roadmap anterior em estrutura Trello.
 
 - **🎯 MVP 19/05** — POC para o mentor. Adaptação do jogo existente para ser kid-friendly + mecânicas educacionais novas em versão hardcoded + Modelo C v2 + slide. Não é rebuild.
-- **🌳 Feira 01–07/06** — Produto polido para o júri Amazon Hacking. Inclui WebGL, audio, dashboard ADMIN funcional, validação pedagógica, sprite art, estande.
+- **🌳 Feira 01–07/06** — Produto polido para o júri Amazon Hacking. Inclui WebGL, audio, dashboard da intermediadora funcional, validação pedagógica, sprite art, estande.
 
 **Datas em dias corridos** (trabalha no FDS).
 
@@ -22,7 +22,7 @@ Tradução do quadro de mentoria de 11/05/26 + roadmap anterior em estrutura Tre
 | Arte/áudio/animação de polimento? | — | ✅ |
 | Demonstrável em Unity Editor com laptop? | ✅ | — |
 | Exige WebGL build ou produto distribuível? | — | ✅ |
-| É implementação funcional do dashboard ADMIN? | Mock visual ✅ | Funcional ✅ |
+| É implementação funcional do dashboard da intermediadora? | Mock visual ✅ | Funcional ✅ |
 
 Empate → vence o card que mais conecta o jogo ao contexto educacional da Vila Jutaí.
 
@@ -94,7 +94,7 @@ Empate → vence o card que mais conecta o jogo ao contexto educacional da Vila 
 - **Due:** 15/05
 - **Subtasks:**
   - [ ] Aplicar strings novas em HUDController, MarketUIController, EndScreenController
-  - [ ] Trocar "ADMIN" → "intermediadora" em todo o código e docs
+  - [x] Usar "intermediadora" em todo o código e docs
   - [ ] Remover notação `%` do HUD do mercado (manter sinal por cor)
   - [ ] Renomear `educationalLabel`, `marginLabel`, `stockLabel` para nomes mais legíveis se ajudar leitura do código
 
@@ -224,7 +224,7 @@ Empate → vence o card que mais conecta o jogo ao contexto educacional da Vila 
 | C03 | **Mensagens educacionais da EndScreen reescritas** — três variantes (Falência / Sobreviveu / Lucrou) em linguagem encorajadora | `mentor` `conteúdo` `educação` `kid-friendly` | biel | 14/05 |
 | C04 | **Audit + glossário de termos do HUD** — lista de cada string atual com substituto kid-friendly | `mentor` `conteúdo` `kid-friendly` | biel | 13/05 |
 | C05 | **Roteiro de insights pop-up in-game** — quando dispara, o que diz, mood do tom | `mentor` `conteúdo` `educação` | biel | 15/05 |
-| C06 | **Spec + wireframe do dashboard ADMIN (para mock)** — métricas a exibir, layout em papel | `mentor` `conteúdo` `educação` | pm | 14/05 |
+| C06 | **Spec + wireframe do dashboard da intermediadora (para mock)** — métricas a exibir, layout em papel | `mentor` `conteúdo` `educação` | pm | 14/05 |
 | C07 | **Spec do mecanismo de pergunta diária** — formato (múltipla escolha vs aberta), distribuição por cultura, política de feedback | `mentor` `conteúdo` `educação` | biel + vanni | 13/05 |
 | C08 | **Banco inicial de perguntas hardcoded** — 5 perguntas por cultura para o MVP, sem ainda lógica adaptativa | `mentor` `conteúdo` `educação` | biel + luiz | 15/05 |
 | C09 | **Ilustrações da Hero zone da EndScreen** — 3 ilustrações (Falência / Sobreviveu / Lucrou) em estilo Stardew | `kid-friendly` `polimento` | kadu (curadoria) | 16/05 |
@@ -233,14 +233,14 @@ Empate → vence o card que mais conecta o jogo ao contexto educacional da Vila 
 
 | # | Card | Labels | Dono | Due |
 |---|---|---|---|---|
-| D01 | **Modelo C v2 · Cliente** — professora intermediadora + dashboard ADMIN como cliente técnico paralelo | `modelo-c` | pm | 14/05 |
+| D01 | **Modelo C v2 · Cliente** — professora intermediadora + dashboard da intermediadora como cliente técnico paralelo | `modelo-c` | pm | 14/05 |
 | D02 | **Modelo C v2 · Mecanismos de Receita** — Steam vs Governo vs empresas de jogos, com recomendação argumentada | `modelo-c` | pm | 15/05 |
 | D03 | **Modelo C v2 · Acompanhamento do Impacto** — indicadores automáticos do jogo + pedagógicos | `modelo-c` `educação` | pm | 16/05 |
 | D04 | **Modelo C v2 · Foco do Impacto / Ações** — incluir representatividade brasileira/jutaí explícita | `modelo-c` `educação` | pm | 17/05 |
 
-### Bloco E · Implementação mock do dashboard ADMIN
+### Bloco E · Implementação mock do dashboard da intermediadora
 
-#### E01 · Mock do dashboard ADMIN para MVP
+#### E01 · Mock do dashboard da intermediadora para MVP
 
 - **Labels:** `mentor` `kid-friendly` `código` `educação`
 - **Dono:** vanni
@@ -308,7 +308,7 @@ Empate → vence o card que mais conecta o jogo ao contexto educacional da Vila 
 |---|---|---|---|---|
 | FA01 | **Diálogos dos compradores v2 — representatividade plena** | `mentor` `conteúdo` `educação` `feira` | kadu (escreve) + vanni (integra) | Depende de F-F01 (estudo histórico profundo) |
 | FA02 | **Pergunta diária v2 — adaptativa** | `código` `educação` `feira` | vanni | Banco expandido, lógica baseada em desempenho passado; depende de C08-v2 (biel expande banco) |
-| FA03 | **Dashboard ADMIN funcional** | `mentor` `código` `educação` `feira` | vanni | Implementa a spec C06, com dados reais do save B01 |
+| FA03 | **Dashboard da intermediadora funcional** | `mentor` `código` `educação` `feira` | vanni | Implementa a spec C06, com dados reais do save B01 |
 | FA04 | **Histórico longitudinal por aluno** | `código` `educação` `feira` | vanni | Extensão do save B01 para múltiplas sessões |
 | FA05 | **Hero zone EndScreen v2 — ilustrações finais** | `polimento` `feira` | kadu (curadoria/produção) + vanni (integra) | C09 entrega versão MVP, FA05 a final |
 
@@ -409,7 +409,7 @@ Já feito ou parcial — confirmar com a equipe antes de mover:
 - **Diferencial é focar no contexto educacional do jogo** (caixa central do quadro) — critério de desempate quando dois cards competem.
 - **Vanni é gargalo de código.** Os outros entregam conteúdo cedo (Bloco C com due dates 13–15/05) para vanni implementar 14–18/05. Se algum card C atrasar, o card A correspondente do vanni atrasa também — sinalizar no standup.
 - **Pergunta adaptativa é a mecânica nova de maior risco.** MVP é hardcoded (B02). Feira é adaptativa de verdade (FA02). Não tentar fazer a versão adaptativa direto no MVP.
-- **Dashboard ADMIN:** mock no MVP (E01, visual estático com dados dummy). Funcional na Feira (FA03, integrando com B01).
+- **Dashboard da intermediadora:** mock no MVP (E01, visual estático com dados dummy). Funcional na Feira (FA03, integrando com B01).
 - **Feedback do mentor 19/05** entra na Sprint Feira via FE05 — reservar 21/05 só para reagendar prioridades pós-apresentação.
 - **Tickets "II"** = easy wins, não prioridade alta no sentido tradicional. São fáceis, não necessariamente mais importantes.
 - **Tutorial (A03)** é card novo a partir do feedback do usuário — não estava no quadro original. Sinalizar no standup que é entregável do MVP.
