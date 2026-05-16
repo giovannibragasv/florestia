@@ -47,6 +47,12 @@ public class MarketUIController : MonoBehaviour
     [SerializeField] GameObject insightToastPanel;
     [SerializeField] TMP_Text insightToastLabel;
 
+    [Header("Day Complete Modal")]
+    [SerializeField] GameObject dayCompletePanel;
+    [SerializeField] TMP_Text dayCompleteTitleLabel;
+    [SerializeField] TMP_Text dayCompleteBodyLabel;
+    [SerializeField] Button dayCompleteContinueButton;
+
     [Header("Daily Summary Modal")]
     [SerializeField] GameObject dailySummaryPanel;
     [SerializeField] TMP_Text summaryTitleLabel;
@@ -72,6 +78,7 @@ public class MarketUIController : MonoBehaviour
         EnsureQuantityStepper();
         EnsureSellFeedbackIcon();
         EnsureInsightToast();
+        EnsureDayCompletePanel();
         EnsureDailySummaryPanel();
         EnsureDailyEducationFlow();
 
@@ -83,6 +90,11 @@ public class MarketUIController : MonoBehaviour
         if (plusButton != null) plusButton.onClick.AddListener(() => ChangeQuantity(+1));
         sellButton.onClick.AddListener(OnSellClicked);
         endDayButton.onClick.AddListener(OnEndDayClicked);
+        if (dayCompleteContinueButton != null)
+        {
+            dayCompleteContinueButton.onClick.RemoveAllListeners();
+            dayCompleteContinueButton.onClick.AddListener(OnDayCompleteContinue);
+        }
         if (summaryContinueButton != null)
             summaryContinueButton.onClick.AddListener(OnSummaryContinue);
 
@@ -379,6 +391,26 @@ public class MarketUIController : MonoBehaviour
 
     void OnEndDayClicked()
     {
+        ShowDayCompletePanel();
+    }
+
+    void ShowDayCompletePanel()
+    {
+        EnsureDayCompletePanel();
+        if (dayCompletePanel == null) { ShowDailySummary(); return; }
+
+        int day = GameManager.Instance != null ? GameManager.Instance.CurrentDay : 1;
+        if (dayCompleteTitleLabel != null) dayCompleteTitleLabel.text = $"Dia {day} concluído!";
+        if (dayCompleteBodyLabel != null)
+        {
+            dayCompleteBodyLabel.text = "Você cuidou da roça e chegou ao fim do dia. Agora vamos ver o que aconteceu.";
+        }
+        dayCompletePanel.SetActive(true);
+    }
+
+    void OnDayCompleteContinue()
+    {
+        if (dayCompletePanel != null) dayCompletePanel.SetActive(false);
         ShowDailySummary();
     }
 
@@ -615,6 +647,63 @@ public class MarketUIController : MonoBehaviour
 
         panel.SetActive(false);
         insightToastPanel = panel;
+    }
+
+    void EnsureDayCompletePanel()
+    {
+        if (dayCompletePanel != null) return;
+
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        if (canvas == null) return;
+
+        var panel = new GameObject("DayCompletePanel");
+        panel.transform.SetParent(canvas.transform, false);
+        var prt = panel.AddComponent<RectTransform>();
+        prt.anchorMin = Vector2.zero;
+        prt.anchorMax = Vector2.one;
+        prt.offsetMin = Vector2.zero;
+        prt.offsetMax = Vector2.zero;
+        panel.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.68f);
+
+        var card = new GameObject("Card");
+        card.transform.SetParent(panel.transform, false);
+        var crt = card.AddComponent<RectTransform>();
+        crt.anchorMin = new Vector2(0.5f, 0.5f);
+        crt.anchorMax = new Vector2(0.5f, 0.5f);
+        crt.pivot = new Vector2(0.5f, 0.5f);
+        crt.sizeDelta = new Vector2(560f, 300f);
+        card.AddComponent<Image>().color = new Color(0.13f, 0.10f, 0.07f, 0.98f);
+
+        dayCompleteTitleLabel = MakeLabelInRect(card.transform, "Title",
+            new Vector2(0f, 82f), new Vector2(500f, 54f), 32, "Dia concluído!");
+        dayCompleteTitleLabel.color = new Color(0.98f, 0.84f, 0.45f);
+
+        dayCompleteBodyLabel = MakeLabelInRect(card.transform, "Body",
+            new Vector2(0f, 10f), new Vector2(460f, 72f), 20,
+            "Você cuidou da roça e chegou ao fim do dia.");
+        dayCompleteBodyLabel.color = new Color(0.95f, 0.92f, 0.84f);
+        dayCompleteBodyLabel.textWrappingMode = TextWrappingModes.Normal;
+
+        var btnGO = new GameObject("ContinueButton");
+        btnGO.transform.SetParent(card.transform, false);
+        var brt = btnGO.AddComponent<RectTransform>();
+        brt.anchorMin = new Vector2(0.5f, 0.5f);
+        brt.anchorMax = new Vector2(0.5f, 0.5f);
+        brt.pivot = new Vector2(0.5f, 0.5f);
+        brt.anchoredPosition = new Vector2(0f, -92f);
+        brt.sizeDelta = new Vector2(250f, 58f);
+        var btnImg = btnGO.AddComponent<Image>();
+        btnImg.color = new Color(0.88f, 0.62f, 0.22f, 1f);
+        dayCompleteContinueButton = btnGO.AddComponent<Button>();
+        dayCompleteContinueButton.targetGraphic = btnImg;
+        dayCompleteContinueButton.onClick.AddListener(OnDayCompleteContinue);
+
+        var btnLabel = MakeLabelInRect(btnGO.transform, "Label",
+            Vector2.zero, new Vector2(230f, 44f), 20, "Ver resumo");
+        btnLabel.color = new Color(0.10f, 0.07f, 0.04f);
+
+        panel.SetActive(false);
+        dayCompletePanel = panel;
     }
 
     Button MakeStepperButton(Transform parent, string name, Vector2 anchoredPos, string glyph)

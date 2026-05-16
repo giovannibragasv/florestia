@@ -109,8 +109,8 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 > **Labels:** kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-17 | **Depende:** B02
 
 - [x] **B04.1** Encadeamento: Resumo Noturno → Pergunta → dica → fechar fase
-- [ ] **B04.2** Tela 'Dia X concluído!' antes do resumo, com mood encorajador
-- [ ] **B04.3** Transição visual de fim de dia → início do próximo dia
+- [x] **B04.2** Tela 'Dia X concluído!' antes do resumo, com mood encorajador
+- [x] **B04.3** Transição visual de fim de dia → início do próximo dia
 
 ### C01 · Roteiro do tutorial inicial
 > **Labels:** conteúdo · educação | **Dono:** kadu,biel | **Due:** 2026-05-13
