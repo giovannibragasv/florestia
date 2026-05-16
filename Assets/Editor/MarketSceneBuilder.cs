@@ -105,7 +105,7 @@ public static class MarketSceneBuilder
                 new Vector2(-170f, cropYs[i]), new Vector2(210f, 36f), false);
         }
 
-        var stockLabel = MakeLabel("StockLabel", tradePanel, "Estoque: 0",
+        var stockLabel = MakeLabel("StockLabel", tradePanel, "Na sacola: 0",
             new Vector2(-170f, 22f), new Vector2(220f, 30f), 19, TextAlignmentOptions.Center, Cream);
 
         var sliderRT = MakeRect("PriceSlider", tradePanel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
@@ -117,7 +117,7 @@ public static class MarketSceneBuilder
 
         var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: R$0", new Vector2(-130f, -30f));
         var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: R$0", new Vector2(110f, -30f));
-        var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Margem: -", new Vector2(110f, -90f));
+        var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Sobra: −", new Vector2(110f, -90f));
 
         var sellBtn = MakeButton("SellButton", "Vender 1 unidade", tradePanel,
             new Vector2(-120f, -176f), new Vector2(210f, 58f), true);

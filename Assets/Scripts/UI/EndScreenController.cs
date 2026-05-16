@@ -90,29 +90,30 @@ public class EndScreenController : MonoBehaviour
         EnsureEndScreenUI();
 
         float final = GameManager.Instance.Balance;
-        finalBalanceLabel.text = $"Saldo final: R${final:F2}";
+        // Vocabulário 8-11 (Modelo C §3.4): "dinheiro no fim" no lugar de "saldo final".
+        finalBalanceLabel.text = $"Dinheiro no fim: R${final:F2}";
 
         if (GameManager.Instance.IsLoss)
         {
-            outcomeLabel.text = "Falência! O saldo chegou a zero.";
-            outcomeLabel.color = new Color(0.9f, 0.2f, 0.2f);
-            SetEducationalText("Dica: venda sempre acima do custo da semente para não ter prejuízo.");
+            outcomeLabel.text = "Acabou o dinheiro. Tenta de novo!";
+            outcomeLabel.color = new Color(0.9f, 0.42f, 0.32f);
+            SetEducationalText("Pra não acabar o dinheiro, venda por um preço maior do que pagou na semente.");
         }
         else if (final > GameManager.StartingBalance)
         {
-            outcomeLabel.text = "Você lucrou! Ótima gestão.";
-            outcomeLabel.color = new Color(0.2f, 0.8f, 0.2f);
-            SetEducationalText("Você dominou a precificação! Margem = Preço − Custo. É assim na roça de verdade.");
+            outcomeLabel.text = "Você plantou, vendeu e sobrou dinheiro!";
+            outcomeLabel.color = new Color(0.32f, 0.80f, 0.42f);
+            SetEducationalText("Sobra = quanto recebeu − quanto gastou. Você fez essa conta direitinho!");
         }
         else
         {
-            outcomeLabel.text = "Você sobreviveu! Dá pra melhorar.";
-            outcomeLabel.color = new Color(0.9f, 0.8f, 0.2f);
-            SetEducationalText("Dica: Açaí tem margem de R$18 por unidade. Vale imobilizar capital por 6 dias?");
+            outcomeLabel.text = "Você terminou os 15 dias!";
+            outcomeLabel.color = new Color(0.95f, 0.84f, 0.35f);
+            SetEducationalText("O Açaí demora 6 dias mas paga bem. Tente plantar mais açaí na próxima vez!");
         }
 
         string best = GetBestCrop();
-        bestCropLabel.text = best != null ? $"Cultura mais rentável: {best}" : "";
+        bestCropLabel.text = best != null ? $"O que mais te rendeu: {best}" : "";
 
         BuildBalanceChart();
     }
@@ -209,7 +210,7 @@ public class EndScreenController : MonoBehaviour
         MakePanel("EndPanel", ct, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
             Vector2.zero, new Vector2(760f, 520f), new Color(0.13f, 0.10f, 0.08f, 0.96f));
 
-        finalBalanceLabel = MakeLabel("FinalBalanceLabel", ct, "Saldo final: R$0,00",
+        finalBalanceLabel = MakeLabel("FinalBalanceLabel", ct, "Dinheiro no fim: R$0,00",
             new Vector2(0f, 140f), new Vector2(520f, 42f), 26, Color.white);
         outcomeLabel = MakeLabel("OutcomeLabel", ct, "-",
             new Vector2(0f, 88f), new Vector2(560f, 46f), 32, Color.white);

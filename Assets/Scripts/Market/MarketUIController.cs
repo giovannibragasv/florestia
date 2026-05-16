@@ -131,7 +131,10 @@ public class MarketUIController : MonoBehaviour
     void RefreshStockLabel()
     {
         int qty = InventorySystem.Instance.GetCount(_selectedCrop);
-        stockLabel.text = $"Estoque: {qty}";
+        // "Estoque" é jargão adulto; "Na sacola" pra criança 8-11 (Modelo C §3.4).
+        stockLabel.text = qty == 1
+            ? $"Na sacola: 1"
+            : $"Na sacola: {qty}";
     }
 
     void RefreshQuantityRange()
@@ -318,32 +321,33 @@ public class MarketUIController : MonoBehaviour
         if (dailySummaryPanel == null) { GameManager.Instance.AdvanceDay(); return; }
 
         int day = GameManager.Instance.CurrentDay;
-        if (summaryTitleLabel != null) summaryTitleLabel.text = $"Dia {day} — Resumo";
+        // Vocabulário 8-11 (Modelo C §3.4): receita/custo/saldo viram dinheiro recebido/sustento/no fim.
+        if (summaryTitleLabel != null) summaryTitleLabel.text = $"Fim do dia {day}";
 
         var sales = EndScreenController.Instance?.GetCurrentDaySales();
         var sb = new StringBuilder();
         float receita = 0f;
         if (sales == null || sales.Count == 0)
         {
-            sb.AppendLine("Nada vendido hoje.");
+            sb.AppendLine("Você não vendeu nada hoje.");
         }
         else
         {
-            sb.AppendLine("Vendido:");
+            sb.AppendLine("Você vendeu:");
             foreach (var s in sales)
             {
-                sb.AppendLine($"  {s.cropName} ×{s.quantity} @ R${s.pricePerUnit:F2} = R${s.total:F2}");
+                sb.AppendLine($"  {s.quantity} × {s.cropName} a R${s.pricePerUnit:F2} = R${s.total:F2}");
                 receita += s.total;
             }
         }
         if (summaryTableLabel != null) summaryTableLabel.text = sb.ToString();
 
         float saldoAposCusto = GameManager.Instance.Balance - GameManager.DailyCost;
-        if (summaryRevenueLabel != null) summaryRevenueLabel.text = $"Receita: R${receita:F2}";
-        if (summaryFixedCostLabel != null) summaryFixedCostLabel.text = $"Custo fixo: −R${GameManager.DailyCost:F2}";
+        if (summaryRevenueLabel != null) summaryRevenueLabel.text = $"Você ganhou: R${receita:F2}";
+        if (summaryFixedCostLabel != null) summaryFixedCostLabel.text = $"Custo do sustento: −R${GameManager.DailyCost:F2}";
         if (summaryBalanceLabel != null)
         {
-            summaryBalanceLabel.text = $"Saldo: R${saldoAposCusto:F2}";
+            summaryBalanceLabel.text = $"Dinheiro no fim do dia: R${saldoAposCusto:F2}";
             summaryBalanceLabel.color = saldoAposCusto >= 0
                 ? new Color(0.30f, 0.78f, 0.40f)
                 : new Color(0.92f, 0.30f, 0.30f);
@@ -586,11 +590,11 @@ public class MarketUIController : MonoBehaviour
         summaryTableLabel.color = new Color(0.95f, 0.92f, 0.84f);
 
         summaryRevenueLabel = MakeLabelInRect(card.transform, "Revenue",
-            new Vector2(0f, -86f), new Vector2(500f, 26f), 18, "Receita: R$0,00");
+            new Vector2(0f, -86f), new Vector2(500f, 26f), 18, "Você ganhou: R$0,00");
         summaryRevenueLabel.alignment = TextAlignmentOptions.Right;
 
         summaryFixedCostLabel = MakeLabelInRect(card.transform, "FixedCost",
-            new Vector2(0f, -114f), new Vector2(500f, 26f), 18, "Custo fixo: −R$2,00");
+            new Vector2(0f, -114f), new Vector2(500f, 26f), 18, "Custo do sustento: −R$2,00");
         summaryFixedCostLabel.alignment = TextAlignmentOptions.Right;
         summaryFixedCostLabel.color = new Color(0.92f, 0.55f, 0.45f);
 
@@ -605,7 +609,7 @@ public class MarketUIController : MonoBehaviour
         divider.AddComponent<Image>().color = new Color(0.6f, 0.45f, 0.22f, 0.6f);
 
         summaryBalanceLabel = MakeLabelInRect(card.transform, "Balance",
-            new Vector2(0f, -160f), new Vector2(500f, 32f), 22, "Saldo: R$0,00");
+            new Vector2(0f, -160f), new Vector2(500f, 32f), 22, "Dinheiro no fim do dia: R$0,00");
         summaryBalanceLabel.alignment = TextAlignmentOptions.Right;
 
         var btnGO = new GameObject("ContinueButton");

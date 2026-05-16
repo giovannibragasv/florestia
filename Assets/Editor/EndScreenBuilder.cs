@@ -52,8 +52,8 @@ public static class EndScreenBuilder
         // Title
         MakeLabel("TitleLabel", ct, "Fim do Ciclo", new Vector2(0, 240), new Vector2(400, 55), 38);
 
-        // Result labels
-        var finalBalance = MakeLabel("FinalBalanceLabel", ct, "Saldo final: R$0,00",
+        // Result labels (linguagem 8-11 anos por Modelo C §3.4)
+        var finalBalance = MakeLabel("FinalBalanceLabel", ct, "Dinheiro no fim: R$0,00",
             new Vector2(0, 170), new Vector2(400, 45));
         finalBalance.color = Color.white;
 
@@ -75,7 +75,7 @@ public static class EndScreenBuilder
         chartRT.gameObject.AddComponent<Image>().color = new Color(0.08f, 0.08f, 0.08f);
 
         // Chart axis label
-        MakeLabel("ChartLabel", ct, "Saldo por dia",
+        MakeLabel("ChartLabel", ct, "Dinheiro em cada dia",
             new Vector2(0, -150), new Vector2(300, 30), 16).color = new Color(0.6f, 0.6f, 0.6f);
 
         // Bar prefab (create as asset)

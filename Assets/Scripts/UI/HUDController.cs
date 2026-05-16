@@ -45,19 +45,20 @@ public class HUDController : MonoBehaviour
 
     public void RefreshBalance(float balance)
     {
-        balanceLabel.text = $"R${balance:F2}";
+        // Vocabulário 8-11 (Modelo C §3.4): "dinheiro" no lugar de "saldo".
+        balanceLabel.text = $"Dinheiro: R${balance:F2}";
         balanceLabel.color = balance < 20f ? Color.red : Color.white;
     }
 
     public void RefreshDay(int day)
     {
-        dayLabel.text = $"Dia {day}/{GameManager.TotalDays}";
+        dayLabel.text = $"Dia {day} de {GameManager.TotalDays}";
     }
 
     public void RefreshStamina(int current, int max)
     {
         staminaBar.value = (float)current / max;
-        staminaLabel.text = $"{current}/{max}";
+        staminaLabel.text = $"Energia: {current}/{max}";
     }
 
     public void RefreshCropPreview(ToolType tool)
@@ -74,9 +75,10 @@ public class HUDController : MonoBehaviour
                     : null;
                 if (crop != null && crop.growthDays > 0)
                 {
-                    float profitPerDay = (crop.baseMarketValue - crop.seedCost) / crop.growthDays;
+                    // Antes: "Próxima: Cacau · −R$6 · 4d · ~R$2.50/dia" (jargão financeiro).
+                    // Agora: "Vou plantar Cacau. Custa R$6. Demora 4 dias pra colher."
                     cropPreviewLabel.text =
-                        $"Próxima: {crop.cropName} · −R${crop.seedCost:F0} · {crop.growthDays}d · ~R${profitPerDay:F2}/dia";
+                        $"Vou plantar {crop.cropName}. Custa R${crop.seedCost:F0}. Demora {crop.growthDays} dias pra colher.";
                 }
                 else
                 {
@@ -84,10 +86,10 @@ public class HUDController : MonoBehaviour
                 }
                 break;
             case ToolType.Water:
-                cropPreviewLabel.text = "Regar tile";
+                cropPreviewLabel.text = "Vou regar a plantação";
                 break;
             case ToolType.Harvest:
-                cropPreviewLabel.text = "Colher tile";
+                cropPreviewLabel.text = "Vou colher o que tá pronto";
                 break;
         }
 
@@ -118,8 +120,28 @@ public class HUDController : MonoBehaviour
 
         float invest = count * crop.seedCost;
         float expected = count * crop.baseMarketValue;
+        // Antes: "Plantando: 4× Cacau · Investimento R$24 · Receita ~R$64"
+        // Agora: "Você tem 4 pés de Cacau · gastou R$24 · pode render até R$64"
         proportionalityLabel.text =
-            $"Plantando: {count}× {crop.cropName} · Investimento R${invest:F0} · Receita ~R${expected:F0}";
+            $"Você tem {count} {PluralCropName(crop.cropName, count)} · gastou R${invest:F0} · pode render até R${expected:F0}";
+    }
+
+    static string PluralCropName(string crop, int qty)
+    {
+        if (qty == 1) return crop switch
+        {
+            "Mandioca" => "pé de mandioca",
+            "Cacau" => "pé de cacau",
+            "Acai" => "açaizeiro",
+            _ => crop.ToLower()
+        };
+        return crop switch
+        {
+            "Mandioca" => "pés de mandioca",
+            "Cacau" => "pés de cacau",
+            "Acai" => "açaizeiros",
+            _ => crop.ToLower() + "s"
+        };
     }
 
     void RefreshAll()
