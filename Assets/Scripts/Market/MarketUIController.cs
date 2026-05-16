@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,9 +22,15 @@ public class MarketUIController : MonoBehaviour
     [SerializeField] TMP_Text marginLabel;
 
     [Header("Quantity")]
-    [SerializeField] Slider quantitySlider;
+    [SerializeField] Button minusButton;
+    [SerializeField] Button plusButton;
+    [SerializeField] TMP_Text quantityValueLabel;
     [SerializeField] TMP_Text quantityLabel;
     [SerializeField] TMP_Text totalLabel;
+    [SerializeField] Image coinIcon;
+
+    int _quantity = 1;
+    int _maxQuantity = 1;
 
     [Header("Buyer")]
     [SerializeField] BuyerSelector buyerSelector;
@@ -34,6 +41,9 @@ public class MarketUIController : MonoBehaviour
     [SerializeField] Button sellButton;
     [SerializeField] TMP_Text sellButtonLabel;
     [SerializeField] Button endDayButton;
+
+    [Header("Sell Feedback")]
+    [SerializeField] Image sellFeedbackIcon;
 
     [Header("Daily Summary Modal")]
     [SerializeField] GameObject dailySummaryPanel;
@@ -53,22 +63,31 @@ public class MarketUIController : MonoBehaviour
         SceneCameraUtility.EnsureEventSystem();
 
         DestroyLegacyCropDropdown();
+        DestroyLegacyQuantitySlider();
         EnsureCropButtons();
-        EnsureQuantitySlider();
+        EnsureQuantityStepper();
+        EnsureSellFeedbackIcon();
         EnsureDailySummaryPanel();
 
         if (priceSlider == null || sellButton == null || endDayButton == null) return;
 
         WireCropButtons();
         priceSlider.onValueChanged.AddListener(_ => RefreshPriceDisplay());
-        if (quantitySlider != null)
-            quantitySlider.onValueChanged.AddListener(_ => RefreshQuantityDisplay());
+        if (minusButton != null) minusButton.onClick.AddListener(() => ChangeQuantity(-1));
+        if (plusButton != null) plusButton.onClick.AddListener(() => ChangeQuantity(+1));
         sellButton.onClick.AddListener(OnSellClicked);
         endDayButton.onClick.AddListener(OnEndDayClicked);
         if (summaryContinueButton != null)
             summaryContinueButton.onClick.AddListener(OnSummaryContinue);
 
         SelectCropByIndex(0);
+    }
+
+    void ChangeQuantity(int delta)
+    {
+        if (_maxQuantity <= 0) { _quantity = 0; RefreshQuantityDisplay(); return; }
+        _quantity = Mathf.Clamp(_quantity + delta, 1, _maxQuantity);
+        RefreshQuantityDisplay();
     }
 
     void WireCropButtons()
@@ -117,22 +136,27 @@ public class MarketUIController : MonoBehaviour
 
     void RefreshQuantityRange()
     {
-        if (quantitySlider == null) return;
-        int stock = InventorySystem.Instance.GetCount(_selectedCrop);
-        quantitySlider.wholeNumbers = true;
-        quantitySlider.minValue = stock > 0 ? 1 : 0;
-        quantitySlider.maxValue = Mathf.Max(stock, 1);
-        quantitySlider.value = quantitySlider.minValue;
+        int stock = InventorySystem.Instance != null
+            ? InventorySystem.Instance.GetCount(_selectedCrop)
+            : 0;
+        _maxQuantity = Mathf.Max(stock, 0);
+        _quantity = stock > 0 ? 1 : 0;
         RefreshQuantityDisplay();
     }
 
     void RefreshQuantityDisplay()
     {
-        if (quantitySlider == null) return;
-        int qty = Mathf.RoundToInt(quantitySlider.value);
-        float price = priceSlider.value;
-        if (quantityLabel != null) quantityLabel.text = $"Qtd: {qty}";
-        if (totalLabel != null) totalLabel.text = $"{qty} × R${price:F2} = R${qty * price:F2}";
+        float price = priceSlider != null ? priceSlider.value : 0f;
+        if (quantityValueLabel != null) quantityValueLabel.text = _quantity.ToString();
+        if (quantityLabel != null) quantityLabel.text = "Quantos vender:";
+        if (totalLabel != null)
+        {
+            totalLabel.text = _quantity > 0
+                ? $"Total: R${_quantity * price:F2}"
+                : "Sem nada na sacola";
+        }
+        if (minusButton != null) minusButton.interactable = _quantity > 1;
+        if (plusButton != null) plusButton.interactable = _quantity < _maxQuantity;
         UpdateSellButtonState();
     }
 
@@ -142,24 +166,14 @@ public class MarketUIController : MonoBehaviour
         if (sellButtonLabel == null)
             sellButtonLabel = sellButton.GetComponentInChildren<TMP_Text>();
 
-        int stock = string.IsNullOrEmpty(_selectedCrop)
-            ? 0
-            : InventorySystem.Instance != null
-                ? InventorySystem.Instance.GetCount(_selectedCrop)
-                : 0;
-
-        int qty = quantitySlider != null
-            ? Mathf.Clamp(Mathf.RoundToInt(quantitySlider.value), 0, Mathf.Max(stock, 0))
-            : (stock > 0 ? 1 : 0);
-
-        bool canSell = _selectedBuyer != null && stock > 0 && qty > 0;
+        bool canSell = _selectedBuyer != null && _maxQuantity > 0 && _quantity > 0;
         sellButton.interactable = canSell;
 
         if (sellButtonLabel != null)
         {
             if (_selectedBuyer == null) sellButtonLabel.text = "Escolha um comprador";
-            else if (stock == 0) sellButtonLabel.text = "Sem estoque";
-            else sellButtonLabel.text = $"Vender {qty} {PluralizeCrop(_selectedCrop, qty)}";
+            else if (_maxQuantity == 0) sellButtonLabel.text = "Você não colheu nada";
+            else sellButtonLabel.text = $"Vender {_quantity} {PluralizeCrop(_selectedCrop, _quantity)}";
         }
     }
 
@@ -189,13 +203,31 @@ public class MarketUIController : MonoBehaviour
 
         float cost = PricingSystem.Instance.GetSeedCost(_selectedCrop);
         float margin = PricingSystem.Instance.GetMarginValue(_selectedCrop);
-        float pct = PricingSystem.Instance.GetMarginPercent(_selectedCrop);
 
-        costLabel.text = $"Custo: R${cost:F2}";
+        costLabel.text = $"Custou: R${cost:F2}";
         priceLabel.text = $"Seu preço: R${asking:F2}";
-        marginLabel.text = margin >= 0
-            ? $"Margem: R${margin:F2} (+{pct:F0}%)"
-            : $"Margem: R${margin:F2} ({pct:F0}%)";
+        if (marginLabel != null)
+        {
+            string label;
+            Color color;
+            if (margin > 0)
+            {
+                label = $"Lucro de R${margin:F2}";
+                color = new Color(0.32f, 0.80f, 0.42f, 1f);
+            }
+            else if (margin < 0)
+            {
+                label = $"Prejuízo de R${Mathf.Abs(margin):F2}";
+                color = new Color(0.92f, 0.36f, 0.32f, 1f);
+            }
+            else
+            {
+                label = "Sem lucro nem prejuízo";
+                color = new Color(0.92f, 0.85f, 0.55f, 1f);
+            }
+            marginLabel.text = label;
+            marginLabel.color = color;
+        }
         RefreshQuantityDisplay();
     }
 
@@ -212,13 +244,9 @@ public class MarketUIController : MonoBehaviour
 
     void OnSellClicked()
     {
-        int stock = InventorySystem.Instance.GetCount(_selectedCrop);
-        if (_selectedBuyer == null || stock == 0) return;
+        if (_selectedBuyer == null || _maxQuantity == 0 || _quantity == 0) return;
 
-        int qty = quantitySlider != null
-            ? Mathf.Clamp(Mathf.RoundToInt(quantitySlider.value), 1, stock)
-            : 1;
-
+        int qty = Mathf.Clamp(_quantity, 1, _maxQuantity);
         bool sold = BuyerSystem.Instance.TrySell(
             _selectedBuyer, _selectedCrop, qty,
             PricingSystem.Instance.GetAskingPrice(_selectedCrop));
@@ -231,6 +259,51 @@ public class MarketUIController : MonoBehaviour
         RefreshStockLabel();
         RefreshQuantityRange();
         UpdateSellButtonState();
+        ShowSellFeedback(sold);
+    }
+
+    void ShowSellFeedback(bool success)
+    {
+        if (sellFeedbackIcon == null) return;
+        StopAllCoroutines();
+        StartCoroutine(AnimateSellFeedback(success));
+    }
+
+    IEnumerator AnimateSellFeedback(bool success)
+    {
+        sellFeedbackIcon.color = success
+            ? new Color(0.30f, 0.85f, 0.40f, 1f)
+            : new Color(0.95f, 0.40f, 0.35f, 1f);
+        var iconLabel = sellFeedbackIcon.GetComponentInChildren<TMP_Text>();
+        if (iconLabel != null) iconLabel.text = success ? "✓" : "✗";
+
+        var rt = sellFeedbackIcon.rectTransform;
+        var go = sellFeedbackIcon.gameObject;
+        go.SetActive(true);
+
+        // Pop-in com scale e fade out
+        float dur = 0.85f;
+        float t = 0f;
+        Color baseColor = sellFeedbackIcon.color;
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            float k = t / dur;
+            float scale = k < 0.25f
+                ? Mathf.Lerp(0.4f, 1.25f, k / 0.25f)
+                : Mathf.Lerp(1.25f, 1.0f, (k - 0.25f) / 0.75f);
+            rt.localScale = new Vector3(scale, scale, 1f);
+            float a = 1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.5f, 1f, k));
+            sellFeedbackIcon.color = new Color(baseColor.r, baseColor.g, baseColor.b, a);
+            if (iconLabel != null)
+            {
+                var c = iconLabel.color;
+                c.a = a;
+                iconLabel.color = c;
+            }
+            yield return null;
+        }
+        go.SetActive(false);
     }
 
     void OnEndDayClicked()
@@ -293,6 +366,12 @@ public class MarketUIController : MonoBehaviour
         if (legacy != null) Destroy(legacy);
     }
 
+    void DestroyLegacyQuantitySlider()
+    {
+        var legacy = GameObject.Find("QuantitySlider");
+        if (legacy != null) Destroy(legacy);
+    }
+
     void EnsureCropButtons()
     {
         if (cropButtons != null && cropButtons.Length >= 3
@@ -351,79 +430,122 @@ public class MarketUIController : MonoBehaviour
 
     static string LabelForCrop(string cropName) => cropName == "Acai" ? "Açaí" : cropName;
 
-    void EnsureQuantitySlider()
+    void EnsureQuantityStepper()
     {
-        if (quantitySlider != null) return;
+        if (minusButton != null && plusButton != null && quantityValueLabel != null) return;
         if (priceSlider == null) return;
 
         Transform parent = priceSlider.transform.parent;
         if (parent == null) return;
 
-        var go = new GameObject("QuantitySlider");
-        go.transform.SetParent(parent, false);
-        var rt = go.AddComponent<RectTransform>();
-        var priceRT = priceSlider.GetComponent<RectTransform>();
-        rt.anchorMin = priceRT.anchorMin;
-        rt.anchorMax = priceRT.anchorMax;
-        rt.pivot = priceRT.pivot;
-        rt.sizeDelta = priceRT.sizeDelta;
-        rt.anchoredPosition = priceRT.anchoredPosition + new Vector2(0f, -56f);
-
-        var bg = go.AddComponent<Image>();
-        bg.color = new Color(0.32f, 0.22f, 0.12f, 0.85f);
-
-        var fillArea = new GameObject("Fill Area");
-        fillArea.transform.SetParent(go.transform, false);
-        var faRT = fillArea.AddComponent<RectTransform>();
-        faRT.anchorMin = new Vector2(0f, 0.25f);
-        faRT.anchorMax = new Vector2(1f, 0.75f);
-        faRT.offsetMin = new Vector2(8f, 0f);
-        faRT.offsetMax = new Vector2(-8f, 0f);
-
-        var fill = new GameObject("Fill");
-        fill.transform.SetParent(fillArea.transform, false);
-        var fillRT = fill.AddComponent<RectTransform>();
-        fillRT.anchorMin = Vector2.zero;
-        fillRT.anchorMax = Vector2.one;
-        fillRT.offsetMin = Vector2.zero;
-        fillRT.offsetMax = Vector2.zero;
-        var fillImg = fill.AddComponent<Image>();
-        fillImg.color = new Color(0.85f, 0.65f, 0.25f, 1f);
-
-        var handleArea = new GameObject("Handle Slide Area");
-        handleArea.transform.SetParent(go.transform, false);
-        var haRT = handleArea.AddComponent<RectTransform>();
-        haRT.anchorMin = Vector2.zero;
-        haRT.anchorMax = Vector2.one;
-        haRT.offsetMin = Vector2.zero;
-        haRT.offsetMax = Vector2.zero;
-
-        var handle = new GameObject("Handle");
-        handle.transform.SetParent(handleArea.transform, false);
-        var hRT = handle.AddComponent<RectTransform>();
-        hRT.sizeDelta = new Vector2(20f, 28f);
-        var hImg = handle.AddComponent<Image>();
-        hImg.color = new Color(0.98f, 0.88f, 0.55f, 1f);
-
-        var slider = go.AddComponent<Slider>();
-        slider.fillRect = fillRT;
-        slider.handleRect = hRT;
-        slider.targetGraphic = hImg;
-        slider.direction = Slider.Direction.LeftToRight;
-        slider.wholeNumbers = true;
-        slider.minValue = 1;
-        slider.maxValue = 10;
-        slider.value = 1;
-        quantitySlider = slider;
+        Vector2 baseAnchor = priceSlider.GetComponent<RectTransform>().anchoredPosition
+                             + new Vector2(0f, -68f);
 
         if (quantityLabel == null)
             quantityLabel = MakeLabelNear(parent, "QuantityLabel",
-                rt.anchoredPosition + new Vector2(-180f, 0f),
-                new Vector2(140f, 28f), 16, "Qtd: 1");
+                baseAnchor + new Vector2(-200f, 0f),
+                new Vector2(220f, 30f), 18, "Quantos vender:");
+
+        if (minusButton == null)
+            minusButton = MakeStepperButton(parent, "MinusButton",
+                baseAnchor + new Vector2(-30f, 0f), "−");
+
+        if (quantityValueLabel == null)
+            quantityValueLabel = MakeLabelNear(parent, "QuantityValueLabel",
+                baseAnchor + new Vector2(30f, 0f),
+                new Vector2(80f, 60f), 36, "1");
+
+        if (quantityValueLabel != null)
+        {
+            quantityValueLabel.alignment = TextAlignmentOptions.Center;
+            quantityValueLabel.color = new Color(0.98f, 0.88f, 0.55f, 1f);
+            quantityValueLabel.fontStyle = FontStyles.Bold;
+        }
+
+        if (plusButton == null)
+            plusButton = MakeStepperButton(parent, "PlusButton",
+                baseAnchor + new Vector2(90f, 0f), "+");
+
         if (totalLabel == null)
             totalLabel = MakeLabelNear(parent, "TotalLabel",
-                rt.anchoredPosition + new Vector2(0f, -32f),
-                new Vector2(360f, 24f), 16, "");
+                baseAnchor + new Vector2(0f, -42f),
+                new Vector2(360f, 26f), 18, "");
+        if (totalLabel != null)
+            totalLabel.alignment = TextAlignmentOptions.Center;
+    }
+
+    void EnsureSellFeedbackIcon()
+    {
+        if (sellFeedbackIcon != null) return;
+
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        if (canvas == null) return;
+
+        var go = new GameObject("SellFeedbackIcon");
+        go.transform.SetParent(canvas.transform, false);
+        var rt = go.AddComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = new Vector2(-280f, 30f);
+        rt.sizeDelta = new Vector2(120f, 120f);
+        sellFeedbackIcon = go.AddComponent<Image>();
+        sellFeedbackIcon.color = new Color(0.30f, 0.85f, 0.40f, 1f);
+        sellFeedbackIcon.raycastTarget = false;
+
+        var labelGO = new GameObject("Glyph");
+        labelGO.transform.SetParent(go.transform, false);
+        var lrt = labelGO.AddComponent<RectTransform>();
+        lrt.anchorMin = Vector2.zero;
+        lrt.anchorMax = Vector2.one;
+        lrt.offsetMin = Vector2.zero;
+        lrt.offsetMax = Vector2.zero;
+        var tmp = labelGO.AddComponent<TextMeshProUGUI>();
+        tmp.text = "✓";
+        tmp.fontSize = 90;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.color = new Color(0.10f, 0.07f, 0.04f, 1f);
+        tmp.raycastTarget = false;
+        var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        if (font != null) tmp.font = font;
+
+        go.SetActive(false);
+    }
+
+    Button MakeStepperButton(Transform parent, string name, Vector2 anchoredPos, string glyph)
+    {
+        var go = new GameObject(name);
+        go.transform.SetParent(parent, false);
+        var rt = go.AddComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta = new Vector2(60f, 60f);
+
+        var img = go.AddComponent<Image>();
+        img.color = new Color(0.88f, 0.62f, 0.22f, 1f);
+        var btn = go.AddComponent<Button>();
+        btn.targetGraphic = img;
+
+        var labelGO = new GameObject("Label");
+        labelGO.transform.SetParent(go.transform, false);
+        var lrt = labelGO.AddComponent<RectTransform>();
+        lrt.anchorMin = Vector2.zero;
+        lrt.anchorMax = Vector2.one;
+        lrt.offsetMin = Vector2.zero;
+        lrt.offsetMax = Vector2.zero;
+        var tmp = labelGO.AddComponent<TextMeshProUGUI>();
+        tmp.text = glyph;
+        tmp.fontSize = 38;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.color = new Color(0.10f, 0.07f, 0.04f, 1f);
+        tmp.fontStyle = FontStyles.Bold;
+        tmp.raycastTarget = false;
+        var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        if (font != null) tmp.font = font;
+
+        return btn;
     }
 
     void EnsureDailySummaryPanel()
