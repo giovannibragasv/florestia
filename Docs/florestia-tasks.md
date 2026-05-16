@@ -20,15 +20,15 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [ ] **A01.1** Listar todos os strings da UI (HUD, botões, modais, EndScreen)
 - [ ] **A01.2** Reescrever conceitos adultos: 'margem', 'estoque', 'saldo', 'custo fixo'
 - [ ] **A01.3** Reescrever mensagens educacionais da EndScreen
-- [ ] **A01.4** Reescrever feedback do mercado (acceptLine / rejectLine atuais)
+- [x] **A01.4** Reescrever feedback do mercado (acceptLine / rejectLine atuais)
 - [ ] **A01.5** Validar com o teste de 10 segundos da auditoria de UX por idade
 
 ### A02 · Refactor de textos no código
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-15 | **Depende:** A01
 
-- [ ] **A02.1** Aplicar strings novas em HUDController, MarketUIController, EndScreenController
+- [x] **A02.1** Aplicar strings novas em HUDController, MarketUIController, EndScreenController
 - [ ] **A02.2** Trocar 'ADMIN' → 'intermediadora' em todo o código e docs
-- [ ] **A02.3** Remover notação % do HUD do mercado (manter sinal por cor)
+- [x] **A02.3** Remover notação % do HUD do mercado (manter sinal por cor)
 - [ ] **A02.4** Renomear SerializedFields para nomes mais legíveis se ajudar leitura do código
 
 ### A03 · Tutorial inicial in-game
@@ -45,26 +45,26 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### A04 · MarketScene kid-first
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-16 | **Depende:** A01, C02
 
-- [ ] **A04.1** Substituir slider de quantidade por stepper ◀ [N] ▶
-- [ ] **A04.2** Remover percentual da margem (manter R$ + cor)
-- [ ] **A04.3** Botão vender com label dinâmico ('Vender 4 mandiocas')
+- [x] **A04.1** Substituir slider de quantidade por stepper ◀ [N] ▶
+- [x] **A04.2** Remover percentual da margem (manter R$ + cor)
+- [x] **A04.3** Botão vender com label dinâmico ('Vender 4 mandiocas')
 - [ ] **A04.4** Retrato do comprador dominando 1/3 esquerdo com balão de fala
-- [ ] **A04.5** Animação thumbs-up/down no resultado da venda
+- [x] **A04.5** Animação thumbs-up/down no resultado da venda
 - [ ] **A04.6** Pilha de moedas visual para o total
-- [ ] **A04.7** Eliminar runtime fallback EnsureQuantitySlider
+- [x] **A04.7** Eliminar runtime fallback EnsureQuantitySlider
 
 ### A05 · EndScreen kid-first
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-17 | **Depende:** A01, C03, C09
 
 - [ ] **A05.1** Hero zone: 3 estados visuais (Falência / Sobreviveu / Lucrou) com ilustração
-- [ ] **A05.2** Frase única encorajadora por desfecho (de C03)
-- [ ] **A05.3** Gráfico de barras com rótulos de dia (1-15)
-- [ ] **A05.4** Linha horizontal de zero no gráfico
-- [ ] **A05.5** Marker visual no dia da virada (saldo cruzou para negativo)
-- [ ] **A05.6** Barras coloridas por sinal (vermelho < 0, verde ≥ 0)
-- [ ] **A05.7** Tip contextual baseado em comportamento do aluno
-- [ ] **A05.8** Botão 'JOGAR DE NOVO' grande e dominante
-- [ ] **A05.9** Remover 'Falência! O saldo chegou a zero' em vermelho-sobre-preto
+- [x] **A05.2** Frase única encorajadora por desfecho (de C03)
+- [x] **A05.3** Gráfico de barras com rótulos de dia (1-15)
+- [x] **A05.4** Linha horizontal de zero no gráfico
+- [x] **A05.5** Marker visual no dia da virada (saldo cruzou para negativo)
+- [x] **A05.6** Barras coloridas por sinal (vermelho < 0, verde ≥ 0)
+- [x] **A05.7** Tip contextual baseado em comportamento do aluno
+- [x] **A05.8** Botão 'JOGAR DE NOVO' grande e dominante
+- [x] **A05.9** Remover 'Falência! O saldo chegou a zero' em vermelho-sobre-preto
 
 ### A06 · Insights e dicas in-game
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-18 | **Depende:** C05
@@ -72,7 +72,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [ ] **A06.1** Pop-up curto após primeira venda lucrativa
 - [ ] **A06.2** Pop-up curto após primeira venda no prejuízo
 - [ ] **A06.3** Pop-up no início de cada dia com dica do dia anterior
-- [ ] **A06.4** Tip contextual na EndScreen baseado em padrão de comportamento
+- [x] **A06.4** Tip contextual na EndScreen baseado em padrão de comportamento
 
 ### A07 · Visualização da progressão do dia
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-18
@@ -92,12 +92,12 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### B02 · Pergunta diária no fim do dia (versão hardcoded)
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-16 | **Depende:** B01, C07, C08
 
-- [ ] **B02.1** Hook no fim do dia (modal antes do AdvanceDay)
+- [x] **B02.1** Hook no fim do dia (modal antes do AdvanceDay)
 - [ ] **B02.2** Carregar banco de perguntas hardcoded por cultura (de C08)
-- [ ] **B02.3** UI da pergunta: enunciado + 3 alternativas, ou input numérico
-- [ ] **B02.4** Feedback visual: certo (verde + parabéns) / errado (mostra a certa, sem punição)
-- [ ] **B02.5** Salvar resposta no histórico do aluno
-- [ ] **B02.6** Escolha simples: pergunta baseada na última cultura plantada/vendida
+- [x] **B02.3** UI da pergunta: enunciado + 3 alternativas, ou input numérico
+- [x] **B02.4** Feedback visual: certo (verde + parabéns) / errado (mostra a certa, sem punição)
+- [x] **B02.5** Salvar resposta no histórico do aluno
+- [x] **B02.6** Escolha simples: pergunta baseada na última cultura plantada/vendida
 
 ### B03 · Fallback de histórico se não plantou
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-17 | **Depende:** B01
@@ -108,7 +108,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### B04 · Dia como fase com encerramento educacional
 > **Labels:** kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-17 | **Depende:** B02
 
-- [ ] **B04.1** Encadeamento: Resumo Noturno → Pergunta → dica → fechar fase
+- [x] **B04.1** Encadeamento: Resumo Noturno → Pergunta → dica → fechar fase
 - [ ] **B04.2** Tela 'Dia X concluído!' antes do resumo, com mood encorajador
 - [ ] **B04.3** Transição visual de fim de dia → início do próximo dia
 
@@ -125,17 +125,17 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### C02 · Diálogos dos compradores (v1 MVP)
 > **Labels:** mentor · conteúdo · educação | **Dono:** kadu | **Due:** 2026-05-14
 
-- [ ] **C02.1** Escrever Atravessador: tom rápido, ofertas baixas mas certas
-- [ ] **C02.2** Escrever Feirante Local: tom amigável, preços medianos
-- [ ] **C02.3** Escrever Comprador Direto: tom respeitoso, paga bem mas raro
-- [ ] **C02.4** Validar vocabulário 8-11, sem jargão financeiro
+- [x] **C02.1** Escrever Atravessador: tom rápido, ofertas baixas mas certas
+- [x] **C02.2** Escrever Feirante Local: tom amigável, preços medianos
+- [x] **C02.3** Escrever Comprador Direto: tom respeitoso, paga bem mas raro
+- [x] **C02.4** Validar vocabulário 8-11, sem jargão financeiro
 
 ### C03 · Mensagens educacionais da EndScreen
 > **Labels:** mentor · conteúdo · educação · kid-friendly | **Dono:** biel | **Due:** 2026-05-14
 
-- [ ] **C03.1** Escrever variante Falência: encorajadora, sugere estratégia
-- [ ] **C03.2** Escrever variante Sobreviveu: validador, sugere upgrade
-- [ ] **C03.3** Escrever variante Lucrou: parabéns + próximo desafio implícito
+- [x] **C03.1** Escrever variante Falência: encorajadora, sugere estratégia
+- [x] **C03.2** Escrever variante Sobreviveu: validador, sugere upgrade
+- [x] **C03.3** Escrever variante Lucrou: parabéns + próximo desafio implícito
 
 ### C04 · Audit + glossário de termos do HUD
 > **Labels:** mentor · conteúdo · kid-friendly | **Dono:** biel | **Due:** 2026-05-13
@@ -163,10 +163,10 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### C07 · Spec do mecanismo de pergunta diária
 > **Labels:** mentor · conteúdo · educação | **Dono:** biel,vanni | **Due:** 2026-05-13
 
-- [ ] **C07.1** Decidir formato: múltipla escolha (3 alternativas) ou input numérico
-- [ ] **C07.2** Definir política de escolha da pergunta (random vs adaptativo)
-- [ ] **C07.3** Definir política de feedback: certo / errado
-- [ ] **C07.4** Definir estrutura do banco de perguntas (campos)
+- [x] **C07.1** Decidir formato: múltipla escolha (3 alternativas) ou input numérico
+- [x] **C07.2** Definir política de escolha da pergunta (random vs adaptativo)
+- [x] **C07.3** Definir política de feedback: certo / errado
+- [x] **C07.4** Definir estrutura do banco de perguntas (campos)
 
 ### C08 · Banco inicial de perguntas hardcoded
 > **Labels:** mentor · conteúdo · educação | **Dono:** biel,luiz | **Due:** 2026-05-15
