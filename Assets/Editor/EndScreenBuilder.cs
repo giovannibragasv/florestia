@@ -89,11 +89,13 @@ public static class EndScreenBuilder
         // Play again button
         var btnRT = MakeRect("PlayAgainButton", ct,
             new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-            new Vector2(0, -230), new Vector2(200, 55));
+            new Vector2(0, -230), new Vector2(360, 78));
         btnRT.gameObject.AddComponent<Image>().color = new Color(0.2f, 0.6f, 0.3f);
         var playAgainBtn = btnRT.gameObject.AddComponent<Button>();
-        MakeLabel("PlayAgainLabel", btnRT, "Jogar novamente",
-            Vector2.zero, new Vector2(200, 55), 20).color = Color.white;
+        var playAgainLabel = MakeLabel("PlayAgainLabel", btnRT, "JOGAR DE NOVO",
+            Vector2.zero, new Vector2(340, 68), 26);
+        playAgainLabel.color = Color.white;
+        playAgainLabel.fontStyle = FontStyles.Bold;
 
         // Wire EndScreenController (which persists from FarmScene)
         // Find the _EndScreen GO if it already exists in scene

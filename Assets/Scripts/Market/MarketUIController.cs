@@ -68,6 +68,7 @@ public class MarketUIController : MonoBehaviour
         EnsureQuantityStepper();
         EnsureSellFeedbackIcon();
         EnsureDailySummaryPanel();
+        EnsureDailyEducationFlow();
 
         if (priceSlider == null || sellButton == null || endDayButton == null) return;
 
@@ -359,6 +360,12 @@ public class MarketUIController : MonoBehaviour
     void OnSummaryContinue()
     {
         if (dailySummaryPanel != null) dailySummaryPanel.SetActive(false);
+        if (DailyEducationFlow.Instance != null)
+        {
+            DailyEducationFlow.Instance.StartFlow();
+            return;
+        }
+
         EndScreenController.Instance?.ClearCurrentDaySales();
         GameManager.Instance.AdvanceDay();
     }
@@ -630,6 +637,14 @@ public class MarketUIController : MonoBehaviour
 
         panel.SetActive(false);
         dailySummaryPanel = panel;
+    }
+
+    void EnsureDailyEducationFlow()
+    {
+        if (DailyEducationFlow.Instance != null) return;
+        var go = new GameObject("DailyEducationFlow");
+        go.transform.SetParent(transform, false);
+        go.AddComponent<DailyEducationFlow>();
     }
 
     static TMP_Text MakeLabelNear(Transform parent, string name,
