@@ -18,22 +18,22 @@ public static class BuyerDataCreator
                 "Atravessador",
                 "Assets/Sprites/Buyers/buyer_atravessador.png",
                 5f, 12f, 20f,
-                "Feito! Vendo logo.",
-                "Tá caro demais, amigo."),
+                "Levo agora, mas pago pouco.",
+                "Por esse preço eu não levo."),
             EnsureBuyer(
                 "Feirante.asset",
                 "Feirante Local",
                 "Assets/Sprites/Buyers/buyer_feirante.png",
                 7f, 15f, 26f,
-                "Trato feito! Boa mercadoria.",
-                "Não tenho esse dinheiro não."),
+                "Gostei! Dá pra vender na feira.",
+                "Hoje não consigo pagar isso."),
             EnsureBuyer(
                 "CompradorDireto.asset",
                 "Comprador Direto",
                 "Assets/Sprites/Buyers/buyer_comprador.png",
                 9f, 18f, 30f,
-                "Pode deixar, pago bem por qualidade.",
-                "Prefiro buscar em outro lugar.")
+                "Combinado! Pago melhor pela sua colheita.",
+                "Esse preço ficou alto pra mim hoje.")
         };
 
         AssetDatabase.SaveAssets();

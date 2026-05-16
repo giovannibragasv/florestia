@@ -17,5 +17,5 @@ MonoBehaviour:
   maxPriceMandioca: 9
   maxPriceCacau: 18
   maxPriceAcai: 30
-  rejectLine: Prefiro buscar em outro lugar.
-  acceptLine: Pode deixar, pago bem por qualidade.
+  rejectLine: "Esse pre\xE7o ficou alto pra mim hoje."
+  acceptLine: Combinado! Pago melhor pela sua colheita.
