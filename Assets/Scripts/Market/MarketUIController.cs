@@ -44,6 +44,8 @@ public class MarketUIController : MonoBehaviour
 
     [Header("Sell Feedback")]
     [SerializeField] Image sellFeedbackIcon;
+    [SerializeField] GameObject insightToastPanel;
+    [SerializeField] TMP_Text insightToastLabel;
 
     [Header("Daily Summary Modal")]
     [SerializeField] GameObject dailySummaryPanel;
@@ -56,6 +58,8 @@ public class MarketUIController : MonoBehaviour
 
     string _selectedCrop;
     BuyerData _selectedBuyer;
+    Coroutine _sellFeedbackRoutine;
+    Coroutine _insightToastRoutine;
 
     void Start()
     {
@@ -67,6 +71,7 @@ public class MarketUIController : MonoBehaviour
         EnsureCropButtons();
         EnsureQuantityStepper();
         EnsureSellFeedbackIcon();
+        EnsureInsightToast();
         EnsureDailySummaryPanel();
         EnsureDailyEducationFlow();
 
@@ -265,13 +270,14 @@ public class MarketUIController : MonoBehaviour
         RefreshQuantityRange();
         UpdateSellButtonState();
         ShowSellFeedback(sold);
+        ShowFirstSaleInsightIfNeeded(sold, qty);
     }
 
     void ShowSellFeedback(bool success)
     {
         if (sellFeedbackIcon == null) return;
-        StopAllCoroutines();
-        StartCoroutine(AnimateSellFeedback(success));
+        if (_sellFeedbackRoutine != null) StopCoroutine(_sellFeedbackRoutine);
+        _sellFeedbackRoutine = StartCoroutine(AnimateSellFeedback(success));
     }
 
     IEnumerator AnimateSellFeedback(bool success)
@@ -309,6 +315,66 @@ public class MarketUIController : MonoBehaviour
             yield return null;
         }
         go.SetActive(false);
+        _sellFeedbackRoutine = null;
+    }
+
+    void ShowFirstSaleInsightIfNeeded(bool sold, int qty)
+    {
+        if (!sold || PricingSystem.Instance == null || GameManager.Instance == null) return;
+
+        float price = PricingSystem.Instance.GetAskingPrice(_selectedCrop);
+        float seedCost = PricingSystem.Instance.GetSeedCost(_selectedCrop);
+        float unitSobra = price - seedCost;
+        if (Mathf.Approximately(unitSobra, 0f)) return;
+
+        bool isSobra = unitSobra > 0f;
+        if (!IsFirstSaleWithSobraState(isSobra)) return;
+
+        float total = Mathf.Abs(unitSobra * qty);
+        string text = isSobra
+            ? $"Boa! Nessa venda sobrou R${total:F2}: você recebeu mais do que gastou na semente."
+            : $"Atenção: nessa venda faltou R${total:F2}. Você vendeu por menos do que pagou na semente.";
+        Color color = isSobra
+            ? new Color(0.32f, 0.80f, 0.42f, 1f)
+            : new Color(0.95f, 0.62f, 0.32f, 1f);
+        ShowInsightToast(text, color);
+    }
+
+    bool IsFirstSaleWithSobraState(bool isSobra)
+    {
+        var sales = GameManager.Instance.Sales;
+        if (sales == null) return true;
+
+        int matching = 0;
+        foreach (var sale in sales)
+        {
+            float cost = PricingSystem.Instance.GetSeedCost(sale.cropName);
+            float sobra = sale.pricePerUnit - cost;
+            if (Mathf.Approximately(sobra, 0f)) continue;
+            if ((sobra > 0f) == isSobra) matching++;
+        }
+
+        // BuyerSystem records the current sale before this method runs.
+        return matching == 1;
+    }
+
+    void ShowInsightToast(string text, Color accent)
+    {
+        EnsureInsightToast();
+        if (insightToastPanel == null || insightToastLabel == null) return;
+
+        insightToastLabel.text = text;
+        insightToastLabel.color = accent;
+        insightToastPanel.SetActive(true);
+        if (_insightToastRoutine != null) StopCoroutine(_insightToastRoutine);
+        _insightToastRoutine = StartCoroutine(HideInsightToastAfterDelay());
+    }
+
+    IEnumerator HideInsightToastAfterDelay()
+    {
+        yield return new WaitForSeconds(3.2f);
+        if (insightToastPanel != null) insightToastPanel.SetActive(false);
+        _insightToastRoutine = null;
     }
 
     void OnEndDayClicked()
@@ -522,6 +588,33 @@ public class MarketUIController : MonoBehaviour
         if (font != null) tmp.font = font;
 
         go.SetActive(false);
+    }
+
+    void EnsureInsightToast()
+    {
+        if (insightToastPanel != null && insightToastLabel != null) return;
+
+        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        if (canvas == null) return;
+
+        var panel = new GameObject("InsightToast");
+        panel.transform.SetParent(canvas.transform, false);
+        var rt = panel.AddComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 1f);
+        rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 1f);
+        rt.anchoredPosition = new Vector2(0f, -84f);
+        rt.sizeDelta = new Vector2(680f, 74f);
+        var bg = panel.AddComponent<Image>();
+        bg.color = new Color(0.12f, 0.08f, 0.05f, 0.94f);
+
+        insightToastLabel = MakeLabelInRect(panel.transform, "Label",
+            Vector2.zero, new Vector2(620f, 60f), 18, "");
+        insightToastLabel.alignment = TextAlignmentOptions.Center;
+        insightToastLabel.textWrappingMode = TextWrappingModes.Normal;
+
+        panel.SetActive(false);
+        insightToastPanel = panel;
     }
 
     Button MakeStepperButton(Transform parent, string name, Vector2 anchoredPos, string glyph)

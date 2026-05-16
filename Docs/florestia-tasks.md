@@ -69,8 +69,8 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### A06 · Insights e dicas in-game
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-18 | **Depende:** C05
 
-- [ ] **A06.1** Pop-up curto após primeira venda lucrativa
-- [ ] **A06.2** Pop-up curto após primeira venda no prejuízo
+- [x] **A06.1** Pop-up curto após primeira venda lucrativa
+- [x] **A06.2** Pop-up curto após primeira venda no prejuízo
 - [ ] **A06.3** Pop-up no início de cada dia com dica do dia anterior
 - [x] **A06.4** Tip contextual na EndScreen baseado em padrão de comportamento
 
