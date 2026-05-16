@@ -97,25 +97,57 @@ public class EndScreenController : MonoBehaviour
         {
             outcomeLabel.text = "Acabou o dinheiro. Tenta de novo!";
             outcomeLabel.color = new Color(0.9f, 0.42f, 0.32f);
-            SetEducationalText("Pra não acabar o dinheiro, venda por um preço maior do que pagou na semente.");
         }
         else if (final > GameManager.StartingBalance)
         {
             outcomeLabel.text = "Você plantou, vendeu e sobrou dinheiro!";
             outcomeLabel.color = new Color(0.32f, 0.80f, 0.42f);
-            SetEducationalText("Sobra = quanto recebeu − quanto gastou. Você fez essa conta direitinho!");
         }
         else
         {
             outcomeLabel.text = "Você terminou os 15 dias!";
             outcomeLabel.color = new Color(0.95f, 0.84f, 0.35f);
-            SetEducationalText("O Açaí demora 6 dias mas paga bem. Tente plantar mais açaí na próxima vez!");
         }
+
+        // Hero zone visual band atrás do outcomeLabel (A05.1 placeholder até C09)
+        RefreshHeroZone();
+
+        // Tip contextual baseado em comportamento real (A05.7)
+        SetEducationalText(GetContextualTip());
 
         string best = GetBestCrop();
         bestCropLabel.text = best != null ? $"O que mais te rendeu: {best}" : "";
 
         BuildBalanceChart();
+    }
+
+    Image _heroBand;
+    void RefreshHeroZone()
+    {
+        if (outcomeLabel == null) return;
+        if (_heroBand == null)
+        {
+            var go = new GameObject("HeroBand");
+            go.transform.SetParent(outcomeLabel.transform.parent, false);
+            go.transform.SetAsFirstSibling();
+            var rt = go.AddComponent<RectTransform>();
+            var olrt = outcomeLabel.rectTransform;
+            rt.anchorMin = olrt.anchorMin;
+            rt.anchorMax = olrt.anchorMax;
+            rt.pivot = olrt.pivot;
+            rt.anchoredPosition = olrt.anchoredPosition;
+            rt.sizeDelta = new Vector2(olrt.sizeDelta.x + 80f, olrt.sizeDelta.y + 30f);
+            _heroBand = go.AddComponent<Image>();
+            _heroBand.raycastTarget = false;
+        }
+        Color c;
+        if (GameManager.Instance.IsLoss)
+            c = new Color(0.92f, 0.42f, 0.32f, 0.16f);
+        else if (GameManager.Instance.Balance > GameManager.StartingBalance)
+            c = new Color(0.32f, 0.80f, 0.42f, 0.18f);
+        else
+            c = new Color(0.95f, 0.84f, 0.35f, 0.16f);
+        _heroBand.color = c;
     }
 
     void SetEducationalText(string text)
@@ -141,27 +173,145 @@ public class EndScreenController : MonoBehaviour
         for (int i = chartContainer.childCount - 1; i >= 0; i--)
             Destroy(chartContainer.GetChild(i).gameObject);
 
-        float max = float.MinValue, min = float.MaxValue;
+        // Inclui o 0 no range pra que a linha de zero seja sempre visível e
+        // as barras negativas saiam pra baixo de forma consistente.
+        float max = 0f, min = 0f;
         foreach (float v in balances) { if (v > max) max = v; if (v < min) min = v; }
         float range = Mathf.Max(max - min, 1f);
 
         float containerHeight = chartContainer.rect.height;
-        float barWidth = chartContainer.rect.width / balances.Count;
+        float containerWidth = chartContainer.rect.width;
+        float barWidth = containerWidth / balances.Count;
+        float zeroY = -containerHeight * 0.5f + (0f - min) / range * containerHeight;
 
+        // 1. Linha horizontal de zero (A05.4)
+        var zeroLine = new GameObject("ZeroLine");
+        zeroLine.transform.SetParent(chartContainer, false);
+        var zlrt = zeroLine.AddComponent<RectTransform>();
+        zlrt.anchorMin = new Vector2(0f, 0.5f);
+        zlrt.anchorMax = new Vector2(1f, 0.5f);
+        zlrt.pivot = new Vector2(0.5f, 0.5f);
+        zlrt.anchoredPosition = new Vector2(0f, zeroY);
+        zlrt.sizeDelta = new Vector2(0f, 1.5f);
+        zeroLine.AddComponent<Image>().color = new Color(0.85f, 0.78f, 0.45f, 0.55f);
+
+        int bankruptcyDay = -1;
         for (int i = 0; i < balances.Count; i++)
         {
+            float v = balances[i];
+
+            // 2. Barras coloridas por sinal (A05.6)
             GameObject bar = Instantiate(barPrefab, chartContainer);
             bar.SetActive(true);
             RectTransform rt = bar.GetComponent<RectTransform>();
-            float normalizedHeight = (balances[i] - min) / range;
-            rt.sizeDelta = new Vector2(barWidth - 2f, normalizedHeight * containerHeight);
-            rt.anchoredPosition = new Vector2(i * barWidth, 0);
+            rt.anchorMin = new Vector2(0f, 0.5f);
+            rt.anchorMax = new Vector2(0f, 0.5f);
+            rt.pivot = new Vector2(0f, v >= 0 ? 0f : 1f);
+
+            float barHeightPx = Mathf.Abs(v) / range * containerHeight;
+            rt.sizeDelta = new Vector2(barWidth - 4f, barHeightPx);
+            rt.anchoredPosition = new Vector2(i * barWidth + 2f, zeroY);
 
             Image img = bar.GetComponent<Image>();
-            img.color = balances[i] >= 0
-                ? new Color(0.2f, 0.75f, 0.4f)
-                : new Color(0.85f, 0.25f, 0.25f);
+            img.color = v >= 0
+                ? new Color(0.32f, 0.78f, 0.42f, 1f)
+                : new Color(0.92f, 0.38f, 0.34f, 1f);
+
+            if (bankruptcyDay < 0 && v < 0f) bankruptcyDay = i;
+
+            // 3. Day labels (A05.3) — exibe apenas a cada 2 dias pra não poluir
+            if (i % 2 == 0 || i == balances.Count - 1)
+            {
+                var dayLabel = new GameObject($"DayLabel_{i}");
+                dayLabel.transform.SetParent(chartContainer, false);
+                var dlrt = dayLabel.AddComponent<RectTransform>();
+                dlrt.anchorMin = new Vector2(0f, 0f);
+                dlrt.anchorMax = new Vector2(0f, 0f);
+                dlrt.pivot = new Vector2(0.5f, 1f);
+                dlrt.anchoredPosition = new Vector2(i * barWidth + barWidth * 0.5f, -2f);
+                dlrt.sizeDelta = new Vector2(barWidth, 18f);
+                var dlt = dayLabel.AddComponent<TextMeshProUGUI>();
+                dlt.text = (i + 1).ToString();
+                dlt.fontSize = 11;
+                dlt.alignment = TextAlignmentOptions.Center;
+                dlt.color = new Color(0.78f, 0.72f, 0.58f, 1f);
+                dlt.raycastTarget = false;
+                var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+                if (font != null) dlt.font = font;
+            }
         }
+
+        // 4. Marker do dia da virada (A05.5)
+        if (bankruptcyDay >= 0)
+        {
+            var marker = new GameObject("BankruptcyMarker");
+            marker.transform.SetParent(chartContainer, false);
+            var mrt = marker.AddComponent<RectTransform>();
+            mrt.anchorMin = new Vector2(0f, 0.5f);
+            mrt.anchorMax = new Vector2(0f, 0.5f);
+            mrt.pivot = new Vector2(0.5f, 0.5f);
+            mrt.anchoredPosition = new Vector2(bankruptcyDay * barWidth + barWidth * 0.5f, zeroY + 30f);
+            mrt.sizeDelta = new Vector2(barWidth * 2f, 22f);
+            var mlt = marker.AddComponent<TextMeshProUGUI>();
+            mlt.text = $"↓ aqui acabou o dinheiro";
+            mlt.fontSize = 12;
+            mlt.alignment = TextAlignmentOptions.Center;
+            mlt.color = new Color(0.95f, 0.42f, 0.38f, 1f);
+            mlt.fontStyle = FontStyles.Bold;
+            mlt.raycastTarget = false;
+            var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+            if (font != null) mlt.font = font;
+        }
+    }
+
+    // Tip contextual baseado no comportamento real do aluno (A05.7)
+    string GetContextualTip()
+    {
+        var gm = GameManager.Instance;
+        if (gm == null) return "";
+
+        // Padrão 1: vendeu abaixo do custo da semente em alguma venda
+        if (gm.Sales != null)
+        {
+            foreach (var s in gm.Sales)
+            {
+                float cost = PricingSystem.Instance != null
+                    ? PricingSystem.Instance.GetSeedCost(s.cropName)
+                    : 0f;
+                if (cost > 0 && s.pricePerUnit < cost)
+                    return $"Você vendeu {s.cropName} por R${s.pricePerUnit:F2}, mas pagou R${cost:F2} na semente. Tente cobrar mais alto na próxima!";
+            }
+        }
+
+        // Padrão 2: só plantou uma cultura
+        if (gm.Plantings != null && gm.Plantings.Count > 0)
+        {
+            string first = gm.Plantings[0].cropName;
+            bool single = true;
+            foreach (var p in gm.Plantings)
+                if (!string.Equals(p.cropName, first, System.StringComparison.OrdinalIgnoreCase))
+                { single = false; break; }
+            if (single)
+                return $"Você só plantou {first}. Da próxima, tenta misturar as três culturas pra ver qual rende mais!";
+        }
+
+        // Padrão 3: vendeu muito para o Atravessador
+        if (gm.Sales != null && gm.Sales.Count >= 3)
+        {
+            int atravessador = 0;
+            foreach (var s in gm.Sales)
+                if (s.buyerName != null && s.buyerName.Contains("travessador"))
+                    atravessador++;
+            if (atravessador * 2 > gm.Sales.Count)
+                return "O Atravessador paga menos. Tente o Feirante ou o Comprador Direto na próxima vez!";
+        }
+
+        // Default por desfecho
+        if (gm.IsLoss)
+            return "Não desanima! Plantar variedade e cobrar mais alto ajuda o dinheiro durar.";
+        if (gm.Balance > GameManager.StartingBalance + 30f)
+            return $"Você terminou com R${gm.Balance:F0}! Bom plano de plantio e venda.";
+        return "Você sobreviveu aos 15 dias. Da próxima, tenta render mais!";
     }
 
     void OnPlayAgain()
@@ -223,8 +373,15 @@ public class EndScreenController : MonoBehaviour
             new Vector2(0.5f, 0.5f), new Vector2(0f, -116f), new Vector2(540f, 140f));
         chartContainer.gameObject.AddComponent<Image>().color = new Color(0.07f, 0.055f, 0.045f, 1f);
 
-        playAgainButton = MakeButton("PlayAgainButton", "Jogar novamente", ct,
-            new Vector2(0f, -224f), new Vector2(210f, 52f));
+        // A05.8: botão dominante, label maior e centrado.
+        playAgainButton = MakeButton("PlayAgainButton", "JOGAR DE NOVO", ct,
+            new Vector2(0f, -250f), new Vector2(360f, 78f));
+        var pbLabel = playAgainButton.GetComponentInChildren<TMP_Text>();
+        if (pbLabel != null)
+        {
+            pbLabel.fontSize = 26;
+            pbLabel.fontStyle = FontStyles.Bold;
+        }
 
         barPrefab = new GameObject("RuntimeChartBarPrefab");
         barPrefab.transform.SetParent(transform, false);
