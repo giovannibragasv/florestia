@@ -208,21 +208,22 @@ public class MarketUIController : MonoBehaviour
         priceLabel.text = $"Seu preço: R${asking:F2}";
         if (marginLabel != null)
         {
+            // Vocabulário 8-11: "sobra" no lugar de "lucro" (Modelo C §3.4).
             string label;
             Color color;
             if (margin > 0)
             {
-                label = $"Lucro de R${margin:F2}";
+                label = $"Sobra de R${margin:F2}";
                 color = new Color(0.32f, 0.80f, 0.42f, 1f);
             }
             else if (margin < 0)
             {
-                label = $"Prejuízo de R${Mathf.Abs(margin):F2}";
+                label = $"Faltam R${Mathf.Abs(margin):F2}";
                 color = new Color(0.92f, 0.36f, 0.32f, 1f);
             }
             else
             {
-                label = "Sem lucro nem prejuízo";
+                label = "Empata: nem sobra nem falta";
                 color = new Color(0.92f, 0.85f, 0.55f, 1f);
             }
             marginLabel.text = label;
