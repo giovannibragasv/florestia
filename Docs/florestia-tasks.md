@@ -140,16 +140,16 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### C04 · Audit + glossário de termos do HUD
 > **Labels:** mentor · conteúdo · kid-friendly | **Dono:** biel | **Due:** 2026-05-13
 
-- [ ] **C04.1** Listar todos os strings do HUDController
-- [ ] **C04.2** Listar strings do MarketUIController
-- [ ] **C04.3** Listar strings da EndScreenController
-- [ ] **C04.4** Para cada string, propor substituto kid-friendly 8-11
+- [x] **C04.1** Listar todos os strings do HUDController
+- [x] **C04.2** Listar strings do MarketUIController
+- [x] **C04.3** Listar strings da EndScreenController
+- [x] **C04.4** Para cada string, propor substituto kid-friendly 8-11
 
 ### C05 · Roteiro de insights pop-up in-game
 > **Labels:** mentor · conteúdo · educação | **Dono:** biel | **Due:** 2026-05-15
 
-- [ ] **C05.1** Pop-up primeira venda lucrativa: parabéns + nome do conceito (lucro)
-- [ ] **C05.2** Pop-up primeira venda no prejuízo: sem culpa + explicação curta
+- [x] **C05.1** Pop-up primeira venda com sobra: parabéns + nome do conceito (sobra)
+- [x] **C05.2** Pop-up primeira venda com falta: sem culpa + explicação curta
 - [x] **C05.3** Pop-up início do dia 2+: dica do dia anterior baseada em comportamento
 
 ### C06 · Spec + wireframe do dashboard da intermediadora
