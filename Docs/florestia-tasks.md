@@ -48,7 +48,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [x] **A04.1** Substituir slider de quantidade por stepper ◀ [N] ▶
 - [x] **A04.2** Remover percentual da margem (manter R$ + cor)
 - [x] **A04.3** Botão vender com label dinâmico ('Vender 4 mandiocas')
-- [ ] **A04.4** Retrato do comprador dominando 1/3 esquerdo com balão de fala
+- [x] **A04.4** Retrato do comprador dominando 1/3 esquerdo com balão de fala
 - [x] **A04.5** Animação thumbs-up/down no resultado da venda
 - [x] **A04.6** Pilha de moedas visual para o total
 - [x] **A04.7** Eliminar runtime fallback EnsureQuantitySlider

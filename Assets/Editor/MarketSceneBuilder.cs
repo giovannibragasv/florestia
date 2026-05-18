@@ -69,13 +69,17 @@ public static class MarketSceneBuilder
         leftPanel.gameObject.AddComponent<Image>().color = Panel2;
 
         var portraitRT = MakeRect("BuyerPortrait", leftPanel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-            new Vector2(0.5f, 1f), new Vector2(0f, -28f), new Vector2(170f, 220f));
+            new Vector2(0.5f, 1f), new Vector2(0f, -22f), new Vector2(250f, 250f));
         var portrait = portraitRT.gameObject.AddComponent<Image>();
         portrait.color = Color.white;
         portrait.preserveAspect = true;
 
-        var dialogueLabel = MakeLabel("BuyerDialogueLine", leftPanel, "Escolha um comprador.",
-            new Vector2(0f, -72f), new Vector2(285f, 74f), 18, TextAlignmentOptions.Center, Cream);
+        var dialogueBubble = MakeRect("BuyerDialogueBubble", leftPanel,
+            new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+            new Vector2(0.5f, 0.5f), new Vector2(0f, -96f), new Vector2(288f, 82f));
+        dialogueBubble.gameObject.AddComponent<Image>().color = new Color(0.10f, 0.07f, 0.04f, 0.92f);
+        var dialogueLabel = MakeLabel("BuyerDialogueLine", dialogueBubble, "Escolha um comprador.",
+            Vector2.zero, new Vector2(268f, 70f), 18, TextAlignmentOptions.Center, Cream);
         dialogueLabel.textWrappingMode = TextWrappingModes.Normal;
 
         Button[] buyerButtons =

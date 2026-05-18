@@ -76,6 +76,7 @@ public class MarketUIController : MonoBehaviour
         DestroyLegacyCropDropdown();
         DestroyLegacyQuantitySlider();
         EnsureCropButtons();
+        EnsureBuyerFocusLayout();
         EnsureQuantityStepper();
         EnsureSellFeedbackIcon();
         EnsureInsightToast();
@@ -119,6 +120,48 @@ public class MarketUIController : MonoBehaviour
             cropButtons[i].onClick.RemoveAllListeners();
             cropButtons[i].onClick.AddListener(() => SelectCropByIndex(idx));
         }
+    }
+
+    void EnsureBuyerFocusLayout()
+    {
+        if (buyerPortrait != null)
+        {
+            var rt = buyerPortrait.rectTransform;
+            rt.sizeDelta = new Vector2(250f, 250f);
+            rt.anchoredPosition = new Vector2(0f, -22f);
+            buyerPortrait.preserveAspect = true;
+        }
+
+        if (buyerDialogueLine != null)
+        {
+            var rt = buyerDialogueLine.rectTransform;
+            rt.sizeDelta = new Vector2(288f, 82f);
+            rt.anchoredPosition = new Vector2(0f, -96f);
+            buyerDialogueLine.alignment = TextAlignmentOptions.Center;
+            buyerDialogueLine.textWrappingMode = TextWrappingModes.Normal;
+
+            EnsureDialogueBubbleBehind(rt);
+        }
+    }
+
+    void EnsureDialogueBubbleBehind(RectTransform labelRT)
+    {
+        var existing = labelRT.parent != null ? labelRT.parent.Find("DialogueBubbleRuntime") : null;
+        if (existing != null) return;
+
+        var bubbleGO = new GameObject("DialogueBubbleRuntime");
+        bubbleGO.transform.SetParent(labelRT.parent, false);
+        var bubbleRT = bubbleGO.AddComponent<RectTransform>();
+        bubbleRT.anchorMin = labelRT.anchorMin;
+        bubbleRT.anchorMax = labelRT.anchorMax;
+        bubbleRT.pivot = labelRT.pivot;
+        bubbleRT.anchoredPosition = labelRT.anchoredPosition;
+        bubbleRT.sizeDelta = labelRT.sizeDelta;
+        var bubble = bubbleGO.AddComponent<Image>();
+        bubble.color = new Color(0.10f, 0.07f, 0.04f, 0.92f);
+        bubble.raycastTarget = false;
+        bubbleGO.transform.SetSiblingIndex(labelRT.GetSiblingIndex());
+        labelRT.SetAsLastSibling();
     }
 
     public void SelectCropByIndex(int index)
