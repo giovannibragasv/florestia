@@ -7,6 +7,7 @@ using TMPro;
 public static class ToolbarBuilder
 {
     static readonly string[] SlotLabels = { "Mandioca", "Cacau", "Açaí", "Água", "Colher" };
+    const string GeneratedSlotPath = "Assets/Sprites/GeneratedStyle/ui_slot_blank_vibrant.png";
     const float SlotSize   = 72f;
     const float SlotGap    = 6f;
     const float BarPadding = 8f;
@@ -66,7 +67,7 @@ public static class ToolbarBuilder
             slotRT.sizeDelta = new Vector2(SlotSize, SlotSize);
             slotRT.anchoredPosition = new Vector2(startX + i * (SlotSize + SlotGap), 0f);
             var bg = slotGO.AddComponent<Image>();
-            bg.color = new Color(0.96f, 0.68f, 0.34f, 0.96f);
+            ApplySlotSprite(bg);
             slotBackgrounds[i] = bg;
             Undo.RegisterCreatedObjectUndo(slotGO, "Build Farm Toolbar");
 
@@ -156,5 +157,19 @@ public static class ToolbarBuilder
         };
 
         return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+    }
+
+    static void ApplySlotSprite(Image image)
+    {
+        Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(GeneratedSlotPath);
+        if (sprite != null)
+        {
+            image.sprite = sprite;
+            image.type = Image.Type.Sliced;
+            image.color = Color.white;
+            return;
+        }
+
+        image.color = new Color(0.96f, 0.68f, 0.34f, 0.96f);
     }
 }
