@@ -191,14 +191,16 @@ public class EndScreenController : MonoBehaviour
         _heroIllustrationBg = go.AddComponent<Image>();
         _heroIllustrationBg.raycastTarget = false;
 
-        _heroIllustrationIcon = MakeLabelInRect(go.transform, "Icon",
-            new Vector2(0f, 14f), new Vector2(130f, 56f), 34, "OK");
+        _heroIllustrationIcon = MakeLabel("Icon", go.transform,
+            "OK",
+            new Vector2(0f, 14f), new Vector2(130f, 56f), 34,
+            new Color(0.98f, 0.88f, 0.55f, 1f));
         _heroIllustrationIcon.fontStyle = FontStyles.Bold;
-        _heroIllustrationIcon.color = new Color(0.98f, 0.88f, 0.55f, 1f);
 
-        _heroIllustrationCaption = MakeLabelInRect(go.transform, "Caption",
-            new Vector2(0f, -34f), new Vector2(132f, 34f), 15, "");
-        _heroIllustrationCaption.color = new Color(0.95f, 0.92f, 0.84f, 1f);
+        _heroIllustrationCaption = MakeLabel("Caption", go.transform,
+            "",
+            new Vector2(0f, -34f), new Vector2(132f, 34f), 15,
+            new Color(0.95f, 0.92f, 0.84f, 1f));
         _heroIllustrationCaption.textWrappingMode = TextWrappingModes.Normal;
     }
 
