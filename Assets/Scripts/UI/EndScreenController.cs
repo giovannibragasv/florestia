@@ -109,7 +109,7 @@ public class EndScreenController : MonoBehaviour
             outcomeLabel.color = new Color(0.95f, 0.84f, 0.35f);
         }
 
-        // Hero zone visual band atrás do outcomeLabel (A05.1 placeholder até C09)
+        // Hero zone com pictograma simples por desfecho; arte final entra em C09/FA05.
         RefreshHeroZone();
 
         // Tip contextual baseado em comportamento real (A05.7)
@@ -122,6 +122,9 @@ public class EndScreenController : MonoBehaviour
     }
 
     Image _heroBand;
+    Image _heroIllustrationBg;
+    TMP_Text _heroIllustrationIcon;
+    TMP_Text _heroIllustrationCaption;
     void RefreshHeroZone()
     {
         if (outcomeLabel == null) return;
@@ -140,14 +143,63 @@ public class EndScreenController : MonoBehaviour
             _heroBand = go.AddComponent<Image>();
             _heroBand.raycastTarget = false;
         }
+        EnsureHeroIllustration();
+
         Color c;
+        string icon;
+        string caption;
         if (GameManager.Instance.IsLoss)
+        {
             c = new Color(0.92f, 0.42f, 0.32f, 0.16f);
+            icon = "...";
+            caption = "pensar e tentar";
+        }
         else if (GameManager.Instance.Balance > GameManager.StartingBalance)
+        {
             c = new Color(0.32f, 0.80f, 0.42f, 0.18f);
+            icon = "R$";
+            caption = "sobrou dinheiro";
+        }
         else
+        {
             c = new Color(0.95f, 0.84f, 0.35f, 0.16f);
+            icon = "OK";
+            caption = "colheita modesta";
+        }
         _heroBand.color = c;
+        if (_heroIllustrationBg != null)
+            _heroIllustrationBg.color = new Color(c.r, c.g, c.b, 0.35f);
+        if (_heroIllustrationIcon != null)
+            _heroIllustrationIcon.text = icon;
+        if (_heroIllustrationCaption != null)
+            _heroIllustrationCaption.text = caption;
+    }
+
+    void EnsureHeroIllustration()
+    {
+        if (_heroIllustrationBg != null) return;
+
+        var go = new GameObject("HeroIllustration");
+        go.transform.SetParent(outcomeLabel.transform.parent, false);
+        var rt = go.AddComponent<RectTransform>();
+        var olrt = outcomeLabel.rectTransform;
+        rt.anchorMin = olrt.anchorMin;
+        rt.anchorMax = olrt.anchorMax;
+        rt.pivot = olrt.pivot;
+        rt.anchoredPosition = olrt.anchoredPosition + new Vector2(-270f, 0f);
+        rt.sizeDelta = new Vector2(150f, 118f);
+        _heroIllustrationBg = go.AddComponent<Image>();
+        _heroIllustrationBg.raycastTarget = false;
+
+        _heroIllustrationIcon = MakeLabelInRect(go.transform, "Icon",
+            new Vector2(0f, 14f), new Vector2(130f, 56f), 34, "OK");
+        _heroIllustrationIcon.fontStyle = FontStyles.Bold;
+        _heroIllustrationIcon.color = new Color(0.98f, 0.88f, 0.55f, 1f);
+
+        _heroIllustrationCaption = MakeLabelInRect(go.transform, "Caption",
+            new Vector2(0f, -34f), new Vector2(132f, 34f), 15, "");
+        _heroIllustrationCaption.color = new Color(0.95f, 0.92f, 0.84f, 1f);
+        _heroIllustrationCaption.textWrappingMode = TextWrappingModes.Normal;
     }
 
     void SetEducationalText(string text)
