@@ -99,8 +99,8 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [x] **A08.2** RNG noturno configurável para aumentar/diminuir chance dos compradores aceitarem
 - [x] **A08.3** Substituir sprites dos compradores por retratos neutros e respeitosos
 - [x] **A08.4** Desclutter da coluna direita do mercado: preço, quantidade, cards e ações em blocos separados
-- [ ] **A08.5** Criar arte de fundo do mercado com céu noturno escuro e original
-- [ ] **A08.6** Reavaliar termo/representação do comprador "Atravessador" com foco pedagógico e sem imagem negativa
+- [x] **A08.5** Criar arte de fundo do mercado com céu noturno escuro e original
+- [x] **A08.6** Reavaliar termo/representação do comprador "Atravessador" com foco pedagógico e sem imagem negativa
 
 ### A09 · Feedback visual de ações na fazenda
 > **Labels:** kid-friendly · código · polimento | **Dono:** vanni | **Fonte:** anotações de review em 2026-05-18
@@ -115,10 +115,10 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 > **Labels:** código · polimento · UX | **Dono:** vanni | **Fonte:** anotações de review em 2026-05-18
 
 - [x] **A10.1** Fazer sprite de regador legível no toolbar
-- [ ] **A10.2** Ajustar savefiles: reset, troca de perfil, arquivos antigos e fluxo de continuação
+- [x] **A10.2** Ajustar savefiles: reset, troca de perfil, arquivos antigos e fluxo de continuação
 - [x] **A10.3** Ajustar tecla ESC: menu de pausa, sair, salvar e voltar
 - [x] **A10.4** Explicitar energia e custo de energia das ações antes/depois de agir
-- [ ] **A10.5** Integrar fonte da pasta `SDV Fonts/` sem quebrar acentos e fallback TMP
+- [x] **A10.5** Integrar fonte da pasta `SDV Fonts/` sem quebrar acentos e fallback TMP
 
 ### B01 · Save persistente por aluno
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Status:** ✅ Concluído · commits `5c83754` (fundação) + `b235a49` (picker)
@@ -165,7 +165,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### C02 · Diálogos dos compradores (v1 MVP)
 > **Labels:** mentor · conteúdo · educação | **Dono:** kadu | **Due:** 2026-05-14
 
-- [x] **C02.1** Escrever Atravessador: tom rápido, ofertas baixas mas certas
+- [x] **C02.1** Escrever Comprador da Estrada: tom rápido, ofertas baixas mas certas
 - [x] **C02.2** Escrever Feirante Local: tom amigável, preços medianos
 - [x] **C02.3** Escrever Comprador Direto: tom respeitoso, paga bem mas raro
 - [x] **C02.4** Validar vocabulário 8-11, sem jargão financeiro

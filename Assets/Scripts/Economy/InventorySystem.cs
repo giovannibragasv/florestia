@@ -44,6 +44,11 @@ public class InventorySystem : MonoBehaviour
         return true;
     }
 
+    public void Clear()
+    {
+        _stock.Clear();
+    }
+
     public IReadOnlyDictionary<string, int> GetAll() => _stock;
 
     public InventorySaveData GetSaveData() => new InventorySaveData

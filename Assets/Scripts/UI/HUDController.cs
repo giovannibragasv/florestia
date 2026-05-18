@@ -449,7 +449,7 @@ public class HUDController : MonoBehaviour
             if (sale.day != previousDay) continue;
             hadSale = true;
             salesCount++;
-            if (sale.buyerName != null && sale.buyerName.Contains("travessador"))
+            if (IsLowPriceBuyer(sale.buyerName))
                 atravessadorSales++;
 
             float cost = PricingSystem.Instance != null
@@ -464,13 +464,20 @@ public class HUDController : MonoBehaviour
         if (soldBelowCost)
             return "Dica do dia: antes de vender, compare o preço com o que você pagou na semente.";
         if (salesCount > 0 && atravessadorSales * 2 >= salesCount)
-            return "Dica do dia: o Atravessador compra rápido, mas outros compradores podem pagar melhor.";
+            return "Dica do dia: o Comprador da Estrada compra rápido, mas outros compradores podem pagar melhor.";
 
         int plantedKinds = CountPlantingKinds(gm, previousDay);
         if (plantedKinds == 1)
             return "Dica do dia: tente misturar culturas. Cada planta demora e rende de um jeito.";
 
         return "Dica do dia: continue comparando custo, dinheiro recebido e sobra antes de decidir o preço.";
+    }
+
+    static bool IsLowPriceBuyer(string buyerName)
+    {
+        if (string.IsNullOrEmpty(buyerName)) return false;
+        string lower = buyerName.ToLowerInvariant();
+        return lower.Contains("travessador") || lower.Contains("estrada");
     }
 
     static int CountPlantingKinds(GameManager gm, int day)

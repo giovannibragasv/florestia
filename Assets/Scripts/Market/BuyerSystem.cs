@@ -4,7 +4,7 @@ public class BuyerSystem : MonoBehaviour
 {
     public static BuyerSystem Instance { get; private set; }
 
-    [SerializeField] BuyerData[] buyers; // assign Atravessador, Feirante, Comprador in Inspector
+    [SerializeField] BuyerData[] buyers; // assign Estrada, Feirante, Comprador in Inspector
 
     [Header("Night Market Mood")]
     [SerializeField] int moodSeedOffset = 7301;

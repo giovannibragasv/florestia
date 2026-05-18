@@ -50,6 +50,14 @@ public class CropSystem : MonoBehaviour
         return count;
     }
 
+    public void ClearAllSlots()
+    {
+        if (slots == null) return;
+        foreach (var slot in slots)
+            if (slot != null)
+                slot.Clear();
+    }
+
     public CropSlotSaveData[] GetSaveData()
     {
         var data = new CropSlotSaveData[slots.Length];

@@ -122,6 +122,14 @@ public class CropSlot : MonoBehaviour
         return harvested;
     }
 
+    public void Clear()
+    {
+        _crop = null;
+        _daysPlanted = 0;
+        _wateredToday = false;
+        RefreshSprite();
+    }
+
     public void OnDayEnd()
     {
         if (_crop != null && _wateredToday) _daysPlanted++;

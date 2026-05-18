@@ -349,15 +349,15 @@ public class EndScreenController : MonoBehaviour
                 return $"Você só plantou {first}. Da próxima, tenta misturar as três culturas pra ver qual rende mais!";
         }
 
-        // Padrão 3: vendeu muito para o Atravessador
+        // Padrão 3: vendeu muito para o comprador de oferta baixa
         if (gm.Sales != null && gm.Sales.Count >= 3)
         {
             int atravessador = 0;
             foreach (var s in gm.Sales)
-                if (s.buyerName != null && s.buyerName.Contains("travessador"))
+                if (IsLowPriceBuyer(s.buyerName))
                     atravessador++;
             if (atravessador * 2 > gm.Sales.Count)
-                return "O Atravessador paga menos. Tente o Feirante ou o Comprador Direto na próxima vez!";
+                return "O Comprador da Estrada compra rápido. Tente o Feirante ou o Comprador Direto pra comparar os preços!";
         }
 
         // Default por desfecho
@@ -366,6 +366,13 @@ public class EndScreenController : MonoBehaviour
         if (gm.Balance > GameManager.StartingBalance + 30f)
             return $"Você terminou com R${gm.Balance:F0}! Bom plano de plantio e venda.";
         return "Você sobreviveu aos 15 dias. Da próxima, tenta render mais!";
+    }
+
+    static bool IsLowPriceBuyer(string buyerName)
+    {
+        if (string.IsNullOrEmpty(buyerName)) return false;
+        string lower = buyerName.ToLowerInvariant();
+        return lower.Contains("travessador") || lower.Contains("estrada");
     }
 
     void OnPlayAgain()

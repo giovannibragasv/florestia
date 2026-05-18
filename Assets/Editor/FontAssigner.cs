@@ -8,8 +8,7 @@ public static class FontAssigner
     [MenuItem("Florestia/Assign TMP Fonts")]
     public static void Assign()
     {
-        TMP_FontAsset font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(
-            "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
+        TMP_FontAsset font = LoadPreferredFont();
         if (font == null) return;
 
         int updated = 0;
@@ -25,6 +24,14 @@ public static class FontAssigner
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
 
         Debug.Log($"Assigned TMP font to {updated} label(s).");
+    }
+
+    static TMP_FontAsset LoadPreferredFont()
+    {
+        return AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(
+                   "Assets/TextMesh Pro/Resources/Fonts & Materials/Stardew_Valley SDF.asset")
+               ?? AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(
+                   "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
     }
 
     static bool AssignFont(TMP_Text text, TMP_FontAsset font)

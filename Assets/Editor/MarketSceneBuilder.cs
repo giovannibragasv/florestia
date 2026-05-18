@@ -48,11 +48,15 @@ public static class MarketSceneBuilder
         var background = MakeRect("Background", ct, Vector2.zero, Vector2.one,
             new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
         var bgImage = background.gameObject.AddComponent<Image>();
-        bgImage.color = new Color(0.07f, 0.06f, 0.09f, 1f);
+        bgImage.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(
+            "Assets/Sprites/Market/market_night_background.png");
+        bgImage.color = bgImage.sprite != null
+            ? Color.white
+            : new Color(0.07f, 0.06f, 0.09f, 1f);
 
         var groundBand = MakeRect("MarketGlow", ct, new Vector2(0f, 0f), new Vector2(1f, 0f),
             new Vector2(0.5f, 0f), new Vector2(0f, 0f), new Vector2(0f, 210f));
-        groundBand.gameObject.AddComponent<Image>().color = new Color(0.32f, 0.20f, 0.09f, 0.9f);
+        groundBand.gameObject.AddComponent<Image>().color = new Color(0.12f, 0.07f, 0.035f, 0.35f);
 
         var panel = MakeRect("MarketPanel", ct, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
             new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(1160f, 700f));
@@ -84,7 +88,7 @@ public static class MarketSceneBuilder
 
         Button[] buyerButtons =
         {
-            MakeButton("BuyerButton_0", "Atravessador", leftPanel, new Vector2(0f, -228f), new Vector2(260f, 48f), false),
+            MakeButton("BuyerButton_0", "Comprador da Estrada", leftPanel, new Vector2(0f, -228f), new Vector2(260f, 48f), false),
             MakeButton("BuyerButton_1", "Feirante Local", leftPanel, new Vector2(0f, -286f), new Vector2(260f, 48f), false),
             MakeButton("BuyerButton_2", "Comprador Direto", leftPanel, new Vector2(0f, -344f), new Vector2(260f, 48f), false)
         };

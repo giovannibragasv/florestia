@@ -15,11 +15,11 @@ public static class BuyerDataCreator
         {
             EnsureBuyer(
                 "Atravessador.asset",
-                "Atravessador",
+                "Comprador da Estrada",
                 "Assets/Sprites/Buyers/buyer_atravessador.png",
                 5f, 12f, 20f,
-                "Levo agora, mas pago pouco.",
-                "Por esse preço eu não levo."),
+                "Levo agora e passo na próxima comunidade.",
+                "Hoje esse preço fica difícil pra minha rota."),
             EnsureBuyer(
                 "Feirante.asset",
                 "Feirante Local",

@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     {
         EnsureProfilePickerExists();
         EnsurePauseMenuExists();
+        SaveSystem.TryMigrateLegacySave();
         EnsureActiveProfile();
         EnsureTutorialControllerExists();
         EnsureIntermediadoraDashboardExists();
@@ -263,5 +264,8 @@ public class GameManager : MonoBehaviour
         Plantings = new List<PlantingRecord>();
         Sales = new List<DailySaleRecord>();
         Questions = new List<QuestionAnswerRecord>();
+        InventorySystem.Instance?.Clear();
+        CropSystem.Instance?.ClearAllSlots();
+        StaminaSystem.Instance?.ResetForNewDay();
     }
 }

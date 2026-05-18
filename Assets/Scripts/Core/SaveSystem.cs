@@ -78,8 +78,10 @@ public class SaveData
 
 public static class SaveSystem
 {
+    const string LegacySaveFile = "florestia_save.json";
     const string IndexFile = "florestia_profiles.json";
     static string IndexPath => Path.Combine(Application.persistentDataPath, IndexFile);
+    static string LegacySavePath => Path.Combine(Application.persistentDataPath, LegacySaveFile);
 
     public static StudentProfile ActiveProfile { get; private set; }
 
@@ -108,6 +110,24 @@ public static class SaveSystem
         list.Add(profile);
         WriteIndex(list);
         return profile;
+    }
+
+    public static void TryMigrateLegacySave()
+    {
+        if (!File.Exists(LegacySavePath)) return;
+
+        SaveData legacy = JsonUtility.FromJson<SaveData>(File.ReadAllText(LegacySavePath));
+        if (legacy == null) return;
+
+        string name = !string.IsNullOrWhiteSpace(legacy.studentName)
+            ? legacy.studentName
+            : "Aluno importado";
+        StudentProfile profile = FindOrCreateImportProfile(name);
+        if (profile == null) return;
+
+        SetActiveProfile(profile);
+        Save(legacy);
+        File.Delete(LegacySavePath);
     }
 
     public static void DeleteProfile(StudentProfile p)
@@ -152,6 +172,22 @@ public static class SaveSystem
     {
         var idx = new StudentProfileIndex { profiles = profiles };
         File.WriteAllText(IndexPath, JsonUtility.ToJson(idx, true));
+    }
+
+    static StudentProfile FindOrCreateImportProfile(string preferredName)
+    {
+        StudentProfile preferred = FindOrCreateProfile(preferredName);
+        if (preferred == null || !File.Exists(SaveFilePath(preferred)))
+            return preferred;
+
+        for (int i = 2; i < 100; i++)
+        {
+            StudentProfile candidate = FindOrCreateProfile($"{preferredName} {i}");
+            if (candidate != null && !File.Exists(SaveFilePath(candidate)))
+                return candidate;
+        }
+
+        return null;
     }
 
     static string SaveFilePath(StudentProfile p) =>
