@@ -55,78 +55,86 @@ public static class MarketSceneBuilder
         groundBand.gameObject.AddComponent<Image>().color = new Color(0.32f, 0.20f, 0.09f, 0.9f);
 
         var panel = MakeRect("MarketPanel", ct, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-            new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(980f, 650f));
+            new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(1160f, 700f));
         panel.gameObject.AddComponent<Image>().color = Panel;
 
         var title = MakeLabel("TitleLabel", panel, "Mercado Noturno",
-            new Vector2(0f, 280f), new Vector2(760f, 42f), 34, TextAlignmentOptions.Center, Gold);
+            new Vector2(0f, 300f), new Vector2(760f, 44f), 34, TextAlignmentOptions.Center, Gold);
         title.fontStyle = FontStyles.Bold;
         MakeLabel("SubtitleLabel", panel, "Negocie sua colheita antes do próximo amanhecer",
-            new Vector2(0f, 246f), new Vector2(760f, 26f), 17, TextAlignmentOptions.Center, Cream);
+            new Vector2(0f, 266f), new Vector2(760f, 26f), 17, TextAlignmentOptions.Center, Cream);
 
         var leftPanel = MakeRect("BuyerPanel", panel, new Vector2(0f, 0.5f), new Vector2(0f, 0.5f),
-            new Vector2(0f, 0.5f), new Vector2(42f, -16f), new Vector2(330f, 470f));
+            new Vector2(0f, 0.5f), new Vector2(46f, -22f), new Vector2(360f, 540f));
         leftPanel.gameObject.AddComponent<Image>().color = Panel2;
 
         var portraitRT = MakeRect("BuyerPortrait", leftPanel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-            new Vector2(0.5f, 1f), new Vector2(0f, -22f), new Vector2(250f, 250f));
+            new Vector2(0.5f, 1f), new Vector2(0f, -34f), new Vector2(168f, 188f));
         var portrait = portraitRT.gameObject.AddComponent<Image>();
         portrait.color = Color.white;
         portrait.preserveAspect = true;
 
         var dialogueBubble = MakeRect("BuyerDialogueBubble", leftPanel,
             new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-            new Vector2(0.5f, 0.5f), new Vector2(0f, -96f), new Vector2(288f, 82f));
+            new Vector2(0.5f, 0.5f), new Vector2(0f, -154f), new Vector2(300f, 78f));
         dialogueBubble.gameObject.AddComponent<Image>().color = new Color(0.10f, 0.07f, 0.04f, 0.92f);
         var dialogueLabel = MakeLabel("BuyerDialogueLine", dialogueBubble, "Escolha um comprador.",
-            Vector2.zero, new Vector2(268f, 70f), 18, TextAlignmentOptions.Center, Cream);
+            Vector2.zero, new Vector2(276f, 62f), 17, TextAlignmentOptions.Center, Cream);
         dialogueLabel.textWrappingMode = TextWrappingModes.Normal;
 
         Button[] buyerButtons =
         {
-            MakeButton("BuyerButton_0", "Atravessador", leftPanel, new Vector2(0f, -170f), new Vector2(245f, 44f), false),
-            MakeButton("BuyerButton_1", "Feirante Local", leftPanel, new Vector2(0f, -224f), new Vector2(245f, 44f), false),
-            MakeButton("BuyerButton_2", "Comprador Direto", leftPanel, new Vector2(0f, -278f), new Vector2(245f, 44f), false)
+            MakeButton("BuyerButton_0", "Atravessador", leftPanel, new Vector2(0f, -228f), new Vector2(260f, 48f), false),
+            MakeButton("BuyerButton_1", "Feirante Local", leftPanel, new Vector2(0f, -286f), new Vector2(260f, 48f), false),
+            MakeButton("BuyerButton_2", "Comprador Direto", leftPanel, new Vector2(0f, -344f), new Vector2(260f, 48f), false)
         };
 
         var tradePanel = MakeRect("TradePanel", panel, new Vector2(1f, 0.5f), new Vector2(1f, 0.5f),
-            new Vector2(1f, 0.5f), new Vector2(-42f, -16f), new Vector2(560f, 470f));
+            new Vector2(1f, 0.5f), new Vector2(-46f, -22f), new Vector2(700f, 540f));
         tradePanel.gameObject.AddComponent<Image>().color = new Color(0.13f, 0.095f, 0.07f, 0.98f);
 
-        MakeLabel("CropHeader", tradePanel, "Produto", new Vector2(-180f, 174f),
+        var moodLabel = MakeLabel("MarketMoodLabel", tradePanel, "Clima da feira: normal", new Vector2(172f, 218f),
+            new Vector2(430f, 26f), 17, TextAlignmentOptions.Right, new Color(0.98f, 0.78f, 0.32f, 1f));
+
+        MakeLabel("CropHeader", tradePanel, "Produto", new Vector2(-230f, 178f),
             new Vector2(160f, 30f), 18, TextAlignmentOptions.Left, Gold);
-        MakeLabel("PriceHeader", tradePanel, "Preço pedido", new Vector2(92f, 174f),
+        MakeLabel("PriceHeader", tradePanel, "Preço pedido", new Vector2(122f, 178f),
             new Vector2(220f, 30f), 18, TextAlignmentOptions.Left, Gold);
 
         // Three crop selector buttons (replaces the old TMP_Dropdown)
         string[] cropNames = { "Mandioca", "Cacau", "Acai" };
         string[] cropLabels = { "Mandioca", "Cacau", "Açaí" };
-        float[] cropYs = { 148f, 108f, 68f };
+        float[] cropYs = { 148f, 102f, 56f };
         Button[] cropButtons = new Button[3];
         for (int i = 0; i < 3; i++)
         {
             cropButtons[i] = MakeButton($"CropButton_{cropNames[i]}", cropLabels[i], tradePanel,
-                new Vector2(-170f, cropYs[i]), new Vector2(210f, 36f), false);
+                new Vector2(-220f, cropYs[i]), new Vector2(230f, 40f), false);
         }
 
         var stockLabel = MakeLabel("StockLabel", tradePanel, "Na sacola: 0",
-            new Vector2(-170f, 22f), new Vector2(220f, 30f), 19, TextAlignmentOptions.Center, Cream);
+            new Vector2(-220f, 14f), new Vector2(230f, 30f), 19, TextAlignmentOptions.Center, Cream);
 
         var sliderRT = MakeRect("PriceSlider", tradePanel, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-            new Vector2(0.5f, 0.5f), new Vector2(110f, 118f), new Vector2(300f, 34f));
+            new Vector2(0.5f, 0.5f), new Vector2(126f, 116f), new Vector2(360f, 38f));
         var slider = MakeSlider(sliderRT);
         slider.minValue = 1f;
         slider.maxValue = 50f;
         slider.value = 7f;
 
-        var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: R$0", new Vector2(-130f, -30f));
-        var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: R$0", new Vector2(110f, -30f));
-        var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Sobra: −", new Vector2(110f, -90f));
+        var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: R$0", new Vector2(-220f, -50f));
+        var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: R$0", new Vector2(0f, -50f));
+        var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Sobra: −", new Vector2(220f, -50f));
+
+        var chanceLabel = MakeLabel("AcceptanceChanceLabel", tradePanel, "Chance de venda: --",
+            new Vector2(126f, -116f), new Vector2(300f, 30f), 19,
+            TextAlignmentOptions.Center, new Color(0.98f, 0.78f, 0.32f, 1f));
+        chanceLabel.fontStyle = FontStyles.Bold;
 
         var sellBtn = MakeButton("SellButton", "Vender 1 unidade", tradePanel,
-            new Vector2(-120f, -176f), new Vector2(210f, 58f), true);
+            new Vector2(-126f, -220f), new Vector2(260f, 62f), true);
         var endDayBtn = MakeButton("EndDayButton", "Encerrar dia", tradePanel,
-            new Vector2(130f, -176f), new Vector2(190f, 58f), true);
+            new Vector2(180f, -220f), new Vector2(220f, 62f), true);
 
         var muic = marketUI.AddComponent<MarketUIController>();
         SerializedObject so = new SerializedObject(muic);
@@ -136,6 +144,8 @@ public static class MarketSceneBuilder
             cropButtonsProp.GetArrayElementAtIndex(i).objectReferenceValue = cropButtons[i];
         so.FindProperty("stockLabel").objectReferenceValue = stockLabel;
         so.FindProperty("priceSlider").objectReferenceValue = slider;
+        so.FindProperty("marketMoodLabel").objectReferenceValue = moodLabel;
+        so.FindProperty("acceptanceChanceLabel").objectReferenceValue = chanceLabel;
         so.FindProperty("costLabel").objectReferenceValue = costLabel;
         so.FindProperty("priceLabel").objectReferenceValue = priceLabel;
         so.FindProperty("marginLabel").objectReferenceValue = marginLabel;

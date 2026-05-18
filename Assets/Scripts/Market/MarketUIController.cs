@@ -17,6 +17,8 @@ public class MarketUIController : MonoBehaviour
 
     [Header("Pricing")]
     [SerializeField] Slider priceSlider;
+    [SerializeField] TMP_Text marketMoodLabel;
+    [SerializeField] TMP_Text acceptanceChanceLabel;
     [SerializeField] TMP_Text costLabel;
     [SerializeField] TMP_Text priceLabel;
     [SerializeField] TMP_Text marginLabel;
@@ -76,6 +78,7 @@ public class MarketUIController : MonoBehaviour
         DestroyLegacyCropDropdown();
         DestroyLegacyQuantitySlider();
         EnsureCropButtons();
+        EnsureMarketReadableLayout();
         EnsureBuyerFocusLayout();
         EnsureQuantityStepper();
         EnsureSellFeedbackIcon();
@@ -122,26 +125,135 @@ public class MarketUIController : MonoBehaviour
         }
     }
 
+    void EnsureMarketReadableLayout()
+    {
+        var marketPanel = GameObject.Find("MarketPanel")?.GetComponent<RectTransform>();
+        if (marketPanel != null)
+        {
+            marketPanel.sizeDelta = new Vector2(1160f, 700f);
+            SetImageColor(marketPanel.gameObject, new Color(0.22f, 0.14f, 0.08f, 0.98f));
+        }
+
+        MoveRect("TitleLabel", new Vector2(0f, 300f), new Vector2(760f, 44f));
+        SetLabelStyle("TitleLabel", 34, TextAlignmentOptions.Center,
+            new Color(0.98f, 0.70f, 0.24f, 1f), FontStyles.Bold);
+        MoveRect("SubtitleLabel", new Vector2(0f, 266f), new Vector2(760f, 26f));
+        SetLabelStyle("SubtitleLabel", 17, TextAlignmentOptions.Center,
+            new Color(0.95f, 0.86f, 0.66f, 1f), FontStyles.Normal);
+
+        var buyerPanel = GameObject.Find("BuyerPanel")?.GetComponent<RectTransform>();
+        if (buyerPanel != null)
+        {
+            buyerPanel.anchoredPosition = new Vector2(46f, -22f);
+            buyerPanel.sizeDelta = new Vector2(360f, 540f);
+            SetImageColor(buyerPanel.gameObject, new Color(0.34f, 0.23f, 0.14f, 0.98f));
+        }
+
+        var tradePanel = GameObject.Find("TradePanel")?.GetComponent<RectTransform>();
+        if (tradePanel != null)
+        {
+            tradePanel.anchoredPosition = new Vector2(-46f, -22f);
+            tradePanel.sizeDelta = new Vector2(700f, 540f);
+            SetImageColor(tradePanel.gameObject, new Color(0.16f, 0.10f, 0.06f, 0.98f));
+
+            if (marketMoodLabel == null)
+                marketMoodLabel = FindTMP("MarketMoodLabel") ?? MakeLabelNear(tradePanel, "MarketMoodLabel",
+                    new Vector2(172f, 218f), new Vector2(430f, 26f), 17, "");
+            if (marketMoodLabel != null)
+            {
+                marketMoodLabel.alignment = TextAlignmentOptions.Right;
+                marketMoodLabel.color = new Color(0.98f, 0.78f, 0.32f, 1f);
+            }
+
+            if (acceptanceChanceLabel == null)
+                acceptanceChanceLabel = FindTMP("AcceptanceChanceLabel") ?? MakeLabelNear(tradePanel, "AcceptanceChanceLabel",
+                    new Vector2(126f, -116f), new Vector2(300f, 30f), 19, "");
+            if (acceptanceChanceLabel != null)
+            {
+                acceptanceChanceLabel.alignment = TextAlignmentOptions.Center;
+                acceptanceChanceLabel.fontStyle = FontStyles.Bold;
+            }
+        }
+
+        MoveRect("BuyerPortrait", new Vector2(0f, -34f), new Vector2(168f, 188f));
+        MoveRect("BuyerDialogueBubble", new Vector2(0f, -154f), new Vector2(300f, 78f));
+        MoveRect("BuyerDialogueLine", Vector2.zero, new Vector2(276f, 62f));
+        SetLabelStyle("BuyerDialogueLine", 17, TextAlignmentOptions.Center,
+            new Color(0.96f, 0.88f, 0.68f, 1f), FontStyles.Normal);
+        MoveRect("BuyerButton_0", new Vector2(0f, -228f), new Vector2(260f, 48f));
+        MoveRect("BuyerButton_1", new Vector2(0f, -286f), new Vector2(260f, 48f));
+        MoveRect("BuyerButton_2", new Vector2(0f, -344f), new Vector2(260f, 48f));
+
+        MoveRect("CropHeader", new Vector2(-230f, 178f), new Vector2(180f, 28f));
+        MoveRect("PriceHeader", new Vector2(122f, 178f), new Vector2(240f, 28f));
+        MoveRect("CropButton_Mandioca", new Vector2(-220f, 148f), new Vector2(230f, 40f));
+        MoveRect("CropButton_Cacau", new Vector2(-220f, 102f), new Vector2(230f, 40f));
+        MoveRect("CropButton_Acai", new Vector2(-220f, 56f), new Vector2(230f, 40f));
+        MoveRect("StockLabel", new Vector2(-220f, 14f), new Vector2(230f, 28f));
+        MoveRect("PriceSlider", new Vector2(126f, 116f), new Vector2(360f, 38f));
+        MoveRect("CostLabel", new Vector2(-220f, -50f), new Vector2(200f, 54f));
+        MoveRect("PriceLabel", new Vector2(0f, -50f), new Vector2(200f, 54f));
+        MoveRect("MarginLabel", new Vector2(220f, -50f), new Vector2(200f, 54f));
+        MoveRect("SellButton", new Vector2(-126f, -220f), new Vector2(260f, 62f));
+        MoveRect("EndDayButton", new Vector2(180f, -220f), new Vector2(220f, 62f));
+        SetButtonLabel("SellButton", 18);
+        SetButtonLabel("EndDayButton", 20);
+
+        RefreshMarketMoodLabel();
+    }
+
     void EnsureBuyerFocusLayout()
     {
         if (buyerPortrait != null)
         {
             var rt = buyerPortrait.rectTransform;
-            rt.sizeDelta = new Vector2(250f, 250f);
-            rt.anchoredPosition = new Vector2(0f, -22f);
+            rt.sizeDelta = new Vector2(168f, 188f);
+            rt.anchoredPosition = new Vector2(0f, -34f);
             buyerPortrait.preserveAspect = true;
         }
 
         if (buyerDialogueLine != null)
         {
             var rt = buyerDialogueLine.rectTransform;
-            rt.sizeDelta = new Vector2(288f, 82f);
-            rt.anchoredPosition = new Vector2(0f, -96f);
+            rt.sizeDelta = new Vector2(276f, 62f);
+            rt.anchoredPosition = Vector2.zero;
             buyerDialogueLine.alignment = TextAlignmentOptions.Center;
             buyerDialogueLine.textWrappingMode = TextWrappingModes.Normal;
 
             EnsureDialogueBubbleBehind(rt);
         }
+    }
+
+    void RefreshMarketMoodLabel()
+    {
+        if (marketMoodLabel == null || BuyerSystem.Instance == null) return;
+
+        float bonus = BuyerSystem.Instance.TonightAcceptanceBonus;
+        int pct = Mathf.RoundToInt(bonus * 100f);
+        string suffix = pct == 0 ? "" : $" ({(pct > 0 ? "+" : "")}{pct}%)";
+        marketMoodLabel.text = $"Clima da feira: {BuyerSystem.Instance.TonightMoodLabel}{suffix}";
+    }
+
+    void RefreshAcceptanceChanceLabel()
+    {
+        if (acceptanceChanceLabel == null) return;
+
+        if (_selectedBuyer == null || BuyerSystem.Instance == null)
+        {
+            acceptanceChanceLabel.text = "Escolha um comprador";
+            acceptanceChanceLabel.color = new Color(0.95f, 0.86f, 0.66f, 1f);
+            return;
+        }
+
+        float price = priceSlider != null ? priceSlider.value : 0f;
+        float chance = BuyerSystem.Instance.GetAcceptanceChance(_selectedBuyer, _selectedCrop, price);
+        int pct = Mathf.RoundToInt(chance * 100f);
+        acceptanceChanceLabel.text = $"Chance de venda: {pct}%";
+        acceptanceChanceLabel.color = chance >= 0.7f
+            ? new Color(0.44f, 0.92f, 0.50f, 1f)
+            : chance >= 0.4f
+                ? new Color(0.98f, 0.78f, 0.32f, 1f)
+                : new Color(0.95f, 0.44f, 0.34f, 1f);
     }
 
     void EnsureDialogueBubbleBehind(RectTransform labelRT)
@@ -176,6 +288,7 @@ public class MarketUIController : MonoBehaviour
         RefreshStockLabel();
         RefreshQuantityRange();
         RefreshPriceDisplay();
+        RefreshMarketMoodLabel();
         UpdateSellButtonState();
     }
 
@@ -224,6 +337,7 @@ public class MarketUIController : MonoBehaviour
         if (plusButton != null) plusButton.interactable = _quantity < _maxQuantity;
         RefreshCoinStack(_quantity * price);
         UpdateSellButtonState();
+        RefreshAcceptanceChanceLabel();
     }
 
     void UpdateSellButtonState()
@@ -296,6 +410,7 @@ public class MarketUIController : MonoBehaviour
             marginLabel.color = color;
         }
         RefreshQuantityDisplay();
+        RefreshAcceptanceChanceLabel();
     }
 
     public void OnBuyerSelected(BuyerData buyer)
@@ -306,6 +421,7 @@ public class MarketUIController : MonoBehaviour
         buyerPortrait.preserveAspect = true;
         buyerDialogueLine.color = new Color(0.96f, 0.88f, 0.68f, 1f);
         buyerDialogueLine.text = buyer.buyerName;
+        RefreshAcceptanceChanceLabel();
         UpdateSellButtonState();
     }
 
@@ -322,6 +438,8 @@ public class MarketUIController : MonoBehaviour
             ? new Color(0.55f, 0.9f, 0.45f, 1f)
             : new Color(1f, 0.48f, 0.36f, 1f);
         buyerDialogueLine.text = sold ? _selectedBuyer.acceptLine : _selectedBuyer.rejectLine;
+        RefreshMarketMoodLabel();
+        RefreshAcceptanceChanceLabel();
         HUDController.Instance?.RefreshBalance(GameManager.Instance.Balance);
         RefreshStockLabel();
         RefreshQuantityRange();
@@ -629,7 +747,7 @@ public class MarketUIController : MonoBehaviour
                 new Vector2(360f, 26f), 18, "");
         if (totalLabel != null)
             totalLabel.alignment = TextAlignmentOptions.Center;
-        EnsureCoinStack(parent, baseAnchor + new Vector2(222f, -42f));
+        EnsureCoinStack(parent, baseAnchor + new Vector2(170f, -42f));
     }
 
     void EnsureCoinStack(Transform parent, Vector2 anchoredPos)
@@ -926,6 +1044,50 @@ public class MarketUIController : MonoBehaviour
         var go = new GameObject("DailyEducationFlow");
         go.transform.SetParent(transform, false);
         go.AddComponent<DailyEducationFlow>();
+    }
+
+    static TMP_Text FindTMP(string name)
+    {
+        var go = GameObject.Find(name);
+        return go != null ? go.GetComponent<TMP_Text>() : null;
+    }
+
+    static void MoveRect(string name, Vector2 anchoredPos, Vector2 size)
+    {
+        var rt = GameObject.Find(name)?.GetComponent<RectTransform>();
+        if (rt == null) return;
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta = size;
+    }
+
+    static void SetImageColor(GameObject go, Color color)
+    {
+        if (go == null) return;
+        var image = go.GetComponent<Image>();
+        if (image != null) image.color = color;
+    }
+
+    static void SetLabelStyle(string name, int fontSize, TextAlignmentOptions alignment,
+        Color color, FontStyles style)
+    {
+        var label = FindTMP(name);
+        if (label == null) return;
+        label.fontSize = fontSize;
+        label.alignment = alignment;
+        label.color = color;
+        label.fontStyle = style;
+        label.textWrappingMode = TextWrappingModes.Normal;
+    }
+
+    static void SetButtonLabel(string buttonName, int fontSize)
+    {
+        var go = GameObject.Find(buttonName);
+        if (go == null) return;
+        var label = go.GetComponentInChildren<TMP_Text>();
+        if (label == null) return;
+        label.fontSize = fontSize;
+        label.fontStyle = FontStyles.Bold;
+        label.alignment = TextAlignmentOptions.Center;
     }
 
     static TMP_Text MakeLabelNear(Transform parent, string name,
