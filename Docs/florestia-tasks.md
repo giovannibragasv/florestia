@@ -93,7 +93,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-16 | **Depende:** B01, C07, C08
 
 - [x] **B02.1** Hook no fim do dia (modal antes do AdvanceDay)
-- [ ] **B02.2** Carregar banco de perguntas hardcoded por cultura (de C08)
+- [x] **B02.2** Carregar banco de perguntas hardcoded por cultura (de C08)
 - [x] **B02.3** UI da pergunta: enunciado + 3 alternativas, ou input numérico
 - [x] **B02.4** Feedback visual: certo (verde + parabéns) / errado (mostra a certa, sem punição)
 - [x] **B02.5** Salvar resposta no histórico do aluno
@@ -171,10 +171,10 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### C08 · Banco inicial de perguntas hardcoded
 > **Labels:** mentor · conteúdo · educação | **Dono:** biel,luiz | **Due:** 2026-05-15
 
-- [ ] **C08.1** 5 perguntas Mandioca (custo, margem, multiplicação)
-- [ ] **C08.2** 5 perguntas Cacau
-- [ ] **C08.3** 5 perguntas Açaí
-- [ ] **C08.4** Estruturar cada pergunta: enunciado + 3 alternativas + correta + explicação
+- [x] **C08.1** 5 perguntas Mandioca (custo, margem, multiplicação)
+- [x] **C08.2** 5 perguntas Cacau
+- [x] **C08.3** 5 perguntas Açaí
+- [x] **C08.4** Estruturar cada pergunta: enunciado + 3 alternativas + correta + explicação
 
 ### C09 · Ilustrações da Hero zone da EndScreen
 > **Labels:** kid-friendly · polimento | **Dono:** kadu | **Due:** 2026-05-16

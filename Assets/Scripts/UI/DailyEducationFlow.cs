@@ -301,6 +301,79 @@ public class DailyCuriosity
 /// </summary>
 public static class DailyEducationGenerator
 {
+    static readonly Dictionary<string, DailyQuestion[]> HardcodedQuestions = new()
+    {
+        ["Mandioca"] = new[]
+        {
+            Q("mandioca-custo-2", "Mandioca", "Custo",
+                "Duas mudas de mandioca custam R$3 cada. Quanto você gasta para plantar as duas?",
+                new[] { "R$3,00", "R$6,00", "R$9,00" }, 1,
+                "R$3,00 + R$3,00 = R$6,00."),
+            Q("mandioca-recebe-3", "Mandioca", "Quanto você recebeu",
+                "Você vendeu 3 mandiocas por R$7 cada. Quanto dinheiro recebeu?",
+                new[] { "R$14,00", "R$21,00", "R$24,00" }, 1,
+                "3 × R$7,00 = R$21,00."),
+            Q("mandioca-sobra-1", "Mandioca", "Sobra",
+                "Uma mandioca custou R$3 para plantar e foi vendida por R$7. Quanto sobrou?",
+                new[] { "R$3,00", "R$4,00", "R$7,00" }, 1,
+                "R$7,00 − R$3,00 = R$4,00."),
+            Q("mandioca-tempo", "Mandioca", "Tempo",
+                "A mandioca demora 2 dias para colher. Se você planta hoje, quantos dias precisa cuidar dela?",
+                new[] { "1 dia", "2 dias", "4 dias" }, 1,
+                "A mandioca fica pronta depois de 2 dias de cuidado."),
+            Q("mandioca-compara", "Mandioca", "Comparar",
+                "Você tem R$9. Cada mandioca custa R$3 para plantar. Quantas mandiocas dá para plantar?",
+                new[] { "2", "3", "4" }, 1,
+                "R$9,00 dividido por R$3,00 dá 3 mandiocas.")
+        },
+        ["Cacau"] = new[]
+        {
+            Q("cacau-custo-2", "Cacau", "Custo",
+                "Duas sementes de cacau custam R$6 cada. Quanto você gasta?",
+                new[] { "R$6,00", "R$12,00", "R$18,00" }, 1,
+                "R$6,00 + R$6,00 = R$12,00."),
+            Q("cacau-recebe-2", "Cacau", "Quanto você recebeu",
+                "Você vendeu 2 cacaus por R$16 cada. Quanto recebeu?",
+                new[] { "R$22,00", "R$32,00", "R$36,00" }, 1,
+                "2 × R$16,00 = R$32,00."),
+            Q("cacau-sobra-1", "Cacau", "Sobra",
+                "Um cacau custou R$6 para plantar e foi vendido por R$16. Quanto sobrou?",
+                new[] { "R$6,00", "R$10,00", "R$16,00" }, 1,
+                "R$16,00 − R$6,00 = R$10,00."),
+            Q("cacau-tempo", "Cacau", "Tempo",
+                "O cacau demora 4 dias para colher. Ele demora mais que a mandioca de 2 dias por quantos dias?",
+                new[] { "1 dia", "2 dias", "4 dias" }, 1,
+                "4 dias − 2 dias = 2 dias a mais."),
+            Q("cacau-compara", "Cacau", "Comparar",
+                "Você tem R$18. Cada cacau custa R$6 para plantar. Quantos cacaus dá para plantar?",
+                new[] { "2", "3", "4" }, 1,
+                "R$18,00 dividido por R$6,00 dá 3 cacaus.")
+        },
+        ["Acai"] = new[]
+        {
+            Q("acai-custo-2", "Acai", "Custo",
+                "Dois açaizeiros custam R$10 cada para plantar. Quanto você gasta?",
+                new[] { "R$10,00", "R$20,00", "R$28,00" }, 1,
+                "R$10,00 + R$10,00 = R$20,00."),
+            Q("acai-recebe-2", "Acai", "Quanto você recebeu",
+                "Você vendeu 2 açaís por R$28 cada. Quanto recebeu?",
+                new[] { "R$38,00", "R$46,00", "R$56,00" }, 2,
+                "2 × R$28,00 = R$56,00."),
+            Q("acai-sobra-1", "Acai", "Sobra",
+                "Um açaí custou R$10 para plantar e foi vendido por R$28. Quanto sobrou?",
+                new[] { "R$10,00", "R$18,00", "R$28,00" }, 1,
+                "R$28,00 − R$10,00 = R$18,00."),
+            Q("acai-tempo", "Acai", "Tempo",
+                "O açaí demora 6 dias para colher. Ele demora mais que o cacau de 4 dias por quantos dias?",
+                new[] { "2 dias", "4 dias", "6 dias" }, 0,
+                "6 dias − 4 dias = 2 dias a mais."),
+            Q("acai-compara", "Acai", "Comparar",
+                "Você tem R$30. Cada açaí custa R$10 para plantar. Quantos açaís dá para plantar?",
+                new[] { "2", "3", "4" }, 1,
+                "R$30,00 dividido por R$10,00 dá 3 açaís.")
+        }
+    };
+
     static readonly Dictionary<string, string[]> Curiosities = new()
     {
         ["Mandioca"] = new[]
@@ -331,6 +404,8 @@ public static class DailyEducationGenerator
 
         string focusCrop = ChooseFocusCrop(todayPlantings, todaySales);
         if (string.IsNullOrEmpty(focusCrop)) focusCrop = "Mandioca";
+        var bankQuestions = PickQuestionsFromBank(focusCrop, day);
+        if (bankQuestions.Count > 0) return bankQuestions;
 
         int qty;
         float pricePerUnit;
@@ -376,6 +451,48 @@ public static class DailyEducationGenerator
             BuildSobraQuestion(focusCrop, totalCusto, totalReceita, sobra, hasSale)
         };
         return list;
+    }
+
+    static List<DailyQuestion> PickQuestionsFromBank(string crop, int day)
+    {
+        var list = new List<DailyQuestion>();
+        if (!HardcodedQuestions.TryGetValue(crop, out var pool) || pool.Length == 0)
+            return list;
+
+        int start = day % pool.Length;
+        int count = Mathf.Min(3, pool.Length);
+        for (int i = 0; i < count; i++)
+            list.Add(CloneQuestion(pool[(start + i) % pool.Length]));
+        return list;
+    }
+
+    static DailyQuestion CloneQuestion(DailyQuestion q)
+    {
+        return new DailyQuestion
+        {
+            questionId = q.questionId,
+            cropName = q.cropName,
+            theme = q.theme,
+            statement = q.statement,
+            options = (string[])q.options.Clone(),
+            correctIndex = q.correctIndex,
+            explanation = q.explanation
+        };
+    }
+
+    static DailyQuestion Q(string id, string crop, string theme, string statement,
+        string[] options, int correctIndex, string explanation)
+    {
+        return new DailyQuestion
+        {
+            questionId = id,
+            cropName = crop,
+            theme = theme,
+            statement = statement,
+            options = options,
+            correctIndex = correctIndex,
+            explanation = explanation
+        };
     }
 
     public static string BuildReviewIfNoActivityToday(GameManager gm)
