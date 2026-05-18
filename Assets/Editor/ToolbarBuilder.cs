@@ -43,7 +43,7 @@ public static class ToolbarBuilder
         barRT.pivot     = new Vector2(0.5f, 0f);
         barRT.anchoredPosition = new Vector2(0f, 18f);
         barRT.sizeDelta = new Vector2(barWidth, SlotSize + 2 * BarPadding);
-        barGO.AddComponent<Image>().color = new Color(0.09f, 0.055f, 0.025f, 0.92f);
+        barGO.AddComponent<Image>().color = new Color(0.60f, 0.30f, 0.08f, 0.96f);
         Undo.RegisterCreatedObjectUndo(barGO, "Build Farm Toolbar");
 
         // Toolbar controller object
@@ -66,7 +66,7 @@ public static class ToolbarBuilder
             slotRT.sizeDelta = new Vector2(SlotSize, SlotSize);
             slotRT.anchoredPosition = new Vector2(startX + i * (SlotSize + SlotGap), 0f);
             var bg = slotGO.AddComponent<Image>();
-            bg.color = new Color(0.25f, 0.18f, 0.10f, 0.85f);
+            bg.color = new Color(0.96f, 0.68f, 0.34f, 0.96f);
             slotBackgrounds[i] = bg;
             Undo.RegisterCreatedObjectUndo(slotGO, "Build Farm Toolbar");
 
@@ -97,7 +97,7 @@ public static class ToolbarBuilder
             key.fontSize = 12;
             key.fontStyle = FontStyles.Bold;
             key.alignment = TextAlignmentOptions.Left;
-            key.color = new Color(1f, 0.9f, 0.55f, 1f);
+            key.color = new Color(0.62f, 0.17f, 0.06f, 1f);
             key.raycastTarget = false;
             Undo.RegisterCreatedObjectUndo(keyGO, "Build Farm Toolbar");
 
@@ -113,7 +113,7 @@ public static class ToolbarBuilder
             tmp.text = SlotLabels[i];
             tmp.fontSize = 9;
             tmp.alignment = TextAlignmentOptions.Center;
-            tmp.color = Color.white;
+            tmp.color = new Color(0.28f, 0.10f, 0.02f, 1f);
             tmp.raycastTarget = false;
             Undo.RegisterCreatedObjectUndo(lblGO, "Build Farm Toolbar");
         }

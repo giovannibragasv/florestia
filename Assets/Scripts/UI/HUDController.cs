@@ -34,6 +34,7 @@ public class HUDController : MonoBehaviour
         EnsureDayPhaseWidgets();
         EnsureCoachingLabels();
         EnsureDayTipPanel();
+        ApplyStardewStyleLayout();
         RefreshAll();
         ShowDayStartTipIfNeeded();
     }
@@ -46,19 +47,25 @@ public class HUDController : MonoBehaviour
             int mins = Mathf.FloorToInt(rem / 60f);
             int secs = Mathf.FloorToInt(rem % 60f);
             timerLabel.text = $"{mins:D2}:{secs:D2}";
-            timerLabel.color = DayNightCycle.Instance.IsNight ? Color.red : Color.white;
+            timerLabel.color = DayNightCycle.Instance.IsNight
+                ? new Color(0.75f, 0.10f, 0.08f, 1f)
+                : new Color(0.20f, 0.09f, 0.03f, 1f);
             RefreshDayPhase(DayNightCycle.Instance.NormalizedTime);
         }
 
         if (GameManager.Instance != null && balanceLabel != null)
-            balanceLabel.color = GameManager.Instance.Balance < 20f ? Color.red : Color.white;
+            balanceLabel.color = GameManager.Instance.Balance < 20f
+                ? new Color(0.75f, 0.10f, 0.08f, 1f)
+                : new Color(0.20f, 0.09f, 0.03f, 1f);
     }
 
     public void RefreshBalance(float balance)
     {
         // Vocabulário 8-11 (Modelo C §3.4): "dinheiro" no lugar de "saldo".
         balanceLabel.text = $"Dinheiro: R${balance:F2}";
-        balanceLabel.color = balance < 20f ? Color.red : Color.white;
+        balanceLabel.color = balance < 20f
+            ? new Color(0.75f, 0.10f, 0.08f, 1f)
+            : new Color(0.20f, 0.09f, 0.03f, 1f);
     }
 
     public void RefreshDay(int day)
@@ -281,11 +288,11 @@ public class HUDController : MonoBehaviour
 
         if (cropPreviewLabel == null)
             cropPreviewLabel = MakeCoachingLabel(canvas.transform, "CropPreviewLabel",
-                new Vector2(0f, -34f), new Color(0.98f, 0.84f, 0.45f, 1f));
+                new Vector2(0f, 108f), new Color(0.98f, 0.84f, 0.45f, 1f));
 
         if (proportionalityLabel == null)
             proportionalityLabel = MakeCoachingLabel(canvas.transform, "ProportionalityLabel",
-                new Vector2(0f, -62f), new Color(0.78f, 0.92f, 0.78f, 1f));
+                new Vector2(0f, 84f), new Color(0.78f, 0.92f, 0.78f, 1f));
     }
 
     static TMP_Text MakeCoachingLabel(Transform parent, string name, Vector2 anchoredPos, Color color)
@@ -293,21 +300,79 @@ public class HUDController : MonoBehaviour
         var go = new GameObject(name);
         go.transform.SetParent(parent, false);
         var rt = go.AddComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 1f);
-        rt.anchorMax = new Vector2(0.5f, 1f);
-        rt.pivot = new Vector2(0.5f, 1f);
+        rt.anchorMin = new Vector2(0.5f, 0f);
+        rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.pivot = new Vector2(0.5f, 0f);
         rt.anchoredPosition = anchoredPos;
-        rt.sizeDelta = new Vector2(720f, 26f);
+        rt.sizeDelta = new Vector2(620f, 24f);
 
         var label = go.AddComponent<TextMeshProUGUI>();
         label.text = "";
-        label.fontSize = 16;
+        label.fontSize = 14;
         label.alignment = TextAlignmentOptions.Center;
         label.color = color;
         label.raycastTarget = false;
         TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
         if (font != null) label.font = font;
         return label;
+    }
+
+    void ApplyStardewStyleLayout()
+    {
+        CompactHudPanel(balanceLabel, new Vector2(16f, -16f), new Vector2(208f, 86f));
+        CompactHudPanel(timerLabel, new Vector2(-16f, -16f), new Vector2(172f, 86f));
+        StyleHudPanel(balanceLabel);
+        StyleHudPanel(timerLabel);
+
+        if (balanceLabel != null) balanceLabel.fontSize = 18;
+        if (dayLabel != null) dayLabel.fontSize = 15;
+        if (staminaLabel != null) staminaLabel.fontSize = 14;
+        if (timerLabel != null) timerLabel.fontSize = 19;
+        if (phaseLabel != null) phaseLabel.fontSize = 14;
+
+        MoveCoachingLabel(cropPreviewLabel, new Vector2(0f, 108f), 14,
+            new Color(0.95f, 0.76f, 0.30f, 1f));
+        MoveCoachingLabel(proportionalityLabel, new Vector2(0f, 82f), 13,
+            new Color(0.78f, 0.92f, 0.78f, 1f));
+    }
+
+    static void CompactHudPanel(TMP_Text childLabel, Vector2 anchoredPos, Vector2 size)
+    {
+        if (childLabel == null) return;
+        var rt = childLabel.transform.parent as RectTransform;
+        if (rt == null) return;
+
+        bool right = anchoredPos.x < 0f;
+        rt.anchorMin = right ? new Vector2(1f, 1f) : new Vector2(0f, 1f);
+        rt.anchorMax = rt.anchorMin;
+        rt.pivot = right ? new Vector2(1f, 1f) : new Vector2(0f, 1f);
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta = size;
+    }
+
+    static void StyleHudPanel(TMP_Text childLabel)
+    {
+        if (childLabel == null) return;
+        if (childLabel.transform.parent.TryGetComponent(out Image panelImage))
+            panelImage.color = new Color(0.95f, 0.60f, 0.27f, 0.90f);
+
+        foreach (var label in childLabel.transform.parent.GetComponentsInChildren<TMP_Text>(true))
+            label.color = new Color(0.20f, 0.09f, 0.03f, 1f);
+    }
+
+    static void MoveCoachingLabel(TMP_Text label, Vector2 anchoredPos, int fontSize, Color color)
+    {
+        if (label == null) return;
+        var rt = label.rectTransform;
+        rt.anchorMin = new Vector2(0.5f, 0f);
+        rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta = new Vector2(620f, 24f);
+        label.fontSize = fontSize;
+        label.alignment = TextAlignmentOptions.Center;
+        label.color = color;
+        label.textWrappingMode = TextWrappingModes.NoWrap;
     }
 
     void ShowDayStartTipIfNeeded()

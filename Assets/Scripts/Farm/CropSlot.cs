@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
 public class CropSlot : MonoBehaviour
@@ -193,8 +194,12 @@ public class CropSlot : MonoBehaviour
     static Sprite GetWhitePixel()
     {
         if (_whitePixel != null) return _whitePixel;
-        var tex = Texture2D.whiteTexture;
-        _whitePixel = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height),
+        var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+        tex.SetPixel(0, 0, Color.white);
+        tex.Apply();
+        tex.name = "CropSlot_WhitePixelTexture";
+        tex.hideFlags = HideFlags.HideAndDontSave;
+        _whitePixel = Sprite.Create(tex, new Rect(0f, 0f, 1f, 1f),
             new Vector2(0.5f, 0.5f), 1f);
         _whitePixel.name = "CropSlot_WhitePixel";
         return _whitePixel;
@@ -238,6 +243,14 @@ public class CropSlot : MonoBehaviour
             HUDController.Instance?.RefreshBalance(GameManager.Instance.Balance);
             HUDController.Instance?.RefreshProportionalityCue();
         }
+    }
+
+    void OnMouseDown()
+    {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        Interact();
     }
 
     public CropSlotSaveData GetSaveData() => new CropSlotSaveData

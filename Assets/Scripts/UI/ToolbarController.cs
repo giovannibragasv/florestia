@@ -6,8 +6,8 @@ public class ToolbarController : MonoBehaviour
     public static ToolbarController Instance { get; private set; }
 
     [SerializeField] Image[] slotBackgrounds; // 5 slots
-    [SerializeField] Color normalColor  = new Color(0.25f, 0.18f, 0.10f, 0.85f);
-    [SerializeField] Color selectedColor = new Color(0.95f, 0.80f, 0.20f, 1f);
+    [SerializeField] Color normalColor  = new Color(0.96f, 0.68f, 0.34f, 0.96f);
+    [SerializeField] Color selectedColor = new Color(0.98f, 0.84f, 0.42f, 1f);
 
     public ToolType Selected { get; private set; } = ToolType.Mandioca;
 
@@ -17,7 +17,11 @@ public class ToolbarController : MonoBehaviour
         Instance = this;
     }
 
-    void Start() => RefreshHighlight();
+    void Start()
+    {
+        StyleToolbarFrame();
+        RefreshHighlight();
+    }
 
     void Update()
     {
@@ -48,7 +52,17 @@ public class ToolbarController : MonoBehaviour
         for (int i = 0; i < slotBackgrounds.Length; i++)
         {
             if (slotBackgrounds[i] == null) continue;
-            slotBackgrounds[i].color = (i == (int)Selected) ? selectedColor : normalColor;
+            slotBackgrounds[i].color = (i == (int)Selected)
+                ? selectedColor
+                : normalColor;
         }
+    }
+
+    void StyleToolbarFrame()
+    {
+        if (slotBackgrounds == null || slotBackgrounds.Length == 0 || slotBackgrounds[0] == null) return;
+        var frame = slotBackgrounds[0].transform.parent;
+        if (frame != null && frame.TryGetComponent(out Image image))
+            image.color = new Color(0.60f, 0.30f, 0.08f, 0.96f);
     }
 }

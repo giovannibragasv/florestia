@@ -13,6 +13,7 @@ public class TutorialController : MonoBehaviour
     Button _okButton;
     TMP_Text _okButtonLabel;
     Button _skipButton;
+    Button _closeButton;
 
     bool _planted;
     bool _watered;
@@ -136,21 +137,26 @@ public class TutorialController : MonoBehaviour
         rt.anchorMax = Vector2.one;
         rt.offsetMin = Vector2.zero;
         rt.offsetMax = Vector2.zero;
-        _root.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.58f);
 
-        var card = Rect("Card", _root.transform, new Vector2(0.5f, 0f), new Vector2(0f, 42f), new Vector2(720f, 220f));
-        card.gameObject.AddComponent<Image>().color = new Color(0.13f, 0.10f, 0.07f, 0.98f);
+        var frame = Rect("CardFrame", _root.transform, new Vector2(0.5f, 0f), new Vector2(0f, 116f), new Vector2(636f, 186f));
+        frame.gameObject.AddComponent<Image>().color = new Color(0.60f, 0.30f, 0.08f, 0.98f);
+
+        var card = Rect("Card", frame.transform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(616f, 166f));
+        card.gameObject.AddComponent<Image>().color = new Color(0.96f, 0.67f, 0.34f, 0.98f);
 
         _titleLabel = Label("Title", card.transform, "Bem-vindo à Florestia!",
-            new Vector2(0f, 72f), new Vector2(640f, 44f), 28, new Color(0.98f, 0.84f, 0.45f));
+            new Vector2(0f, 50f), new Vector2(520f, 34f), 23, new Color(0.36f, 0.15f, 0.04f));
+        _titleLabel.fontStyle = FontStyles.Bold;
         _bodyLabel = Label("Body", card.transform, "",
-            new Vector2(0f, 8f), new Vector2(620f, 80f), 20, new Color(0.95f, 0.92f, 0.84f));
+            new Vector2(0f, 2f), new Vector2(552f, 56f), 17, new Color(0.24f, 0.10f, 0.03f));
         _bodyLabel.textWrappingMode = TextWrappingModes.Normal;
 
-        _okButton = ButtonAt("OkButton", card.transform, new Vector2(-95f, -74f), new Vector2(180f, 50f), "Entendi");
+        _okButton = ButtonAt("OkButton", card.transform, new Vector2(-76f, -58f), new Vector2(150f, 40f), "Entendi");
         _okButtonLabel = _okButton.GetComponentInChildren<TMP_Text>();
-        _skipButton = ButtonAt("SkipButton", card.transform, new Vector2(125f, -74f), new Vector2(220f, 50f), "Pular tutorial");
+        _skipButton = ButtonAt("SkipButton", card.transform, new Vector2(112f, -58f), new Vector2(190f, 40f), "Pular tutorial");
         _skipButton.onClick.AddListener(SkipTutorial);
+        _closeButton = ButtonAt("CloseButton", card.transform, new Vector2(284f, 58f), new Vector2(32f, 32f), "X");
+        _closeButton.onClick.AddListener(Hide);
 
         _root.SetActive(false);
     }
@@ -160,8 +166,8 @@ public class TutorialController : MonoBehaviour
         var go = new GameObject(name);
         go.transform.SetParent(parent, false);
         var rt = go.AddComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 0f);
-        rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.anchorMin = parent.name == "TutorialOverlay" ? new Vector2(0.5f, 0f) : new Vector2(0.5f, 0.5f);
+        rt.anchorMax = rt.anchorMin;
         rt.pivot = pivot;
         rt.anchoredPosition = anchoredPos;
         rt.sizeDelta = size;
@@ -186,13 +192,15 @@ public class TutorialController : MonoBehaviour
     {
         var rt = Rect(name, parent, new Vector2(0.5f, 0.5f), anchoredPos, size);
         var image = rt.gameObject.AddComponent<Image>();
-        image.color = name == "SkipButton"
-            ? new Color(0.30f, 0.22f, 0.14f, 1f)
-            : new Color(0.88f, 0.62f, 0.22f, 1f);
+        image.color = name == "CloseButton"
+            ? new Color(0.75f, 0.18f, 0.12f, 1f)
+            : name == "SkipButton"
+                ? new Color(0.72f, 0.40f, 0.16f, 1f)
+                : new Color(0.93f, 0.78f, 0.38f, 1f);
         var button = rt.gameObject.AddComponent<Button>();
         button.targetGraphic = image;
         var label = Label("Label", rt.transform, text, Vector2.zero, size, 18,
-            name == "SkipButton" ? new Color(0.95f, 0.88f, 0.68f) : new Color(0.10f, 0.07f, 0.04f));
+            name == "CloseButton" ? Color.white : new Color(0.16f, 0.07f, 0.02f));
         label.fontStyle = FontStyles.Bold;
         return button;
     }
