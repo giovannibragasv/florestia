@@ -129,7 +129,7 @@ public static class FarmScenePolishBuilder
             Undo.RegisterCreatedObjectUndo(skyGO, "Apply Farm Scene Polish");
         }
         var skyImage = sky.GetComponent<Image>() ?? sky.gameObject.AddComponent<Image>();
-        skyImage.color = new Color(0.53f, 0.81f, 0.98f, 0f);
+        skyImage.color = new Color(1f, 1f, 1f, 0f);
         skyImage.raycastTarget = false;
         sky.SetAsFirstSibling();
 

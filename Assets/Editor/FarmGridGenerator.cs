@@ -44,8 +44,6 @@ public static class FarmGridGenerator
                 sr.sprite = soilSprite != null ? soilSprite : null;
                 if (soilSprite == null) sr.color = new Color(0.55f, 0.35f, 0.15f, 1f);
                 sr.sortingOrder = 0;
-                if (soilSprite != null && (row + col) % 2 == 0)
-                    sr.color = new Color(0.96f, 0.92f, 0.84f, 1f);
 
                 var collider = slot.AddComponent<BoxCollider2D>();
                 collider.isTrigger = true;
