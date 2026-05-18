@@ -28,6 +28,7 @@ public class MarketUIController : MonoBehaviour
     [SerializeField] TMP_Text quantityLabel;
     [SerializeField] TMP_Text totalLabel;
     [SerializeField] Image coinIcon;
+    Image[] _coinStackCoins;
 
     int _quantity = 1;
     int _maxQuantity = 1;
@@ -178,6 +179,7 @@ public class MarketUIController : MonoBehaviour
         }
         if (minusButton != null) minusButton.interactable = _quantity > 1;
         if (plusButton != null) plusButton.interactable = _quantity < _maxQuantity;
+        RefreshCoinStack(_quantity * price);
         UpdateSellButtonState();
     }
 
@@ -542,7 +544,6 @@ public class MarketUIController : MonoBehaviour
 
     void EnsureQuantityStepper()
     {
-        if (minusButton != null && plusButton != null && quantityValueLabel != null) return;
         if (priceSlider == null) return;
 
         Transform parent = priceSlider.transform.parent;
@@ -550,6 +551,9 @@ public class MarketUIController : MonoBehaviour
 
         Vector2 baseAnchor = priceSlider.GetComponent<RectTransform>().anchoredPosition
                              + new Vector2(0f, -68f);
+        if (minusButton != null && plusButton != null && quantityValueLabel != null
+            && _coinStackCoins != null)
+            return;
 
         if (quantityLabel == null)
             quantityLabel = MakeLabelNear(parent, "QuantityLabel",
@@ -582,6 +586,58 @@ public class MarketUIController : MonoBehaviour
                 new Vector2(360f, 26f), 18, "");
         if (totalLabel != null)
             totalLabel.alignment = TextAlignmentOptions.Center;
+        EnsureCoinStack(parent, baseAnchor + new Vector2(222f, -42f));
+    }
+
+    void EnsureCoinStack(Transform parent, Vector2 anchoredPos)
+    {
+        if (_coinStackCoins != null && _coinStackCoins.Length > 0) return;
+
+        var root = new GameObject("CoinStack");
+        root.transform.SetParent(parent, false);
+        var rootRT = root.AddComponent<RectTransform>();
+        rootRT.anchorMin = new Vector2(0.5f, 0.5f);
+        rootRT.anchorMax = new Vector2(0.5f, 0.5f);
+        rootRT.pivot = new Vector2(0.5f, 0.5f);
+        rootRT.anchoredPosition = anchoredPos;
+        rootRT.sizeDelta = new Vector2(96f, 44f);
+
+        _coinStackCoins = new Image[5];
+        for (int i = 0; i < _coinStackCoins.Length; i++)
+        {
+            var coin = new GameObject($"Coin_{i + 1}");
+            coin.transform.SetParent(root.transform, false);
+            var rt = coin.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(0f, 0f);
+            rt.anchorMax = new Vector2(0f, 0f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(14f + i * 15f, 10f + (i % 2) * 7f);
+            rt.sizeDelta = new Vector2(22f, 22f);
+            var img = coin.AddComponent<Image>();
+            img.sprite = coinIcon != null ? coinIcon.sprite : null;
+            img.color = new Color(0.98f, 0.78f, 0.24f, 1f);
+            img.preserveAspect = true;
+
+            var label = MakeLabelInRect(coin.transform, "Glyph", Vector2.zero,
+                new Vector2(22f, 22f), 12, "$");
+            label.color = new Color(0.32f, 0.20f, 0.04f, 1f);
+            label.fontStyle = FontStyles.Bold;
+            _coinStackCoins[i] = img;
+        }
+
+        RefreshCoinStack(0f);
+    }
+
+    void RefreshCoinStack(float total)
+    {
+        if (_coinStackCoins == null) return;
+
+        int visible = total <= 0f
+            ? 0
+            : Mathf.Clamp(Mathf.CeilToInt(total / 10f), 1, _coinStackCoins.Length);
+        for (int i = 0; i < _coinStackCoins.Length; i++)
+            if (_coinStackCoins[i] != null)
+                _coinStackCoins[i].gameObject.SetActive(i < visible);
     }
 
     void EnsureSellFeedbackIcon()
