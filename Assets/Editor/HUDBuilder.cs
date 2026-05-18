@@ -5,9 +5,6 @@ using TMPro;
 
 public static class HUDBuilder
 {
-    const string GeneratedHudPanelPath = "Assets/Sprites/GeneratedStyle/ui_hud_panel_vibrant.png";
-    const string GeneratedStatusPanelPath = "Assets/Sprites/GeneratedStyle/ui_status_panel_vibrant.png";
-
     [MenuItem("Florestia/Build Farm HUD")]
     public static void Build()
     {
@@ -50,57 +47,55 @@ public static class HUDBuilder
         // ── Top-left panel ──────────────────────────────────
         var tlPanel = MakeAnchoredRect("TopLeft", hudGO.transform,
             new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
-            new Vector2(16, -16), new Vector2(260, 135));
-        ApplyPanelSprite(tlPanel, GeneratedHudPanelPath,
-            new Color(0.95f, 0.60f, 0.27f, 0.90f));
+            new Vector2(16, -16), new Vector2(208, 86));
+        tlPanel.gameObject.AddComponent<Image>().color = new Color(0.95f, 0.60f, 0.27f, 0.90f);
 
         MakeIcon("CoinIcon", tlPanel, "Assets/Sprites/UI/ui_coin.png",
-            new Vector2(22, -30), new Vector2(26, 26));
+            new Vector2(14, -14), new Vector2(26, 26));
         MakeIcon("StaminaIcon", tlPanel, "Assets/Sprites/UI/ui_stamina.png",
-            new Vector2(22, -88), new Vector2(24, 24));
+            new Vector2(14, -62), new Vector2(24, 24));
 
         var balanceLabel = MakeLabel("BalanceLabel", tlPanel,
-            "Dinheiro: R$50,00", new Vector2(58, -28), new Vector2(170, 28), 18);
+            "Dinheiro: R$50,00", new Vector2(48, -10), new Vector2(150, 28), 18);
 
         var dayLabel = MakeLabel("DayLabel", tlPanel,
-            "Dia 1 de 15", new Vector2(58, -58), new Vector2(170, 22), 15);
+            "Dia 1 de 15", new Vector2(48, -36), new Vector2(150, 22), 15);
 
         var staminaLabel = MakeLabel("StaminaLabel", tlPanel,
-            "Energia: 20/20", new Vector2(58, -88), new Vector2(102, 22), 14);
+            "Energia: 20/20", new Vector2(48, -62), new Vector2(92, 22), 14);
 
         // Stamina bar (placed right of the label)
         var sliderRT = MakeAnchoredRect("StaminaBar", tlPanel,
             new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0),
-            new Vector2(158, 28), new Vector2(68, 12));
+            new Vector2(132, 13), new Vector2(58, 12));
         var slider = sliderRT.gameObject.AddComponent<Slider>();
         slider.minValue = 0f; slider.maxValue = 1f; slider.value = 1f;
 
         // ── Top-right: timer ────────────────────────────────
         var trPanel = MakeAnchoredRect("TopRight", hudGO.transform,
             new Vector2(1, 1), new Vector2(1, 1), new Vector2(1, 1),
-            new Vector2(-16, -16), new Vector2(220, 160));
-        ApplyPanelSprite(trPanel, GeneratedStatusPanelPath,
-            new Color(0.95f, 0.60f, 0.27f, 0.90f));
+            new Vector2(-16, -16), new Vector2(172, 86));
+        trPanel.gameObject.AddComponent<Image>().color = new Color(0.95f, 0.60f, 0.27f, 0.90f);
         MakeIcon("SunIcon", trPanel, "Assets/Sprites/UI/ui_sun.png",
-            new Vector2(28, -24), new Vector2(26, 26));
+            new Vector2(14, -10), new Vector2(26, 26));
 
         var timerLabel = MakeLabel("TimerLabel", trPanel,
-            "05:00", new Vector2(62, -22), new Vector2(96, 26), 19);
+            "05:00", new Vector2(48, -8), new Vector2(96, 26), 19);
         timerLabel.alignment = TextAlignmentOptions.Left;
 
         var phaseLabel = MakeLabel("PhaseLabel", trPanel,
-            "Manhã", new Vector2(28, -54), new Vector2(130, 22), 14);
+            "Manhã", new Vector2(14, -36), new Vector2(130, 22), 14);
         phaseLabel.alignment = TextAlignmentOptions.Left;
         phaseLabel.color = new Color(0.98f, 0.84f, 0.45f, 1f);
 
         var phaseBg = MakeAnchoredRect("PhaseProgressBg", trPanel,
             new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
-            new Vector2(28, -82), new Vector2(154, 8));
+            new Vector2(14, -64), new Vector2(130, 8));
         phaseBg.gameObject.AddComponent<Image>().color = new Color(0.42f, 0.22f, 0.08f, 1f);
 
         var phaseFillRT = MakeAnchoredRect("PhaseProgressFill", phaseBg,
             new Vector2(0, 0.5f), new Vector2(0, 0.5f), new Vector2(0, 0.5f),
-            Vector2.zero, new Vector2(154, 8));
+            Vector2.zero, new Vector2(130, 8));
         phaseFillRT.localScale = new Vector3(0f, 1f, 1f);
         var phaseProgressFill = phaseFillRT.gameObject.AddComponent<Image>();
         phaseProgressFill.color = phaseLabel.color;
@@ -165,20 +160,5 @@ public static class HUDBuilder
         image.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
         image.color = Color.white;
         image.preserveAspect = true;
-    }
-
-    static void ApplyPanelSprite(RectTransform rt, string spritePath, Color fallbackColor)
-    {
-        var image = rt.gameObject.AddComponent<Image>();
-        Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
-        if (sprite != null)
-        {
-            image.sprite = sprite;
-            image.type = Image.Type.Sliced;
-            image.color = Color.white;
-            return;
-        }
-
-        image.color = fallbackColor;
     }
 }

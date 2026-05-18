@@ -52,17 +52,9 @@ public class ToolbarController : MonoBehaviour
         for (int i = 0; i < slotBackgrounds.Length; i++)
         {
             if (slotBackgrounds[i] == null) continue;
-            bool selected = i == (int)Selected;
-            if (slotBackgrounds[i].sprite != null)
-            {
-                slotBackgrounds[i].color = selected
-                    ? new Color(1f, 0.92f, 0.46f, 1f)
-                    : Color.white;
-            }
-            else
-            {
-                slotBackgrounds[i].color = selected ? selectedColor : normalColor;
-            }
+            slotBackgrounds[i].color = (i == (int)Selected)
+                ? selectedColor
+                : normalColor;
         }
     }
 
@@ -83,7 +75,6 @@ public class ToolbarController : MonoBehaviour
         {
             var slot = slotBackgrounds[i];
             if (slot == null) continue;
-            slot.color = slot.sprite != null ? Color.white : normalColor;
             var rt = slot.rectTransform;
             rt.sizeDelta = new Vector2(72f, 72f);
             rt.anchoredPosition = new Vector2(startX + i * (72f + 6f), 0f);

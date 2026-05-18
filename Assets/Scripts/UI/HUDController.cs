@@ -319,8 +319,8 @@ public class HUDController : MonoBehaviour
 
     void ApplyStardewStyleLayout()
     {
-        CompactHudPanel(balanceLabel, new Vector2(16f, -16f), new Vector2(260f, 135f));
-        CompactHudPanel(timerLabel, new Vector2(-16f, -16f), new Vector2(220f, 160f));
+        CompactHudPanel(balanceLabel, new Vector2(16f, -16f), new Vector2(208f, 86f));
+        CompactHudPanel(timerLabel, new Vector2(-16f, -16f), new Vector2(172f, 86f));
         StyleHudPanel(balanceLabel);
         StyleHudPanel(timerLabel);
         LayoutTopRightPanel(timerLabel);
@@ -355,9 +355,7 @@ public class HUDController : MonoBehaviour
     {
         if (childLabel == null) return;
         if (childLabel.transform.parent.TryGetComponent(out Image panelImage))
-            panelImage.color = panelImage.sprite != null
-                ? Color.white
-                : new Color(0.95f, 0.60f, 0.27f, 0.90f);
+            panelImage.color = new Color(0.95f, 0.60f, 0.27f, 0.90f);
 
         foreach (var label in childLabel.transform.parent.GetComponentsInChildren<TMP_Text>(true))
             label.color = new Color(0.20f, 0.09f, 0.03f, 1f);
@@ -367,25 +365,25 @@ public class HUDController : MonoBehaviour
     {
         if (timer == null) return;
         Transform panel = timer.transform.parent;
-        PlaceChild(panel.Find("SunIcon") as RectTransform, new Vector2(28f, -24f), new Vector2(26f, 26f));
-        PlaceChild(timer.rectTransform, new Vector2(62f, -22f), new Vector2(96f, 26f));
+        PlaceChild(panel.Find("SunIcon") as RectTransform, new Vector2(14f, -10f), new Vector2(26f, 26f));
+        PlaceChild(timer.rectTransform, new Vector2(48f, -8f), new Vector2(96f, 26f));
         timer.alignment = TextAlignmentOptions.Left;
 
         TMP_Text phase = panel.Find("PhaseLabel")?.GetComponent<TMP_Text>();
         if (phase != null)
         {
-            PlaceChild(phase.rectTransform, new Vector2(28f, -54f), new Vector2(130f, 22f));
+            PlaceChild(phase.rectTransform, new Vector2(14f, -36f), new Vector2(130f, 22f));
             phase.alignment = TextAlignmentOptions.Left;
         }
 
         RectTransform bg = panel.Find("PhaseProgressBg") as RectTransform;
-        PlaceChild(bg, new Vector2(28f, -82f), new Vector2(154f, 8f));
+        PlaceChild(bg, new Vector2(14f, -64f), new Vector2(130f, 8f));
         if (bg != null && bg.GetComponent<Image>() != null)
             bg.GetComponent<Image>().color = new Color(0.42f, 0.22f, 0.08f, 1f);
         if (bg != null)
         {
             var fill = bg.Find("PhaseProgressFill") as RectTransform;
-            if (fill != null) fill.sizeDelta = new Vector2(154f, 8f);
+            if (fill != null) fill.sizeDelta = new Vector2(130f, 8f);
         }
     }
 
