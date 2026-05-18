@@ -290,7 +290,7 @@ public class EndScreenController : MonoBehaviour
                 dlt.alignment = TextAlignmentOptions.Center;
                 dlt.color = new Color(0.78f, 0.72f, 0.58f, 1f);
                 dlt.raycastTarget = false;
-                var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+                var font = FlorestiaFontUtility.LoadPreferredTMPFont();
                 if (font != null) dlt.font = font;
             }
         }
@@ -313,7 +313,7 @@ public class EndScreenController : MonoBehaviour
             mlt.color = new Color(0.95f, 0.42f, 0.38f, 1f);
             mlt.fontStyle = FontStyles.Bold;
             mlt.raycastTarget = false;
-            var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+            var font = FlorestiaFontUtility.LoadPreferredTMPFont();
             if (font != null) mlt.font = font;
         }
     }
@@ -521,7 +521,7 @@ public class EndScreenController : MonoBehaviour
         label.color = color;
         label.raycastTarget = false;
 
-        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
         if (font != null) label.font = font;
 
         return label;

@@ -263,7 +263,7 @@ public class HUDController : MonoBehaviour
         label.alignment = TextAlignmentOptions.Center;
         label.color = new Color(0.98f, 0.84f, 0.45f, 1f);
         label.raycastTarget = false;
-        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
         if (font != null) label.font = font;
         return label;
     }
@@ -326,7 +326,7 @@ public class HUDController : MonoBehaviour
         label.alignment = TextAlignmentOptions.Center;
         label.color = color;
         label.raycastTarget = false;
-        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
         if (font != null) label.font = font;
         return label;
     }
@@ -545,7 +545,7 @@ public class HUDController : MonoBehaviour
         label.fontSize = fontSize;
         label.color = color;
         label.raycastTarget = false;
-        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
         if (font != null) label.font = font;
         return label;
     }

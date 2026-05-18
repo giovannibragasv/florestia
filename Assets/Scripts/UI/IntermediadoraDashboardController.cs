@@ -195,7 +195,7 @@ public class IntermediadoraDashboardController : MonoBehaviour
         label.alignment = TextAlignmentOptions.Center;
         label.color = color;
         label.raycastTarget = false;
-        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
         if (font != null) label.font = font;
         return label;
     }

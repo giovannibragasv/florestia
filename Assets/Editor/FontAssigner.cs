@@ -36,7 +36,7 @@ public static class FontAssigner
 
     static bool AssignFont(TMP_Text text, TMP_FontAsset font)
     {
-        if (text.font != null) return false;
+        if (text.font == font) return false;
 
         Undo.RecordObject(text, "Assign TMP Font");
         text.font = font;

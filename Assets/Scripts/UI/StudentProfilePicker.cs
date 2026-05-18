@@ -256,7 +256,7 @@ public class StudentProfilePicker : MonoBehaviour
         tmp.color = color;
         tmp.alignment = align;
         tmp.raycastTarget = false;
-        var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        var font = FlorestiaFontUtility.LoadPreferredTMPFont();
         if (font != null) tmp.font = font;
         return tmp;
     }
