@@ -77,25 +77,25 @@ public static class HUDBuilder
             new Vector2(-16, -16), new Vector2(172, 86));
         trPanel.gameObject.AddComponent<Image>().color = new Color(0.95f, 0.60f, 0.27f, 0.90f);
         MakeIcon("SunIcon", trPanel, "Assets/Sprites/UI/ui_sun.png",
-            new Vector2(-166, -10), new Vector2(26, 26));
+            new Vector2(14, -10), new Vector2(26, 26));
 
         var timerLabel = MakeLabel("TimerLabel", trPanel,
-            "05:00", new Vector2(-134, -10), new Vector2(74, 28), 19);
-        timerLabel.alignment = TextAlignmentOptions.Right;
+            "05:00", new Vector2(48, -8), new Vector2(96, 26), 19);
+        timerLabel.alignment = TextAlignmentOptions.Left;
 
         var phaseLabel = MakeLabel("PhaseLabel", trPanel,
-            "Manhã", new Vector2(-166, -40), new Vector2(150, 22), 14);
-        phaseLabel.alignment = TextAlignmentOptions.Center;
+            "Manhã", new Vector2(14, -36), new Vector2(130, 22), 14);
+        phaseLabel.alignment = TextAlignmentOptions.Left;
         phaseLabel.color = new Color(0.98f, 0.84f, 0.45f, 1f);
 
         var phaseBg = MakeAnchoredRect("PhaseProgressBg", trPanel,
             new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1),
-            new Vector2(-166, -66), new Vector2(146, 8));
-        phaseBg.gameObject.AddComponent<Image>().color = new Color(0.28f, 0.20f, 0.12f, 1f);
+            new Vector2(14, -64), new Vector2(130, 8));
+        phaseBg.gameObject.AddComponent<Image>().color = new Color(0.42f, 0.22f, 0.08f, 1f);
 
         var phaseFillRT = MakeAnchoredRect("PhaseProgressFill", phaseBg,
             new Vector2(0, 0.5f), new Vector2(0, 0.5f), new Vector2(0, 0.5f),
-            Vector2.zero, new Vector2(146, 8));
+            Vector2.zero, new Vector2(130, 8));
         phaseFillRT.localScale = new Vector3(0f, 1f, 1f);
         var phaseProgressFill = phaseFillRT.gameObject.AddComponent<Image>();
         phaseProgressFill.color = phaseLabel.color;

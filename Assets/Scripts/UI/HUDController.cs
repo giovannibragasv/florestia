@@ -93,10 +93,8 @@ public class HUDController : MonoBehaviour
                     : null;
                 if (crop != null && crop.growthDays > 0)
                 {
-                    // Antes: "Próxima: Cacau · −R$6 · 4d · ~R$2.50/dia" (jargão financeiro).
-                    // Agora: "Vou plantar Cacau. Custa R$6. Demora 4 dias pra colher."
                     cropPreviewLabel.text =
-                        $"Vou plantar {crop.cropName}. Custa R${crop.seedCost:F0}. Demora {crop.growthDays} dias pra colher.";
+                        $"{LabelForCrop(crop.cropName)} · R${crop.seedCost:F0} · {crop.growthDays} dias";
                 }
                 else
                 {
@@ -104,10 +102,10 @@ public class HUDController : MonoBehaviour
                 }
                 break;
             case ToolType.Water:
-                cropPreviewLabel.text = "Vou regar a plantação";
+                cropPreviewLabel.text = "Regar";
                 break;
             case ToolType.Harvest:
-                cropPreviewLabel.text = "Vou colher o que tá pronto";
+                cropPreviewLabel.text = "Colher";
                 break;
         }
 
@@ -141,8 +139,10 @@ public class HUDController : MonoBehaviour
         // Antes: "Plantando: 4× Cacau · Investimento R$24 · Receita ~R$64"
         // Agora: "Você tem 4 pés de Cacau · gastou R$24 · pode render até R$64"
         proportionalityLabel.text =
-            $"Você tem {count} {PluralCropName(crop.cropName, count)} · gastou R${invest:F0} · pode render até R${expected:F0}";
+            $"{count} {PluralCropName(crop.cropName, count)} · gastou R${invest:F0} · rende até R${expected:F0}";
     }
+
+    static string LabelForCrop(string cropName) => cropName == "Acai" ? "Açaí" : cropName;
 
     static string PluralCropName(string crop, int qty)
     {
@@ -323,6 +323,7 @@ public class HUDController : MonoBehaviour
         CompactHudPanel(timerLabel, new Vector2(-16f, -16f), new Vector2(172f, 86f));
         StyleHudPanel(balanceLabel);
         StyleHudPanel(timerLabel);
+        LayoutTopRightPanel(timerLabel);
 
         if (balanceLabel != null) balanceLabel.fontSize = 18;
         if (dayLabel != null) dayLabel.fontSize = 15;
@@ -330,9 +331,9 @@ public class HUDController : MonoBehaviour
         if (timerLabel != null) timerLabel.fontSize = 19;
         if (phaseLabel != null) phaseLabel.fontSize = 14;
 
-        MoveCoachingLabel(cropPreviewLabel, new Vector2(0f, 108f), 14,
+        MoveCoachingLabel(cropPreviewLabel, new Vector2(0f, 104f), 13,
             new Color(0.95f, 0.76f, 0.30f, 1f));
-        MoveCoachingLabel(proportionalityLabel, new Vector2(0f, 82f), 13,
+        MoveCoachingLabel(proportionalityLabel, new Vector2(0f, 82f), 12,
             new Color(0.78f, 0.92f, 0.78f, 1f));
     }
 
@@ -358,6 +359,42 @@ public class HUDController : MonoBehaviour
 
         foreach (var label in childLabel.transform.parent.GetComponentsInChildren<TMP_Text>(true))
             label.color = new Color(0.20f, 0.09f, 0.03f, 1f);
+    }
+
+    static void LayoutTopRightPanel(TMP_Text timer)
+    {
+        if (timer == null) return;
+        Transform panel = timer.transform.parent;
+        PlaceChild(panel.Find("SunIcon") as RectTransform, new Vector2(14f, -10f), new Vector2(26f, 26f));
+        PlaceChild(timer.rectTransform, new Vector2(48f, -8f), new Vector2(96f, 26f));
+        timer.alignment = TextAlignmentOptions.Left;
+
+        TMP_Text phase = panel.Find("PhaseLabel")?.GetComponent<TMP_Text>();
+        if (phase != null)
+        {
+            PlaceChild(phase.rectTransform, new Vector2(14f, -36f), new Vector2(130f, 22f));
+            phase.alignment = TextAlignmentOptions.Left;
+        }
+
+        RectTransform bg = panel.Find("PhaseProgressBg") as RectTransform;
+        PlaceChild(bg, new Vector2(14f, -64f), new Vector2(130f, 8f));
+        if (bg != null && bg.GetComponent<Image>() != null)
+            bg.GetComponent<Image>().color = new Color(0.42f, 0.22f, 0.08f, 1f);
+        if (bg != null)
+        {
+            var fill = bg.Find("PhaseProgressFill") as RectTransform;
+            if (fill != null) fill.sizeDelta = new Vector2(130f, 8f);
+        }
+    }
+
+    static void PlaceChild(RectTransform rt, Vector2 anchoredPos, Vector2 size)
+    {
+        if (rt == null) return;
+        rt.anchorMin = new Vector2(0f, 1f);
+        rt.anchorMax = new Vector2(0f, 1f);
+        rt.pivot = new Vector2(0f, 1f);
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta = size;
     }
 
     static void MoveCoachingLabel(TMP_Text label, Vector2 anchoredPos, int fontSize, Color color)

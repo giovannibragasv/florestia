@@ -64,5 +64,30 @@ public class ToolbarController : MonoBehaviour
         var frame = slotBackgrounds[0].transform.parent;
         if (frame != null && frame.TryGetComponent(out Image image))
             image.color = new Color(0.60f, 0.30f, 0.08f, 0.96f);
+        if (frame is RectTransform frameRT)
+        {
+            frameRT.sizeDelta = new Vector2(400f, 88f);
+            frameRT.anchoredPosition = new Vector2(0f, 18f);
+        }
+
+        float startX = -2f * (72f + 6f);
+        for (int i = 0; i < slotBackgrounds.Length; i++)
+        {
+            var slot = slotBackgrounds[i];
+            if (slot == null) continue;
+            var rt = slot.rectTransform;
+            rt.sizeDelta = new Vector2(72f, 72f);
+            rt.anchoredPosition = new Vector2(startX + i * (72f + 6f), 0f);
+
+            var label = slot.transform.Find("Label");
+            if (label != null) label.gameObject.SetActive(false);
+
+            var icon = slot.transform.Find("Icon") as RectTransform;
+            if (icon != null)
+            {
+                icon.sizeDelta = new Vector2(48f, 48f);
+                icon.anchoredPosition = new Vector2(0f, -2f);
+            }
+        }
     }
 }

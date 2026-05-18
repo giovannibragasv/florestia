@@ -7,9 +7,9 @@ using TMPro;
 public static class ToolbarBuilder
 {
     static readonly string[] SlotLabels = { "Mandioca", "Cacau", "Açaí", "Água", "Colher" };
-    const float SlotSize   = 64f;
-    const float SlotGap    = 8f;
-    const float BarPadding = 10f;
+    const float SlotSize   = 72f;
+    const float SlotGap    = 6f;
+    const float BarPadding = 8f;
 
     [MenuItem("Florestia/Build Farm Toolbar")]
     public static void Build()
@@ -76,8 +76,8 @@ public static class ToolbarBuilder
             iconRT.anchorMin = new Vector2(0.5f, 0.5f);
             iconRT.anchorMax = new Vector2(0.5f, 0.5f);
             iconRT.pivot = new Vector2(0.5f, 0.5f);
-            iconRT.sizeDelta = new Vector2(34f, 34f);
-            iconRT.anchoredPosition = new Vector2(0f, 8f);
+            iconRT.sizeDelta = new Vector2(48f, 48f);
+            iconRT.anchoredPosition = new Vector2(0f, -2f);
             var icon = iconGO.AddComponent<Image>();
             icon.sprite = LoadSlotIcon(i);
             icon.preserveAspect = true;
@@ -103,6 +103,7 @@ public static class ToolbarBuilder
 
             var lblGO = new GameObject("Label");
             lblGO.transform.SetParent(slotRT, false);
+            lblGO.SetActive(false);
             var lblRT = lblGO.AddComponent<RectTransform>();
             lblRT.anchorMin = new Vector2(0f, 0f);
             lblRT.anchorMax = new Vector2(1f, 0f);

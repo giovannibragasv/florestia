@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class PlayerController : MonoBehaviour
@@ -65,6 +66,9 @@ public class PlayerController : MonoBehaviour
                 ToolbarController.Instance.Selected == ToolType.Water)
                 _nextWaterUseTime = Time.time + waterRepeatInterval;
         }
+
+        if (Input.GetMouseButtonDown(0))
+            TryInteractWithClickedSlot();
     }
 
     void FixedUpdate()
@@ -158,6 +162,44 @@ public class PlayerController : MonoBehaviour
         if (slot == null) return false;
         slot.Interact();
         return true;
+    }
+
+    bool TryInteractWithClickedSlot()
+    {
+        if (ToolbarController.Instance == null || Camera.main == null) return false;
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return false;
+
+        Vector3 world = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 point = new Vector2(world.x, world.y);
+        CropSlot slot = FindSlotAtWorldPoint(point);
+        if (slot == null) return false;
+        slot.Interact();
+        return true;
+    }
+
+    CropSlot FindSlotAtWorldPoint(Vector2 point)
+    {
+        var hits = Physics2D.OverlapPointAll(point);
+        foreach (var hit in hits)
+        {
+            if (hit == null) continue;
+            CropSlot slot = hit.GetComponent<CropSlot>() ?? hit.GetComponentInParent<CropSlot>();
+            if (slot != null) return slot;
+        }
+
+        RefreshSlotCacheIfNeeded();
+        CropSlot best = null;
+        float bestDist = 0.72f;
+        foreach (var candidate in _cachedSlots)
+        {
+            if (candidate == null) continue;
+            float dist = Vector2.Distance(point, candidate.transform.position);
+            if (dist >= bestDist) continue;
+            bestDist = dist;
+            best = candidate;
+        }
+        return best;
     }
 
     CropSlot FindSlotInFacingDirection()
