@@ -15,13 +15,13 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ## 🎯 Sprint MVP (11-19/05)
 
 ### A01 · Audit + reescrita de todos os textos do jogo
-> **Labels:** mentor · kid-friendly · conteúdo · educação | **Dono:** biel,kadu | **Due:** 2026-05-14
+> **Labels:** mentor · kid-friendly · conteúdo · educação | **Status:** ✅ Concluído · ver `Docs/florestia-glossario-kid-friendly.md`
 
-- [ ] **A01.1** Listar todos os strings da UI (HUD, botões, modais, EndScreen)
-- [ ] **A01.2** Reescrever conceitos adultos: 'margem', 'estoque', 'saldo', 'custo fixo'
-- [ ] **A01.3** Reescrever mensagens educacionais da EndScreen
+- [x] **A01.1** Listar todos os strings da UI (HUD, botões, modais, EndScreen)
+- [x] **A01.2** Reescrever conceitos adultos: 'margem', 'estoque', 'saldo', 'custo fixo'
+- [x] **A01.3** Reescrever mensagens educacionais da EndScreen
 - [x] **A01.4** Reescrever feedback do mercado (acceptLine / rejectLine atuais)
-- [ ] **A01.5** Validar com o teste de 10 segundos da auditoria de UX por idade
+- [x] **A01.5** Validar com o teste de 10 segundos da auditoria de UX por idade
 
 ### A02 · Refactor de textos no código
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-15 | **Depende:** A01
@@ -56,7 +56,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### A05 · EndScreen kid-first
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-17 | **Depende:** A01, C03, C09
 
-- [ ] **A05.1** Hero zone: 3 estados visuais (Falência / Sobreviveu / Lucrou) com ilustração
+- [x] **A05.1** Hero zone: 3 estados visuais (Falência / Sobreviveu / Lucrou) com ilustração
 - [x] **A05.2** Frase única encorajadora por desfecho (de C03)
 - [x] **A05.3** Gráfico de barras com rótulos de dia (1-15)
 - [x] **A05.4** Linha horizontal de zero no gráfico
