@@ -81,6 +81,7 @@ public class MarketUIController : MonoBehaviour
         EnsureMarketReadableLayout();
         EnsureBuyerFocusLayout();
         EnsureQuantityStepper();
+        EnsureMarketReadableLayout();
         EnsureSellFeedbackIcon();
         EnsureInsightToast();
         EnsureDayCompletePanel();
@@ -191,11 +192,25 @@ public class MarketUIController : MonoBehaviour
         MoveRect("CropButton_Acai", new Vector2(-220f, 56f), new Vector2(230f, 40f));
         MoveRect("StockLabel", new Vector2(-220f, 14f), new Vector2(230f, 28f));
         MoveRect("PriceSlider", new Vector2(126f, 116f), new Vector2(360f, 38f));
-        MoveRect("CostLabel", new Vector2(-220f, -50f), new Vector2(200f, 54f));
-        MoveRect("PriceLabel", new Vector2(0f, -50f), new Vector2(200f, 54f));
-        MoveRect("MarginLabel", new Vector2(220f, -50f), new Vector2(200f, 54f));
-        MoveRect("SellButton", new Vector2(-126f, -220f), new Vector2(260f, 62f));
-        MoveRect("EndDayButton", new Vector2(180f, -220f), new Vector2(220f, 62f));
+        MoveRect("QuantityLabel", new Vector2(150f, 54f), new Vector2(260f, 28f));
+        SetLabelStyle("QuantityLabel", 18, TextAlignmentOptions.Center,
+            new Color(0.95f, 0.86f, 0.66f, 1f), FontStyles.Normal);
+        MoveRect("MinusButton", new Vector2(70f, 12f), new Vector2(58f, 58f));
+        MoveRect("QuantityValueLabel", new Vector2(150f, 12f), new Vector2(72f, 58f));
+        SetLabelStyle("QuantityValueLabel", 36, TextAlignmentOptions.Center,
+            new Color(0.98f, 0.88f, 0.55f, 1f), FontStyles.Bold);
+        MoveRect("PlusButton", new Vector2(230f, 12f), new Vector2(58f, 58f));
+        MoveRect("TotalLabel", new Vector2(150f, -38f), new Vector2(340f, 28f));
+        SetLabelStyle("TotalLabel", 17, TextAlignmentOptions.Center,
+            new Color(0.95f, 0.86f, 0.66f, 1f), FontStyles.Normal);
+        MoveRect("CoinStack", new Vector2(324f, -38f), new Vector2(96f, 44f));
+
+        MoveRect("CostLabel", new Vector2(-220f, -104f), new Vector2(200f, 54f));
+        MoveRect("PriceLabel", new Vector2(0f, -104f), new Vector2(200f, 54f));
+        MoveRect("MarginLabel", new Vector2(220f, -104f), new Vector2(200f, 54f));
+        MoveRect("AcceptanceChanceLabel", new Vector2(126f, -164f), new Vector2(330f, 30f));
+        MoveRect("SellButton", new Vector2(-126f, -234f), new Vector2(260f, 62f));
+        MoveRect("EndDayButton", new Vector2(180f, -234f), new Vector2(220f, 62f));
         SetButtonLabel("SellButton", 18);
         SetButtonLabel("EndDayButton", 20);
 
@@ -710,25 +725,26 @@ public class MarketUIController : MonoBehaviour
         Transform parent = priceSlider.transform.parent;
         if (parent == null) return;
 
-        Vector2 baseAnchor = priceSlider.GetComponent<RectTransform>().anchoredPosition
-                             + new Vector2(0f, -68f);
+        Vector2 baseAnchor = new Vector2(150f, 12f);
         if (minusButton != null && plusButton != null && quantityValueLabel != null
             && _coinStackCoins != null)
             return;
 
         if (quantityLabel == null)
             quantityLabel = MakeLabelNear(parent, "QuantityLabel",
-                baseAnchor + new Vector2(-200f, 0f),
-                new Vector2(220f, 30f), 18, "Quantos vender:");
+                new Vector2(150f, 54f),
+                new Vector2(260f, 28f), 18, "Quantos vender:");
+        if (quantityLabel != null)
+            quantityLabel.alignment = TextAlignmentOptions.Center;
 
         if (minusButton == null)
             minusButton = MakeStepperButton(parent, "MinusButton",
-                baseAnchor + new Vector2(-30f, 0f), "−");
+                baseAnchor + new Vector2(-80f, 0f), "−");
 
         if (quantityValueLabel == null)
             quantityValueLabel = MakeLabelNear(parent, "QuantityValueLabel",
-                baseAnchor + new Vector2(30f, 0f),
-                new Vector2(80f, 60f), 36, "1");
+                baseAnchor,
+                new Vector2(72f, 58f), 36, "1");
 
         if (quantityValueLabel != null)
         {
@@ -739,15 +755,15 @@ public class MarketUIController : MonoBehaviour
 
         if (plusButton == null)
             plusButton = MakeStepperButton(parent, "PlusButton",
-                baseAnchor + new Vector2(90f, 0f), "+");
+                baseAnchor + new Vector2(80f, 0f), "+");
 
         if (totalLabel == null)
             totalLabel = MakeLabelNear(parent, "TotalLabel",
-                baseAnchor + new Vector2(0f, -42f),
-                new Vector2(360f, 26f), 18, "");
+                new Vector2(150f, -38f),
+                new Vector2(340f, 28f), 17, "");
         if (totalLabel != null)
             totalLabel.alignment = TextAlignmentOptions.Center;
-        EnsureCoinStack(parent, baseAnchor + new Vector2(170f, -42f));
+        EnsureCoinStack(parent, new Vector2(324f, -38f));
     }
 
     void EnsureCoinStack(Transform parent, Vector2 anchoredPos)

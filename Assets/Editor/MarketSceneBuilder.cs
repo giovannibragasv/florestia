@@ -122,19 +122,19 @@ public static class MarketSceneBuilder
         slider.maxValue = 50f;
         slider.value = 7f;
 
-        var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: R$0", new Vector2(-220f, -50f));
-        var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: R$0", new Vector2(0f, -50f));
-        var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Sobra: −", new Vector2(220f, -50f));
+        var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: R$0", new Vector2(-220f, -104f));
+        var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: R$0", new Vector2(0f, -104f));
+        var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Sobra: −", new Vector2(220f, -104f));
 
         var chanceLabel = MakeLabel("AcceptanceChanceLabel", tradePanel, "Chance de venda: --",
-            new Vector2(126f, -116f), new Vector2(300f, 30f), 19,
+            new Vector2(126f, -164f), new Vector2(330f, 30f), 19,
             TextAlignmentOptions.Center, new Color(0.98f, 0.78f, 0.32f, 1f));
         chanceLabel.fontStyle = FontStyles.Bold;
 
         var sellBtn = MakeButton("SellButton", "Vender 1 unidade", tradePanel,
-            new Vector2(-126f, -220f), new Vector2(260f, 62f), true);
+            new Vector2(-126f, -234f), new Vector2(260f, 62f), true);
         var endDayBtn = MakeButton("EndDayButton", "Encerrar dia", tradePanel,
-            new Vector2(180f, -220f), new Vector2(220f, 62f), true);
+            new Vector2(180f, -234f), new Vector2(220f, 62f), true);
 
         var muic = marketUI.AddComponent<MarketUIController>();
         SerializedObject so = new SerializedObject(muic);

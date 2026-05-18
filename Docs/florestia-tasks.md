@@ -92,6 +92,34 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [x] **A07.1** Indicador visual de fase do dia além do sky gradient
 - [x] **A07.2** Texto curto no HUD: 'Manhã' / 'Tarde' / 'Anoitecer'
 
+### A08 · Mercado, feedback visual e polimento pós-review
+> **Labels:** mentor · kid-friendly · código · polimento | **Dono:** vanni | **Fonte:** anotações de review em 2026-05-18
+
+- [x] **A08.1** Revamp inicial da MarketScene com stepper, retratos novos e chance de venda
+- [x] **A08.2** RNG noturno configurável para aumentar/diminuir chance dos compradores aceitarem
+- [x] **A08.3** Substituir sprites dos compradores por retratos neutros e respeitosos
+- [x] **A08.4** Desclutter da coluna direita do mercado: preço, quantidade, cards e ações em blocos separados
+- [ ] **A08.5** Criar arte de fundo do mercado com céu noturno escuro e original
+- [ ] **A08.6** Reavaliar termo/representação do comprador "Atravessador" com foco pedagógico e sem imagem negativa
+
+### A09 · Feedback visual de ações na fazenda
+> **Labels:** kid-friendly · código · polimento | **Dono:** vanni | **Fonte:** anotações de review em 2026-05-18
+
+- [ ] **A09.1** Adicionar aviso visual quando a planta ficar pronta para colher, possivelmente exclamação
+- [ ] **A09.2** Adicionar reação visual quando a planta for plantada
+- [ ] **A09.3** Adicionar reação visual quando a planta for regada
+- [ ] **A09.4** Adicionar reação visual quando a planta for colhida
+- [ ] **A09.5** Colocar highlight no tile sob o mouse, não no tile para onde o player olha
+
+### A10 · Assets, fontes, save e controles
+> **Labels:** código · polimento · UX | **Dono:** vanni | **Fonte:** anotações de review em 2026-05-18
+
+- [ ] **A10.1** Fazer sprite de regador legível no toolbar
+- [ ] **A10.2** Ajustar savefiles: reset, troca de perfil, arquivos antigos e fluxo de continuação
+- [ ] **A10.3** Ajustar tecla ESC: menu de pausa, sair, salvar e voltar
+- [ ] **A10.4** Explicitar energia e custo de energia das ações antes/depois de agir
+- [ ] **A10.5** Integrar fonte da pasta `SDV Fonts/` sem quebrar acentos e fallback TMP
+
 ### B01 · Save persistente por aluno
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Status:** ✅ Concluído · commits `5c83754` (fundação) + `b235a49` (picker)
 
