@@ -14,6 +14,7 @@ public class StudentProfilePicker : MonoBehaviour
     GameObject _activeActionsPanel;
     TMP_Text _activeLabel;
     bool _firstFrameDone;
+    public bool IsVisible => _root != null && _root.activeSelf;
 
     void Awake()
     {
@@ -32,8 +33,10 @@ public class StudentProfilePicker : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            Show();
+        if (Input.GetKeyDown(KeyCode.Escape)
+            && _root != null && _root.activeSelf
+            && SaveSystem.ActiveProfile != null)
+            Hide();
     }
 
     public void Show()

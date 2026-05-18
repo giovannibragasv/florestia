@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         EnsureProfilePickerExists();
+        EnsurePauseMenuExists();
         EnsureActiveProfile();
         EnsureTutorialControllerExists();
         EnsureIntermediadoraDashboardExists();
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         EnsureIntermediadoraDashboardExists();
+        EnsurePauseMenuExists();
 
         if (scene.name == "FarmScene" || scene.name == "MarketScene")
         {
@@ -85,6 +87,13 @@ public class GameManager : MonoBehaviour
         if (IntermediadoraDashboardController.Instance != null) return;
         var go = new GameObject("_IntermediadoraDashboard");
         go.AddComponent<IntermediadoraDashboardController>();
+    }
+
+    static void EnsurePauseMenuExists()
+    {
+        if (PauseMenuController.Instance != null) return;
+        var go = new GameObject("_PauseMenu");
+        go.AddComponent<PauseMenuController>();
     }
 
     public void ApplyDailyFixedCost() { Balance -= DailyCost; }
@@ -161,6 +170,11 @@ public class GameManager : MonoBehaviour
     {
         SaveSystem.Delete();
         ResetRunState();
+    }
+
+    public void SaveNow()
+    {
+        SaveSystem.Save(BuildSaveData());
     }
 
     public void GoToMarket()
