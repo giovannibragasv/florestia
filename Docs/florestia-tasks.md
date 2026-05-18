@@ -12,7 +12,19 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 
 ---
 
-## 🎯 Sprint MVP (11-19/05)
+## 📅 Próximas entregas oficiais (datas adiadas)
+
+| Data | Artefato | Cluster Trello |
+|---|---|---|
+| **18/05/26** | Protótipo · fotos e/ou vídeo dos resultados | `H01.1` + `H01.2` (em Em Curso) |
+| **22/05/26** | Relato de Experiência (versão final) | `RE01` (em Em Curso) |
+| **25/05/26** | Validação do MVP com mentor | `MV01` (Sprint MVP) — apresentação + smoke test + slide H01 (`H01.3`–`H01.5`) |
+
+> Sprint MVP originalmente datado 19/05; validação real adiada para 25/05. O intervalo efetivo agora é 11–25/05.
+
+---
+
+## 🎯 Sprint MVP (11-25/05)
 
 ### A01 · Audit + reescrita de todos os textos do jogo
 > **Labels:** mentor · kid-friendly · conteúdo · educação | **Status:** ✅ Concluído · ver `Docs/florestia-glossario-kid-friendly.md`
@@ -261,13 +273,28 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [x] **G02.3** Bloquear vender 0 unidades
 
 ### H01 · Slide para apresentação do MVP (mentor-facing)
-> **Labels:** mentor · apresentação | **Dono:** kadu,tex | **Due:** 2026-05-18
+> **Labels:** mentor · apresentação | **Dono:** kadu,tex,vanni | **Due:** ver datas adiadas no topo
 
-- [ ] **H01.1** Gravar gifs das mecânicas novas (plantio, mercado, pergunta, EndScreen)
-- [ ] **H01.2** Coletar sprites e ilustrações da Hero zone
-- [ ] **H01.3** Slide de fundamentação BNCC (referenciar EDD compliance PDF)
-- [ ] **H01.4** Slide do Modelo C v2 (resumo dos 4 campos)
-- [ ] **H01.5** Slide do preview da Feira
+- [ ] **H01.1** Gravar gifs/vídeo das mecânicas (plantio, mercado, pergunta, EndScreen) · **due 18/05** · artefato Protótipo
+- [ ] **H01.2** Coletar sprites e ilustrações da Hero zone · **due 18/05** · artefato Protótipo
+- [ ] **H01.3** Slide de fundamentação BNCC (referenciar EDD compliance PDF) · **due 25/05** · validação MVP
+- [ ] **H01.4** Slide do Modelo C v2 (resumo dos 4 campos) · **due 25/05** · validação MVP
+- [ ] **H01.5** Slide do preview da Feira · **due 25/05** · validação MVP
+
+### MV01 · Validação do MVP com mentor
+> **Labels:** mentor · apresentação | **Dono:** grupo todo | **Due:** 2026-05-25 | **Status:** novo cluster pós-adiamento
+
+- [ ] **MV01.1** Smoke test end-to-end no jogo: tutorial → plantio → mercado → resumo + perguntas → EndScreen sem erros vermelhos
+- [ ] **MV01.2** Anexar versão final do Modelo C v2 (entregue pelo pm) ao deck
+- [ ] **MV01.3** Anexar gifs/vídeo (H01.1) e sprites (H01.2) ao deck
+- [ ] **MV01.4** Ensaiar a apresentação ao menos 1x antes do dia 25/05
+- [ ] **MV01.5** Validação propriamente dita com mentor no 25/05
+
+### RE01 · Relato de Experiência (versão final)
+> **Labels:** pesquisa · apresentação · conteúdo · feira | **Dono:** grupo todo | **Due:** 2026-05-22 | **Status:** em Em Curso (originalmente 21/05, adiada 1 dia)
+
+Texto vivo em [Google Doc](https://docs.google.com/document/d/1zKTieMFTJTrKzVOSGtel0M7Qik7llygS/edit). Conteúdo do relato já está em
+`references/relato_florestia.pdf` (rascunho); versão final entra no doc compartilhado pelo grupo.
 
 ---
 
