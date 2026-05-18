@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -30,6 +31,7 @@ public static class StardewFontAssetBuilder
 
         TMP_FontAsset fallback = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(
             "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset");
+        fontAsset.fallbackFontAssetTable ??= new List<TMP_FontAsset>();
         if (fallback != null && !fontAsset.fallbackFontAssetTable.Contains(fallback))
             fontAsset.fallbackFontAssetTable.Add(fallback);
 
