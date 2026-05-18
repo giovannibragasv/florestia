@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
 public class CropSlot : MonoBehaviour
@@ -243,14 +242,6 @@ public class CropSlot : MonoBehaviour
             HUDController.Instance?.RefreshBalance(GameManager.Instance.Balance);
             HUDController.Instance?.RefreshProportionalityCue();
         }
-    }
-
-    void OnMouseDown()
-    {
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            return;
-
-        Interact();
     }
 
     public CropSlotSaveData GetSaveData() => new CropSlotSaveData

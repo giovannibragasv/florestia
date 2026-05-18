@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteRenderer))]
 public class PlayerController : MonoBehaviour
@@ -29,6 +30,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D _rb;
     SpriteRenderer _sr;
     CropSlot[] _cachedSlots;
+    SpriteRenderer[] _highlightEdges;
+    static Sprite _highlightPixel;
     Vector2 _input;
     float _animTimer;
     float _nextWaterUseTime;
@@ -136,6 +139,7 @@ public class PlayerController : MonoBehaviour
     void UpdateTileHighlight()
     {
         if (tileHighlight == null) return;
+        EnsureTileHighlightStyle();
 
         CropSlot found = FindSlotInFacingDirection();
         tileHighlight.gameObject.SetActive(found != null);
@@ -144,13 +148,53 @@ public class PlayerController : MonoBehaviour
             tileHighlight.transform.position = new Vector3(
                 found.transform.position.x,
                 found.transform.position.y, 0f);
-            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 7f);
-            float alpha = Mathf.Lerp(0.65f, 0.9f, pulse);
-            float scale = Mathf.Lerp(1.08f, 1.18f, pulse);
-            Color c = tileHighlight.color;
-            c.a = alpha;
-            tileHighlight.color = c;
-            tileHighlight.transform.localScale = new Vector3(scale, scale, 1f);
+            float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 5f);
+            float alpha = Mathf.Lerp(0.55f, 0.82f, pulse);
+            foreach (var edge in _highlightEdges)
+            {
+                if (edge == null) continue;
+                Color c = edge.color;
+                c.a = alpha;
+                edge.color = c;
+            }
+        }
+    }
+
+    void EnsureTileHighlightStyle()
+    {
+        if (_highlightEdges != null && _highlightEdges.Length == 4) return;
+
+        tileHighlight.sprite = null;
+        tileHighlight.color = Color.clear;
+        tileHighlight.transform.localScale = Vector3.one;
+
+        _highlightEdges = new SpriteRenderer[4];
+        Vector2[] positions =
+        {
+            new Vector2(0f, 0.46f),
+            new Vector2(0f, -0.46f),
+            new Vector2(-0.46f, 0f),
+            new Vector2(0.46f, 0f)
+        };
+        Vector2[] scales =
+        {
+            new Vector2(0.92f, 0.06f),
+            new Vector2(0.92f, 0.06f),
+            new Vector2(0.06f, 0.92f),
+            new Vector2(0.06f, 0.92f)
+        };
+
+        for (int i = 0; i < 4; i++)
+        {
+            var go = new GameObject($"HighlightEdge_{i}");
+            go.transform.SetParent(tileHighlight.transform, false);
+            go.transform.localPosition = positions[i];
+            go.transform.localScale = new Vector3(scales[i].x, scales[i].y, 1f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = GetHighlightPixel();
+            sr.color = new Color(1f, 0.82f, 0.18f, 0.7f);
+            sr.sortingOrder = 8;
+            _highlightEdges[i] = sr;
         }
     }
 
@@ -167,7 +211,7 @@ public class PlayerController : MonoBehaviour
     bool TryInteractWithClickedSlot()
     {
         if (ToolbarController.Instance == null || Camera.main == null) return false;
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        if (IsPointerOverBlockingUi())
             return false;
 
         Vector3 world = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -243,7 +287,55 @@ public class PlayerController : MonoBehaviour
     void RefreshSlotCacheIfNeeded()
     {
         if (_cachedSlots != null && _cachedSlots.Length > 0) return;
-        _cachedSlots = FindObjectsByType<CropSlot>();
+
+        CropSlot[] all = FindObjectsByType<CropSlot>();
+        Transform farmGrid = GameObject.Find("FarmGrid")?.transform;
+        if (farmGrid == null)
+        {
+            _cachedSlots = all;
+            return;
+        }
+
+        var filtered = new System.Collections.Generic.List<CropSlot>();
+        foreach (var slot in all)
+        {
+            if (slot == null || !slot.gameObject.activeInHierarchy) continue;
+            if (slot.transform.IsChildOf(farmGrid))
+                filtered.Add(slot);
+        }
+        _cachedSlots = filtered.Count > 0 ? filtered.ToArray() : all;
+    }
+
+    static bool IsPointerOverBlockingUi()
+    {
+        if (EventSystem.current == null) return false;
+
+        var data = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+        var results = new System.Collections.Generic.List<RaycastResult>();
+        EventSystem.current.RaycastAll(data, results);
+        foreach (var result in results)
+        {
+            var selectable = result.gameObject.GetComponentInParent<Selectable>();
+            if (selectable != null) return true;
+        }
+        return false;
+    }
+
+    static Sprite GetHighlightPixel()
+    {
+        if (_highlightPixel != null) return _highlightPixel;
+        var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+        tex.SetPixel(0, 0, Color.white);
+        tex.Apply();
+        tex.name = "TileHighlight_WhitePixelTexture";
+        tex.hideFlags = HideFlags.HideAndDontSave;
+        _highlightPixel = Sprite.Create(tex, new Rect(0f, 0f, 1f, 1f),
+            new Vector2(0.5f, 0.5f), 1f);
+        _highlightPixel.name = "TileHighlight_WhitePixel";
+        return _highlightPixel;
     }
 
     void OnDrawGizmosSelected()

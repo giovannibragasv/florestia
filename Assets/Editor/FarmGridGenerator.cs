@@ -8,6 +8,12 @@ public static class FarmGridGenerator
     [MenuItem("Florestia/Generate 6x6 Farm Grid")]
     public static void GenerateGrid()
     {
+        foreach (var oldSlot in Object.FindObjectsByType<CropSlot>(FindObjectsSortMode.None))
+        {
+            if (oldSlot != null)
+                Undo.DestroyObjectImmediate(oldSlot.gameObject);
+        }
+
         var existing = GameObject.Find("FarmGrid");
         if (existing != null) Undo.DestroyObjectImmediate(existing);
 
