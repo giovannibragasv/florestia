@@ -77,6 +77,8 @@ public class HUDController : MonoBehaviour
     {
         staminaBar.value = (float)current / max;
         staminaLabel.text = $"Energia: {current}/{max}";
+        if (ToolbarController.Instance != null)
+            RefreshCropPreview(ToolbarController.Instance.Selected);
     }
 
     public void RefreshCropPreview(ToolType tool)
@@ -93,8 +95,10 @@ public class HUDController : MonoBehaviour
                     : null;
                 if (crop != null && crop.growthDays > 0)
                 {
+                    int energy = crop.staminaCostToPlant;
                     cropPreviewLabel.text =
-                        $"{LabelForCrop(crop.cropName)} · R${crop.seedCost:F0} · {crop.growthDays} dias";
+                        $"{LabelForCrop(crop.cropName)} · R${crop.seedCost:F0} · {crop.growthDays} dias · usa {energy} energia";
+                    ApplyEnergyPreviewColor(energy);
                 }
                 else
                 {
@@ -102,14 +106,24 @@ public class HUDController : MonoBehaviour
                 }
                 break;
             case ToolType.Water:
-                cropPreviewLabel.text = "Regar";
+                cropPreviewLabel.text = "Regar · usa 2 energia";
+                ApplyEnergyPreviewColor(2);
                 break;
             case ToolType.Harvest:
-                cropPreviewLabel.text = "Colher";
+                cropPreviewLabel.text = "Colher · usa 3 energia";
+                ApplyEnergyPreviewColor(3);
                 break;
         }
 
         RefreshProportionalityCue();
+    }
+
+    void ApplyEnergyPreviewColor(int cost)
+    {
+        if (cropPreviewLabel == null || StaminaSystem.Instance == null) return;
+        cropPreviewLabel.color = StaminaSystem.Instance.Current >= cost
+            ? new Color(0.95f, 0.76f, 0.30f, 1f)
+            : new Color(0.88f, 0.18f, 0.12f, 1f);
     }
 
     public void RefreshProportionalityCue()

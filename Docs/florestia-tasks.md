@@ -117,7 +117,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 - [ ] **A10.1** Fazer sprite de regador legível no toolbar
 - [ ] **A10.2** Ajustar savefiles: reset, troca de perfil, arquivos antigos e fluxo de continuação
 - [ ] **A10.3** Ajustar tecla ESC: menu de pausa, sair, salvar e voltar
-- [ ] **A10.4** Explicitar energia e custo de energia das ações antes/depois de agir
+- [x] **A10.4** Explicitar energia e custo de energia das ações antes/depois de agir
 - [ ] **A10.5** Integrar fonte da pasta `SDV Fonts/` sem quebrar acentos e fallback TMP
 
 ### B01 · Save persistente por aluno
