@@ -259,7 +259,7 @@ public class DailyEducationFlow : MonoBehaviour
         t.color = color;
         t.alignment = align;
         t.raycastTarget = false;
-        var font = FlorestiaFontUtility.LoadPreferredTMPFont();
+        var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
         if (font != null) t.font = font;
         return t;
     }

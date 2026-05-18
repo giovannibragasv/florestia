@@ -183,7 +183,7 @@ public class TutorialController : MonoBehaviour
         label.alignment = TextAlignmentOptions.Center;
         label.color = color;
         label.raycastTarget = false;
-        TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
+        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
         if (font != null) label.font = font;
         return label;
     }

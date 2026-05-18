@@ -707,7 +707,7 @@ public class MarketUIController : MonoBehaviour
             label.alignment = TextAlignmentOptions.Center;
             label.color = new Color(0.96f, 0.88f, 0.68f, 1f);
             label.raycastTarget = false;
-            TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
+            TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
             if (font != null) label.font = font;
 
             made[i] = btn;
@@ -849,7 +849,7 @@ public class MarketUIController : MonoBehaviour
         tmp.alignment = TextAlignmentOptions.Center;
         tmp.color = new Color(0.10f, 0.07f, 0.04f, 1f);
         tmp.raycastTarget = false;
-        var font = FlorestiaFontUtility.LoadPreferredTMPFont();
+        var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
         if (font != null) tmp.font = font;
 
         go.SetActive(false);
@@ -969,7 +969,7 @@ public class MarketUIController : MonoBehaviour
         tmp.color = new Color(0.10f, 0.07f, 0.04f, 1f);
         tmp.fontStyle = FontStyles.Bold;
         tmp.raycastTarget = false;
-        var font = FlorestiaFontUtility.LoadPreferredTMPFont();
+        var font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
         if (font != null) tmp.font = font;
 
         return btn;
@@ -1123,7 +1123,7 @@ public class MarketUIController : MonoBehaviour
         label.alignment = TextAlignmentOptions.Left;
         label.color = new Color(0.96f, 0.88f, 0.68f, 1f);
         label.raycastTarget = false;
-        TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
+        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
         if (font != null) label.font = font;
         return label;
     }
@@ -1146,7 +1146,7 @@ public class MarketUIController : MonoBehaviour
         label.color = Color.white;
         label.raycastTarget = false;
         label.textWrappingMode = TextWrappingModes.Normal;
-        TMP_FontAsset font = FlorestiaFontUtility.LoadPreferredTMPFont();
+        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
         if (font != null) label.font = font;
         return label;
     }
