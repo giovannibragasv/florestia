@@ -217,11 +217,11 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### E01 · Mock do dashboard da intermediadora
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-18 | **Depende:** C06, D01
 
-- [ ] **E01.1** Tela acessível por flag ou senha simples
-- [ ] **E01.2** Layout estático com dados dummy: aluno, dia, saldo, melhor cultura, % acerto
-- [ ] **E01.3** Reaproveitar componente de gráfico de barras da EndScreen
-- [ ] **E01.4** Header 'visão da intermediadora'
-- [ ] **E01.5** Sem persistência real (funcional vem na Feira)
+- [x] **E01.1** Tela acessível por flag ou senha simples
+- [x] **E01.2** Layout estático com dados dummy: aluno, dia, saldo, melhor cultura, % acerto
+- [x] **E01.3** Reaproveitar componente de gráfico de barras da EndScreen
+- [x] **E01.4** Header 'visão da intermediadora'
+- [x] **E01.5** Sem persistência real (funcional vem na Feira)
 
 ### F01 · Estudo histórico/cultural Vila Jutaí · preliminar
 > **Labels:** pesquisa | **Dono:** tex,kadu | **Due:** 2026-05-17
