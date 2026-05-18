@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer), typeof(BoxCollider2D))]
@@ -17,6 +18,9 @@ public class CropSlot : MonoBehaviour
     SpriteRenderer _waterOverlayRenderer; // child GO — clear watered feedback above growth art
     SpriteRenderer _growthBarBg;    // child GO — dark background of life bar
     SpriteRenderer _growthBarFill;  // child GO — colored fill scaled by progress
+    GameObject _readyMarkerRoot;
+    GameObject _actionFeedbackRoot;
+    Coroutine _actionFeedbackRoutine;
 
     const float BarWidth = 0.72f;
     const float BarHeight = 0.10f;
@@ -50,6 +54,7 @@ public class CropSlot : MonoBehaviour
         _waterOverlayRenderer.color = new Color(0.85f, 0.95f, 1f, 0.62f);
 
         BuildGrowthBar();
+        BuildReadyMarker();
 
         if (!TryGetComponent(out BoxCollider2D col) || col == null)
             col = gameObject.AddComponent<BoxCollider2D>();
@@ -67,6 +72,14 @@ public class CropSlot : MonoBehaviour
 
     void Start() => RefreshSprite();
 
+    void Update()
+    {
+        if (_readyMarkerRoot == null || !_readyMarkerRoot.activeSelf) return;
+
+        float pulse = 1f + Mathf.Sin(Time.time * 7f + SlotIndex) * 0.10f;
+        _readyMarkerRoot.transform.localScale = new Vector3(pulse, pulse, 1f);
+    }
+
     public bool TryPlant(CropData crop)
     {
         if (!IsEmpty) return false;
@@ -78,6 +91,7 @@ public class CropSlot : MonoBehaviour
         _crop = crop;
         _daysPlanted = 0;
         RefreshSprite();
+        ShowActionFeedback(new Color(0.36f, 0.95f, 0.42f, 1f));
         return true;
     }
 
@@ -90,6 +104,7 @@ public class CropSlot : MonoBehaviour
 
         _wateredToday = true;
         RefreshSprite();
+        ShowActionFeedback(new Color(0.35f, 0.78f, 1f, 1f));
         return true;
     }
 
@@ -103,6 +118,7 @@ public class CropSlot : MonoBehaviour
         _daysPlanted = 0;
         _wateredToday = false;
         RefreshSprite();
+        ShowActionFeedback(new Color(1f, 0.78f, 0.24f, 1f));
         return harvested;
     }
 
@@ -144,6 +160,7 @@ public class CropSlot : MonoBehaviour
         }
 
         RefreshGrowthBar();
+        RefreshReadyMarker();
     }
 
     void BuildGrowthBar()
@@ -188,6 +205,109 @@ public class CropSlot : MonoBehaviour
             new Color(0.55f, 0.85f, 0.35f, 1f),  // verde
             new Color(0.95f, 0.75f, 0.20f, 1f),  // dourado
             progress);
+    }
+
+    void BuildReadyMarker()
+    {
+        _readyMarkerRoot = new GameObject("ReadyMarker");
+        _readyMarkerRoot.transform.SetParent(transform, false);
+        _readyMarkerRoot.transform.localPosition = new Vector3(0.33f, 0.56f, 0f);
+
+        var backGO = new GameObject("Back");
+        backGO.transform.SetParent(_readyMarkerRoot.transform, false);
+        backGO.transform.localScale = new Vector3(0.24f, 0.30f, 1f);
+        var back = backGO.AddComponent<SpriteRenderer>();
+        back.sprite = GetWhitePixel();
+        back.color = new Color(1f, 0.78f, 0.18f, 0.92f);
+        back.sortingOrder = _soilRenderer.sortingOrder + 10;
+
+        var lineGO = new GameObject("Line");
+        lineGO.transform.SetParent(_readyMarkerRoot.transform, false);
+        lineGO.transform.localPosition = new Vector3(0f, 0.04f, 0f);
+        lineGO.transform.localScale = new Vector3(0.045f, 0.16f, 1f);
+        var line = lineGO.AddComponent<SpriteRenderer>();
+        line.sprite = GetWhitePixel();
+        line.color = new Color(0.16f, 0.08f, 0.02f, 1f);
+        line.sortingOrder = _soilRenderer.sortingOrder + 11;
+
+        var dotGO = new GameObject("Dot");
+        dotGO.transform.SetParent(_readyMarkerRoot.transform, false);
+        dotGO.transform.localPosition = new Vector3(0f, -0.10f, 0f);
+        dotGO.transform.localScale = new Vector3(0.055f, 0.055f, 1f);
+        var dot = dotGO.AddComponent<SpriteRenderer>();
+        dot.sprite = GetWhitePixel();
+        dot.color = new Color(0.16f, 0.08f, 0.02f, 1f);
+        dot.sortingOrder = _soilRenderer.sortingOrder + 11;
+
+        _readyMarkerRoot.SetActive(false);
+    }
+
+    void RefreshReadyMarker()
+    {
+        if (_readyMarkerRoot != null)
+            _readyMarkerRoot.SetActive(IsReady);
+    }
+
+    void ShowActionFeedback(Color color)
+    {
+        if (!isActiveAndEnabled) return;
+        if (_actionFeedbackRoutine != null)
+            StopCoroutine(_actionFeedbackRoutine);
+        if (_actionFeedbackRoot != null)
+            Destroy(_actionFeedbackRoot);
+        _actionFeedbackRoutine = StartCoroutine(AnimateActionFeedback(color));
+    }
+
+    IEnumerator AnimateActionFeedback(Color color)
+    {
+        const int count = 7;
+        var pieces = new SpriteRenderer[count];
+        var starts = new Vector3[count];
+        var ends = new Vector3[count];
+
+        _actionFeedbackRoot = new GameObject("ActionFeedback");
+        _actionFeedbackRoot.transform.SetParent(transform, false);
+        _actionFeedbackRoot.transform.localPosition = Vector3.zero;
+
+        for (int i = 0; i < count; i++)
+        {
+            float angle = (i / (float)count) * Mathf.PI * 2f;
+            starts[i] = new Vector3(Mathf.Cos(angle) * 0.12f, Mathf.Sin(angle) * 0.04f, 0f);
+            ends[i] = new Vector3(Mathf.Cos(angle) * 0.30f, 0.40f + Mathf.Abs(Mathf.Sin(angle)) * 0.12f, 0f);
+
+            var go = new GameObject($"Spark_{i}");
+            go.transform.SetParent(_actionFeedbackRoot.transform, false);
+            go.transform.localPosition = starts[i];
+            go.transform.localScale = Vector3.one * (0.055f + i % 3 * 0.015f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = GetWhitePixel();
+            sr.color = color;
+            sr.sortingOrder = _soilRenderer.sortingOrder + 12;
+            pieces[i] = sr;
+        }
+
+        float duration = 0.48f;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / duration);
+            float eased = 1f - Mathf.Pow(1f - k, 2f);
+            for (int i = 0; i < pieces.Length; i++)
+            {
+                if (pieces[i] == null) continue;
+                pieces[i].transform.localPosition = Vector3.Lerp(starts[i], ends[i], eased);
+                pieces[i].transform.localScale = Vector3.one * Mathf.Lerp(0.075f, 0.025f, k);
+                var c = color;
+                c.a = 1f - k;
+                pieces[i].color = c;
+            }
+            yield return null;
+        }
+
+        Destroy(_actionFeedbackRoot);
+        _actionFeedbackRoot = null;
+        _actionFeedbackRoutine = null;
     }
 
     static Sprite GetWhitePixel()

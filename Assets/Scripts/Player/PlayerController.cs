@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     CropSlot[] _cachedSlots;
     SpriteRenderer[] _highlightEdges;
     static Sprite _highlightPixel;
+    CropSlot _hoveredSlot;
     Vector2 _input;
     float _animTimer;
     float _nextWaterUseTime;
@@ -141,7 +142,8 @@ public class PlayerController : MonoBehaviour
         if (tileHighlight == null) return;
         EnsureTileHighlightStyle();
 
-        CropSlot found = FindSlotInFacingDirection();
+        _hoveredSlot = FindSlotUnderMouse();
+        CropSlot found = _hoveredSlot;
         tileHighlight.gameObject.SetActive(found != null);
         if (found != null)
         {
@@ -202,7 +204,9 @@ public class PlayerController : MonoBehaviour
     {
         if (ToolbarController.Instance == null) return false;
 
-        CropSlot slot = FindSlotInFacingDirection();
+        CropSlot slot = _hoveredSlot != null ? _hoveredSlot : FindSlotUnderMouse();
+        if (slot == null)
+            slot = FindSlotInFacingDirection();
         if (slot == null) return false;
         slot.Interact();
         return true;
@@ -220,6 +224,15 @@ public class PlayerController : MonoBehaviour
         if (slot == null) return false;
         slot.Interact();
         return true;
+    }
+
+    CropSlot FindSlotUnderMouse()
+    {
+        if (Camera.main == null || IsPointerOverBlockingUi()) return null;
+
+        Vector3 world = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 point = new Vector2(world.x, world.y);
+        return FindSlotAtWorldPoint(point);
     }
 
     CropSlot FindSlotAtWorldPoint(Vector2 point)

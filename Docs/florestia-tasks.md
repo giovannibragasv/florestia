@@ -105,11 +105,11 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### A09 · Feedback visual de ações na fazenda
 > **Labels:** kid-friendly · código · polimento | **Dono:** vanni | **Fonte:** anotações de review em 2026-05-18
 
-- [ ] **A09.1** Adicionar aviso visual quando a planta ficar pronta para colher, possivelmente exclamação
-- [ ] **A09.2** Adicionar reação visual quando a planta for plantada
-- [ ] **A09.3** Adicionar reação visual quando a planta for regada
-- [ ] **A09.4** Adicionar reação visual quando a planta for colhida
-- [ ] **A09.5** Colocar highlight no tile sob o mouse, não no tile para onde o player olha
+- [x] **A09.1** Adicionar aviso visual quando a planta ficar pronta para colher, possivelmente exclamação
+- [x] **A09.2** Adicionar reação visual quando a planta for plantada
+- [x] **A09.3** Adicionar reação visual quando a planta for regada
+- [x] **A09.4** Adicionar reação visual quando a planta for colhida
+- [x] **A09.5** Colocar highlight no tile sob o mouse, não no tile para onde o player olha
 
 ### A10 · Assets, fontes, save e controles
 > **Labels:** código · polimento · UX | **Dono:** vanni | **Fonte:** anotações de review em 2026-05-18
