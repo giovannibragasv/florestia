@@ -212,10 +212,15 @@ public class CropSlot : MonoBehaviour
             case ToolType.Cacau:
             case ToolType.Acai:
                 CropData crop = CropSystem.Instance?.GetCropData(ToolbarController.Instance.Selected);
-                if (crop != null && TryPlant(crop)) plantingChanged = true;
+                if (crop != null && TryPlant(crop))
+                {
+                    plantingChanged = true;
+                    TutorialController.Instance?.NotifyPlanted();
+                }
                 break;
             case ToolType.Water:
-                TryWater();
+                if (TryWater())
+                    TutorialController.Instance?.NotifyWatered();
                 break;
             case ToolType.Harvest:
                 CropData harvested = TryHarvest();
@@ -223,6 +228,7 @@ public class CropSlot : MonoBehaviour
                 {
                     InventorySystem.Instance?.AddCrop(harvested.cropName);
                     plantingChanged = true;
+                    TutorialController.Instance?.NotifyHarvested();
                 }
                 break;
         }

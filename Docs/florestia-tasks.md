@@ -34,13 +34,13 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### A03 · Tutorial inicial in-game
 > **Labels:** mentor · kid-friendly · código · educação | **Dono:** vanni | **Due:** 2026-05-17 | **Depende:** A01, C01
 
-- [ ] **A03.1** Tela de boas-vindas no primeiro launch
-- [ ] **A03.2** Tooltip contextual primeira ação de plantar
-- [ ] **A03.3** Tooltip contextual primeira ação de regar
-- [ ] **A03.4** Tooltip contextual primeira ação de colher
-- [ ] **A03.5** Tooltip contextual primeira ida ao mercado
-- [ ] **A03.6** Botão 'pular tutorial' sempre disponível
-- [ ] **A03.7** Flag de 'tutorial completo' no save
+- [x] **A03.1** Tela de boas-vindas no primeiro launch
+- [x] **A03.2** Tooltip contextual primeira ação de plantar
+- [x] **A03.3** Tooltip contextual primeira ação de regar
+- [x] **A03.4** Tooltip contextual primeira ação de colher
+- [x] **A03.5** Tooltip contextual primeira ida ao mercado
+- [x] **A03.6** Botão 'pular tutorial' sempre disponível
+- [x] **A03.7** Flag de 'tutorial completo' no save
 
 ### A04 · MarketScene kid-first
 > **Labels:** mentor · kid-friendly · código | **Dono:** vanni | **Due:** 2026-05-16 | **Depende:** A01, C02
@@ -115,12 +115,12 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### C01 · Roteiro do tutorial inicial
 > **Labels:** conteúdo · educação | **Dono:** kadu,biel | **Due:** 2026-05-13
 
-- [ ] **C01.1** Roteiro passo 1: chegar à roça e plantar
-- [ ] **C01.2** Roteiro passo 2: regar a plantação
-- [ ] **C01.3** Roteiro passo 3: colher
-- [ ] **C01.4** Roteiro passo 4: ir ao mercado pela ponte
-- [ ] **C01.5** Roteiro passo 5: vender com slider de preço
-- [ ] **C01.6** Roteiro passo 6: encerrar o dia + pergunta
+- [x] **C01.1** Roteiro passo 1: chegar à roça e plantar
+- [x] **C01.2** Roteiro passo 2: regar a plantação
+- [x] **C01.3** Roteiro passo 3: colher
+- [x] **C01.4** Roteiro passo 4: ir ao mercado pela ponte
+- [x] **C01.5** Roteiro passo 5: vender com slider de preço
+- [x] **C01.6** Roteiro passo 6: encerrar o dia + pergunta
 
 ### C02 · Diálogos dos compradores (v1 MVP)
 > **Labels:** mentor · conteúdo · educação | **Dono:** kadu | **Due:** 2026-05-14

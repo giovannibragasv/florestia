@@ -67,6 +67,7 @@ public class SaveData
     public string studentName;
     public int day;
     public float balance;
+    public bool tutorialCompleted;
     public InventorySaveData inventory;
     public CropSlotSaveData[] cropSlots;
     public float[] dailyBalanceHistory;

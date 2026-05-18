@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public List<PlantingRecord> Plantings { get; private set; } = new();
     public List<DailySaleRecord> Sales { get; private set; } = new();
     public List<QuestionAnswerRecord> Questions { get; private set; } = new();
+    public bool TutorialCompleted { get; private set; }
 
     public bool IsGameOver => CurrentDay > TotalDays || IsLoss;
     public StudentProfile ActiveProfile => SaveSystem.ActiveProfile;
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
     {
         EnsureProfilePickerExists();
         EnsureActiveProfile();
+        EnsureTutorialControllerExists();
         SaveData loaded = SaveSystem.Load();
         if (IsPlayableSave(loaded))
         {
@@ -58,9 +60,19 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name == "FarmScene" || scene.name == "MarketScene")
+            EnsureTutorialControllerExists();
+
         if (scene.name != "FarmScene") return;
         SaveData loaded = SaveSystem.Load();
         if (loaded != null) ApplySave(loaded);
+    }
+
+    static void EnsureTutorialControllerExists()
+    {
+        if (TutorialController.Instance != null) return;
+        var go = new GameObject("_Tutorial");
+        go.AddComponent<TutorialController>();
     }
 
     public void ApplyDailyFixedCost() { Balance -= DailyCost; }
@@ -102,6 +114,13 @@ public class GameManager : MonoBehaviour
         });
     }
 
+    public void CompleteTutorial()
+    {
+        if (TutorialCompleted) return;
+        TutorialCompleted = true;
+        SaveSystem.Save(BuildSaveData());
+    }
+
     public void AdvanceDay()
     {
         CurrentDay++;
@@ -136,6 +155,7 @@ public class GameManager : MonoBehaviour
     {
         if (CropSystem.Instance != null) CropSystem.Instance.OnDayEnd();
         if (StaminaSystem.Instance != null) StaminaSystem.Instance.ResetForNewDay();
+        TutorialController.Instance?.NotifyMarketEntered();
 
         SaveSystem.Save(BuildSaveData());
         SceneManager.LoadScene("MarketScene");
@@ -167,6 +187,7 @@ public class GameManager : MonoBehaviour
         {
             day = CurrentDay,
             balance = Balance,
+            tutorialCompleted = TutorialCompleted,
             inventory = inventory,
             cropSlots = cropSlots,
             dailyBalanceHistory = DailyBalances.ToArray(),
@@ -181,6 +202,7 @@ public class GameManager : MonoBehaviour
         CurrentDay = data.day;
         Balance = data.balance;
         IsLoss = false;
+        TutorialCompleted = data.tutorialCompleted;
         DailyBalances = data.dailyBalanceHistory != null
             ? new List<float>(data.dailyBalanceHistory)
             : new List<float>();
@@ -210,6 +232,7 @@ public class GameManager : MonoBehaviour
         CurrentDay = 1;
         Balance = StartingBalance;
         IsLoss = false;
+        TutorialCompleted = false;
         DailyBalances = new List<float>();
         Plantings = new List<PlantingRecord>();
         Sales = new List<DailySaleRecord>();
