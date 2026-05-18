@@ -151,7 +151,7 @@ public static class ToolbarBuilder
             0 => "Assets/Sprites/Crops/Mandioca/crop_mandioca_02.png",
             1 => "Assets/Sprites/Crops/Cacau/crop_cacau_04.png",
             2 => "Assets/Sprites/Crops/Acai/crop_acai_06.png",
-            3 => "Assets/Sprites/Terrain/terrain_soil_watered.png",
+            3 => "Assets/Sprites/UI/ui_watering_can.png",
             _ => "Assets/Sprites/UI/ui_coin.png"
         };
 

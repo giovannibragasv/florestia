@@ -114,7 +114,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 ### A10 · Assets, fontes, save e controles
 > **Labels:** código · polimento · UX | **Dono:** vanni | **Fonte:** anotações de review em 2026-05-18
 
-- [ ] **A10.1** Fazer sprite de regador legível no toolbar
+- [x] **A10.1** Fazer sprite de regador legível no toolbar
 - [ ] **A10.2** Ajustar savefiles: reset, troca de perfil, arquivos antigos e fluxo de continuação
 - [x] **A10.3** Ajustar tecla ESC: menu de pausa, sair, salvar e voltar
 - [x] **A10.4** Explicitar energia e custo de energia das ações antes/depois de agir
