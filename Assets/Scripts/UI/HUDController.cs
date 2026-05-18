@@ -18,6 +18,11 @@ public class HUDController : MonoBehaviour
     [SerializeField] TMP_Text cropPreviewLabel;
     [SerializeField] TMP_Text proportionalityLabel;
 
+    [Header("Day Tip")]
+    [SerializeField] GameObject dayTipPanel;
+    [SerializeField] TMP_Text dayTipLabel;
+    [SerializeField] Button dayTipCloseButton;
+
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -28,7 +33,9 @@ public class HUDController : MonoBehaviour
     {
         EnsureDayPhaseWidgets();
         EnsureCoachingLabels();
+        EnsureDayTipPanel();
         RefreshAll();
+        ShowDayStartTipIfNeeded();
     }
 
     void Update()
@@ -301,5 +308,145 @@ public class HUDController : MonoBehaviour
         TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
         if (font != null) label.font = font;
         return label;
+    }
+
+    void ShowDayStartTipIfNeeded()
+    {
+        if (GameManager.Instance == null || GameManager.Instance.CurrentDay <= 1) return;
+        EnsureDayTipPanel();
+        if (dayTipPanel == null || dayTipLabel == null) return;
+
+        dayTipLabel.text = BuildTipForPreviousDay(GameManager.Instance);
+        dayTipPanel.SetActive(true);
+    }
+
+    static string BuildTipForPreviousDay(GameManager gm)
+    {
+        int previousDay = gm.CurrentDay - 1;
+        bool hadSale = false;
+        bool soldBelowCost = false;
+        int atravessadorSales = 0;
+        int salesCount = 0;
+
+        foreach (var sale in gm.Sales)
+        {
+            if (sale.day != previousDay) continue;
+            hadSale = true;
+            salesCount++;
+            if (sale.buyerName != null && sale.buyerName.Contains("travessador"))
+                atravessadorSales++;
+
+            float cost = PricingSystem.Instance != null
+                ? PricingSystem.Instance.GetSeedCost(sale.cropName)
+                : 0f;
+            if (cost > 0f && sale.pricePerUnit < cost)
+                soldBelowCost = true;
+        }
+
+        if (!hadSale)
+            return "Dica do dia: tente colher e vender algo hoje. Dinheiro parado na sacola não ajuda no sustento.";
+        if (soldBelowCost)
+            return "Dica do dia: antes de vender, compare o preço com o que você pagou na semente.";
+        if (salesCount > 0 && atravessadorSales * 2 >= salesCount)
+            return "Dica do dia: o Atravessador compra rápido, mas outros compradores podem pagar melhor.";
+
+        int plantedKinds = CountPlantingKinds(gm, previousDay);
+        if (plantedKinds == 1)
+            return "Dica do dia: tente misturar culturas. Cada planta demora e rende de um jeito.";
+
+        return "Dica do dia: continue comparando custo, dinheiro recebido e sobra antes de decidir o preço.";
+    }
+
+    static int CountPlantingKinds(GameManager gm, int day)
+    {
+        bool mandioca = false, cacau = false, acai = false;
+        foreach (var planting in gm.Plantings)
+        {
+            if (planting.day != day) continue;
+            if (planting.cropName == "Mandioca") mandioca = true;
+            else if (planting.cropName == "Cacau") cacau = true;
+            else if (planting.cropName == "Acai") acai = true;
+        }
+        int count = 0;
+        if (mandioca) count++;
+        if (cacau) count++;
+        if (acai) count++;
+        return count;
+    }
+
+    void EnsureDayTipPanel()
+    {
+        if (dayTipPanel != null && dayTipLabel != null && dayTipCloseButton != null) return;
+
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas == null) canvas = Object.FindAnyObjectByType<Canvas>();
+        if (canvas == null) return;
+
+        var panel = new GameObject("DayTipPanel");
+        panel.transform.SetParent(canvas.transform, false);
+        var rt = panel.AddComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 1f);
+        rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 1f);
+        rt.anchoredPosition = new Vector2(0f, -100f);
+        rt.sizeDelta = new Vector2(720f, 86f);
+        panel.AddComponent<Image>().color = new Color(0.12f, 0.08f, 0.05f, 0.94f);
+
+        dayTipLabel = MakePanelLabel(panel.transform, "TipLabel",
+            new Vector2(-58f, 0f), new Vector2(560f, 64f), 18,
+            new Color(0.96f, 0.88f, 0.68f, 1f));
+        dayTipLabel.alignment = TextAlignmentOptions.Center;
+        dayTipLabel.textWrappingMode = TextWrappingModes.Normal;
+
+        dayTipCloseButton = MakePanelButton(panel.transform, "CloseButton",
+            new Vector2(292f, 0f), new Vector2(92f, 46f), "OK");
+        dayTipCloseButton.onClick.AddListener(() => panel.SetActive(false));
+
+        panel.SetActive(false);
+        dayTipPanel = panel;
+    }
+
+    static TMP_Text MakePanelLabel(Transform parent, string name, Vector2 anchoredPos,
+        Vector2 size, int fontSize, Color color)
+    {
+        var go = new GameObject(name);
+        go.transform.SetParent(parent, false);
+        var rt = go.AddComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta = size;
+        var label = go.AddComponent<TextMeshProUGUI>();
+        label.text = "";
+        label.fontSize = fontSize;
+        label.color = color;
+        label.raycastTarget = false;
+        TMP_FontAsset font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        if (font != null) label.font = font;
+        return label;
+    }
+
+    static Button MakePanelButton(Transform parent, string name, Vector2 anchoredPos, Vector2 size, string text)
+    {
+        var go = new GameObject(name);
+        go.transform.SetParent(parent, false);
+        var rt = go.AddComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta = size;
+        var image = go.AddComponent<Image>();
+        image.color = new Color(0.88f, 0.62f, 0.22f, 1f);
+        var button = go.AddComponent<Button>();
+        button.targetGraphic = image;
+
+        var label = MakePanelLabel(go.transform, "Label", Vector2.zero, size, 18,
+            new Color(0.10f, 0.07f, 0.04f, 1f));
+        label.text = text;
+        label.alignment = TextAlignmentOptions.Center;
+        label.fontStyle = FontStyles.Bold;
+        return button;
     }
 }

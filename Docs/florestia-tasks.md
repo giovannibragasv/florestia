@@ -71,7 +71,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 
 - [x] **A06.1** Pop-up curto após primeira venda lucrativa
 - [x] **A06.2** Pop-up curto após primeira venda no prejuízo
-- [ ] **A06.3** Pop-up no início de cada dia com dica do dia anterior
+- [x] **A06.3** Pop-up no início de cada dia com dica do dia anterior
 - [x] **A06.4** Tip contextual na EndScreen baseado em padrão de comportamento
 
 ### A07 · Visualização da progressão do dia
@@ -150,7 +150,7 @@ Fonte única de tudo que está pendente, em curso ou concluído no projeto.
 
 - [ ] **C05.1** Pop-up primeira venda lucrativa: parabéns + nome do conceito (lucro)
 - [ ] **C05.2** Pop-up primeira venda no prejuízo: sem culpa + explicação curta
-- [ ] **C05.3** Pop-up início do dia 2+: dica do dia anterior baseada em comportamento
+- [x] **C05.3** Pop-up início do dia 2+: dica do dia anterior baseada em comportamento
 
 ### C06 · Spec + wireframe do dashboard da intermediadora
 > **Labels:** mentor · conteúdo · educação | **Dono:** pm | **Due:** 2026-05-14
