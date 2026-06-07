@@ -47,9 +47,9 @@ public class GameManager : MonoBehaviour
         {
             ApplySave(loaded);
         }
-        else if (loaded != null)
+        else
         {
-            SaveSystem.Delete();
+            if (loaded != null) SaveSystem.Delete();
             ResetRunState();
         }
     }
@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        EnsureProfilePickerExists();
         EnsureIntermediadoraDashboardExists();
         EnsurePauseMenuExists();
 
@@ -73,7 +74,8 @@ public class GameManager : MonoBehaviour
 
         if (scene.name != "FarmScene") return;
         SaveData loaded = SaveSystem.Load();
-        if (loaded != null) ApplySave(loaded);
+        if (IsPlayableSave(loaded)) ApplySave(loaded);
+        else ResetRunState();
     }
 
     static void EnsureTutorialControllerExists()
@@ -125,14 +127,17 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    public void RecordQuestionAnswer(string cropName, string questionId, bool correct)
+    public void RecordQuestionAnswer(string cropName, string questionId, string category,
+        bool correct, float timeTakenSeconds)
     {
         Questions.Add(new QuestionAnswerRecord
         {
             day = CurrentDay,
             cropName = cropName,
             questionId = questionId,
-            correct = correct
+            category = category,
+            correct = correct,
+            timeTakenSeconds = timeTakenSeconds
         });
     }
 

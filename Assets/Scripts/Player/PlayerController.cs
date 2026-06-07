@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float interactionRange = 1.0f;
     [SerializeField] KeyCode interactKey = KeyCode.E;
     [SerializeField] SpriteRenderer tileHighlight;
+    [SerializeField] Sprite idleDown;
+    [SerializeField] Sprite idleUp;
     [SerializeField] Sprite[] walkDown;
     [SerializeField] Sprite[] walkUp;
     [SerializeField] Sprite[] walkSide;
@@ -121,6 +123,22 @@ public class PlayerController : MonoBehaviour
         {
             _animTimer = 0f;
             _animFrame = 0;
+
+            Sprite idleFrame = GetIdleFrame();
+            if (idleFrame != null)
+                _sr.sprite = idleFrame;
+            return;
+        }
+
+        Sprite[] frames = FacingDirection == 0 ? walkUp : FacingDirection == 2 ? walkDown : walkSide;
+        int frameCount = CountUsableFrames(frames);
+        if (_animFrame >= frameCount)
+            _animFrame = 0;
+
+        if (frameCount <= 1)
+        {
+            _animTimer = 0f;
+            _animFrame = 0;
         }
         else
         {
@@ -128,13 +146,50 @@ public class PlayerController : MonoBehaviour
             if (_animTimer >= 0.2f)
             {
                 _animTimer = 0f;
-                _animFrame = (_animFrame + 1) % 2;
+                _animFrame = (_animFrame + 1) % frameCount;
             }
         }
 
-        Sprite[] frames = FacingDirection == 0 ? walkUp : FacingDirection == 2 ? walkDown : walkSide;
-        if (frames != null && frames.Length > _animFrame && frames[_animFrame] != null)
-            _sr.sprite = frames[_animFrame];
+        Sprite frame = GetUsableFrame(frames, _animFrame);
+        if (frame != null)
+            _sr.sprite = frame;
+    }
+
+    Sprite GetIdleFrame()
+    {
+        if (FacingDirection == 0)
+            return idleUp != null ? idleUp : GetUsableFrame(walkUp, 0);
+        if (FacingDirection == 2)
+            return idleDown != null ? idleDown : GetUsableFrame(walkDown, 0);
+        return GetUsableFrame(walkSide, 0);
+    }
+
+    int CountUsableFrames(Sprite[] frames)
+    {
+        if (frames == null) return 0;
+
+        int count = 0;
+        foreach (Sprite frame in frames)
+        {
+            if (frame != null)
+                count++;
+        }
+        return count;
+    }
+
+    Sprite GetUsableFrame(Sprite[] frames, int frameIndex)
+    {
+        if (frames == null) return null;
+
+        int current = 0;
+        foreach (Sprite frame in frames)
+        {
+            if (frame == null) continue;
+            if (current == frameIndex)
+                return frame;
+            current++;
+        }
+        return null;
     }
 
     void UpdateTileHighlight()

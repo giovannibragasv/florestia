@@ -23,7 +23,7 @@ public static class PlayerBuilder
 
         var sr = playerGO.AddComponent<SpriteRenderer>();
         sr.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(
-            "Assets/Sprites/Player/player_walk_down_0.png");
+            "Assets/Sprites/Player/player_idle_down.png");
         sr.color = Color.white;
         sr.sortingOrder = 10;
 
@@ -48,15 +48,22 @@ public static class PlayerBuilder
         so.FindProperty("forwardSelectDistance").floatValue = 1.45f;
         so.FindProperty("lateralSelectTolerance").floatValue = 0.75f;
         so.FindProperty("backwardSelectTolerance").floatValue = 0.3f;
+        so.FindProperty("idleDown").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(
+            "Assets/Sprites/Player/player_idle_down.png");
+        so.FindProperty("idleUp").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Sprite>(
+            "Assets/Sprites/Player/player_idle_up.png");
         AssignSprites(so.FindProperty("walkDown"),
             "Assets/Sprites/Player/player_walk_down_0.png",
             "Assets/Sprites/Player/player_walk_down_1.png");
         AssignSprites(so.FindProperty("walkUp"),
             "Assets/Sprites/Player/player_walk_up_0.png",
-            "Assets/Sprites/Player/player_walk_up_0.png");
+            "Assets/Sprites/Player/player_walk_up_1.png");
         AssignSprites(so.FindProperty("walkSide"),
             "Assets/Sprites/Player/player_walk_side_0.png",
-            "Assets/Sprites/Player/player_walk_side_0.png");
+            "Assets/Sprites/Player/player_walk_side_1.png",
+            "Assets/Sprites/Player/player_walk_side_2.png",
+            "Assets/Sprites/Player/player_walk_side_3.png");
+
         so.ApplyModifiedPropertiesWithoutUndo();
 
         Selection.activeGameObject = playerGO;
@@ -64,12 +71,18 @@ public static class PlayerBuilder
             "Player built. WASD to move, E to interact with the highlighted tile.");
     }
 
-    static void AssignSprites(SerializedProperty prop, string frame0, string frame1)
+    static void AssignSprites(SerializedProperty prop, string frame0, string frame1, string frame2 = null, string frame3 = null)
     {
-        prop.arraySize = 2;
+        prop.arraySize = frame3 != null ? 4 : frame2 != null ? 3 : 2;
         prop.GetArrayElementAtIndex(0).objectReferenceValue =
             AssetDatabase.LoadAssetAtPath<Sprite>(frame0);
         prop.GetArrayElementAtIndex(1).objectReferenceValue =
             AssetDatabase.LoadAssetAtPath<Sprite>(frame1);
+        if (frame2 != null)
+            prop.GetArrayElementAtIndex(2).objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<Sprite>(frame2);
+        if (frame3 != null)
+            prop.GetArrayElementAtIndex(3).objectReferenceValue =
+                AssetDatabase.LoadAssetAtPath<Sprite>(frame3);
     }
 }

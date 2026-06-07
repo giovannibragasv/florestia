@@ -64,7 +64,7 @@ public class TutorialController : MonoBehaviour
     {
         if (!ShouldShowTutorial() || _planted) return;
         _planted = true;
-        ShowTip("Boa plantação!", "Agora escolha o regador e clique na plantação. Planta regada cresce no fim do dia.", "Vou regar");
+        ShowTip("Boa plantação!", "Agora escolha o regador e clique na plantação.", "Vou regar");
     }
 
     public void NotifyWatered()

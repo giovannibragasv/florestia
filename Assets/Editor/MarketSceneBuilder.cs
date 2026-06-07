@@ -54,10 +54,6 @@ public static class MarketSceneBuilder
             ? Color.white
             : new Color(0.07f, 0.06f, 0.09f, 1f);
 
-        var groundBand = MakeRect("MarketGlow", ct, new Vector2(0f, 0f), new Vector2(1f, 0f),
-            new Vector2(0.5f, 0f), new Vector2(0f, 0f), new Vector2(0f, 210f));
-        groundBand.gameObject.AddComponent<Image>().color = new Color(0.12f, 0.07f, 0.035f, 0.35f);
-
         var panel = MakeRect("MarketPanel", ct, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
             new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(1160f, 700f));
         panel.gameObject.AddComponent<Image>().color = Panel;
@@ -73,7 +69,7 @@ public static class MarketSceneBuilder
         leftPanel.gameObject.AddComponent<Image>().color = Panel2;
 
         var portraitRT = MakeRect("BuyerPortrait", leftPanel, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f),
-            new Vector2(0.5f, 1f), new Vector2(0f, -34f), new Vector2(168f, 188f));
+            new Vector2(0.5f, 1f), new Vector2(0f, -28f), new Vector2(232f, 260f));
         var portrait = portraitRT.gameObject.AddComponent<Image>();
         portrait.color = Color.white;
         portrait.preserveAspect = true;
@@ -126,8 +122,8 @@ public static class MarketSceneBuilder
         slider.maxValue = 50f;
         slider.value = 7f;
 
-        var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: R$0", new Vector2(-220f, -104f));
-        var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: R$0", new Vector2(0f, -104f));
+        var costLabel = MakeInfoLabel("CostLabel", tradePanel, "Custo: F$0", new Vector2(-220f, -104f));
+        var priceLabel = MakeInfoLabel("PriceLabel", tradePanel, "Seu preço: F$0", new Vector2(0f, -104f));
         var marginLabel = MakeInfoLabel("MarginLabel", tradePanel, "Sobra: −", new Vector2(220f, -104f));
 
         var chanceLabel = MakeLabel("AcceptanceChanceLabel", tradePanel, "Chance de venda: --",
@@ -175,7 +171,6 @@ public static class MarketSceneBuilder
         muicBuyerSO.ApplyModifiedPropertiesWithoutUndo();
 
         Selection.activeGameObject = panel.gameObject;
-        FontAssigner.Assign();
         Debug.Log("Polished Market Scene UI built and wired.");
     }
 

@@ -103,9 +103,12 @@ public class DailyEducationFlow : MonoBehaviour
         }
     }
 
+    float _questionShownAt;
+
     void ShowOptions(DailyQuestion q)
     {
         if (_optionButtons == null) return;
+        if (q != null) _questionShownAt = Time.unscaledTime;
         for (int i = 0; i < _optionButtons.Length; i++)
         {
             if (_optionButtons[i] == null) continue;
@@ -140,7 +143,9 @@ public class DailyEducationFlow : MonoBehaviour
                 : new Color(0.92f, 0.55f, 0.45f);
         }
 
-        GameManager.Instance?.RecordQuestionAnswer(q.cropName, q.questionId, correct);
+        float elapsed = Mathf.Max(0f, Time.unscaledTime - _questionShownAt);
+        GameManager.Instance?.RecordQuestionAnswer(q.cropName, q.questionId,
+            q.ResolvedCategory, correct, elapsed);
 
         if (_continueLabel != null)
             _continueLabel.text = (_stepIndex >= _questions.Count - 1) ? "Curiosidade" : "Próxima pergunta";
@@ -287,6 +292,34 @@ public class DailyQuestion
     public string[] options;
     public int correctIndex;
     public string explanation;
+    public string category;
+
+    public string ResolvedCategory => !string.IsNullOrEmpty(category)
+        ? category
+        : QuestionCategoryClassifier.Classify(theme, questionId, statement);
+}
+
+public static class QuestionCategoryClassifier
+{
+    // Conceitos pedagógicos (Florestia_Perguntas_Acai_MVP.pdf §2.2):
+    // a coluna que a professora vê no dashboard agrega por conceito.
+    public const string Custo = "Custo";
+    public const string Receita = "Receita";
+    public const string Sobra = "Sobra";
+    public const string Decisao = "Decisão";
+    public const string Outro = "Outro";
+
+    public static string Classify(string theme, string questionId, string statement)
+    {
+        string haystack = ((theme ?? "") + " " + (questionId ?? "") + " " + (statement ?? "")).ToLowerInvariant();
+        if (haystack.Contains("decid") || haystack.Contains("valeu") || haystack.Contains("escolh")
+            || haystack.Contains("compar")) return Decisao;
+        if (haystack.Contains("sobr") || haystack.Contains("lucr") || haystack.Contains("falt")
+            || haystack.Contains("diferenç") || haystack.Contains("diferenca")) return Sobra;
+        if (haystack.Contains("receb") || haystack.Contains("receita") || haystack.Contains("vend")) return Receita;
+        if (haystack.Contains("custo") || haystack.Contains("gast") || haystack.Contains("planta")) return Custo;
+        return Outro;
+    }
 }
 
 public class DailyCuriosity
@@ -306,71 +339,96 @@ public static class DailyEducationGenerator
         ["Mandioca"] = new[]
         {
             Q("mandioca-custo-2", "Mandioca", "Custo",
-                "Duas mudas de mandioca custam R$3 cada. Quanto você gasta para plantar as duas?",
-                new[] { "R$3,00", "R$6,00", "R$9,00" }, 1,
-                "R$3,00 + R$3,00 = R$6,00."),
+                "Duas mudas de mandioca custam F$3 cada. Quanto você gasta para plantar as duas?",
+                new[] { "F$3,00", "F$6,00", "F$9,00" }, 1,
+                "F$3,00 + F$3,00 = F$6,00."),
             Q("mandioca-recebe-3", "Mandioca", "Quanto você recebeu",
-                "Você vendeu 3 mandiocas por R$7 cada. Quanto dinheiro recebeu?",
-                new[] { "R$14,00", "R$21,00", "R$24,00" }, 1,
-                "3 × R$7,00 = R$21,00."),
+                "Você vendeu 3 mandiocas por F$7 cada. Quanto dinheiro recebeu?",
+                new[] { "F$14,00", "F$21,00", "F$24,00" }, 1,
+                "3 × F$7,00 = F$21,00."),
             Q("mandioca-sobra-1", "Mandioca", "Sobra",
-                "Uma mandioca custou R$3 para plantar e foi vendida por R$7. Quanto sobrou?",
-                new[] { "R$3,00", "R$4,00", "R$7,00" }, 1,
-                "R$7,00 − R$3,00 = R$4,00."),
+                "Uma mandioca custou F$3 para plantar e foi vendida por F$7. Quanto sobrou?",
+                new[] { "F$3,00", "F$4,00", "F$7,00" }, 1,
+                "F$7,00 − F$3,00 = F$4,00."),
             Q("mandioca-tempo", "Mandioca", "Tempo",
                 "A mandioca demora 2 dias para colher. Se você planta hoje, quantos dias precisa cuidar dela?",
                 new[] { "1 dia", "2 dias", "4 dias" }, 1,
                 "A mandioca fica pronta depois de 2 dias de cuidado."),
             Q("mandioca-compara", "Mandioca", "Comparar",
-                "Você tem R$9. Cada mandioca custa R$3 para plantar. Quantas mandiocas dá para plantar?",
+                "Você tem F$9. Cada mandioca custa F$3 para plantar. Quantas mandiocas dá para plantar?",
                 new[] { "2", "3", "4" }, 1,
-                "R$9,00 dividido por R$3,00 dá 3 mandiocas.")
+                "F$9,00 dividido por F$3,00 dá 3 mandiocas.")
         },
         ["Cacau"] = new[]
         {
             Q("cacau-custo-2", "Cacau", "Custo",
-                "Duas sementes de cacau custam R$6 cada. Quanto você gasta?",
-                new[] { "R$6,00", "R$12,00", "R$18,00" }, 1,
-                "R$6,00 + R$6,00 = R$12,00."),
+                "Duas sementes de cacau custam F$6 cada. Quanto você gasta?",
+                new[] { "F$6,00", "F$12,00", "F$18,00" }, 1,
+                "F$6,00 + F$6,00 = F$12,00."),
             Q("cacau-recebe-2", "Cacau", "Quanto você recebeu",
-                "Você vendeu 2 cacaus por R$16 cada. Quanto recebeu?",
-                new[] { "R$22,00", "R$32,00", "R$36,00" }, 1,
-                "2 × R$16,00 = R$32,00."),
+                "Você vendeu 2 cacaus por F$16 cada. Quanto recebeu?",
+                new[] { "F$22,00", "F$32,00", "F$36,00" }, 1,
+                "2 × F$16,00 = F$32,00."),
             Q("cacau-sobra-1", "Cacau", "Sobra",
-                "Um cacau custou R$6 para plantar e foi vendido por R$16. Quanto sobrou?",
-                new[] { "R$6,00", "R$10,00", "R$16,00" }, 1,
-                "R$16,00 − R$6,00 = R$10,00."),
+                "Um cacau custou F$6 para plantar e foi vendido por F$16. Quanto sobrou?",
+                new[] { "F$6,00", "F$10,00", "F$16,00" }, 1,
+                "F$16,00 − F$6,00 = F$10,00."),
             Q("cacau-tempo", "Cacau", "Tempo",
                 "O cacau demora 4 dias para colher. Ele demora mais que a mandioca de 2 dias por quantos dias?",
                 new[] { "1 dia", "2 dias", "4 dias" }, 1,
                 "4 dias − 2 dias = 2 dias a mais."),
             Q("cacau-compara", "Cacau", "Comparar",
-                "Você tem R$18. Cada cacau custa R$6 para plantar. Quantos cacaus dá para plantar?",
+                "Você tem F$18. Cada cacau custa F$6 para plantar. Quantos cacaus dá para plantar?",
                 new[] { "2", "3", "4" }, 1,
-                "R$18,00 dividido por R$6,00 dá 3 cacaus.")
+                "F$18,00 dividido por F$6,00 dá 3 cacaus.")
         },
+        // Banco do Açaí · cultura-piloto MVP.
+        // Origem: Florestia_Perguntas_Acai_MVP.pdf §3.2 — matriz Conceito × Competência
+        // (Calcular, Comparar, Projetar, Decidir). Números reescritos com valores do GDD
+        // (custo F$10 / venda F$28) por decisão DEC01.
         ["Acai"] = new[]
         {
-            Q("acai-custo-2", "Acai", "Custo",
-                "Dois açaizeiros custam R$10 cada para plantar. Quanto você gasta?",
-                new[] { "R$10,00", "R$20,00", "R$28,00" }, 1,
-                "R$10,00 + R$10,00 = R$20,00."),
-            Q("acai-recebe-2", "Acai", "Quanto você recebeu",
-                "Você vendeu 2 açaís por R$28 cada. Quanto recebeu?",
-                new[] { "R$38,00", "R$46,00", "R$56,00" }, 2,
-                "2 × R$28,00 = R$56,00."),
-            Q("acai-sobra-1", "Acai", "Sobra",
-                "Um açaí custou R$10 para plantar e foi vendido por R$28. Quanto sobrou?",
-                new[] { "R$10,00", "R$18,00", "R$28,00" }, 1,
-                "R$28,00 − R$10,00 = R$18,00."),
-            Q("acai-tempo", "Acai", "Tempo",
-                "O açaí demora 6 dias para colher. Ele demora mais que o cacau de 4 dias por quantos dias?",
-                new[] { "2 dias", "4 dias", "6 dias" }, 0,
-                "6 dias − 4 dias = 2 dias a mais."),
-            Q("acai-compara", "Acai", "Comparar",
-                "Você tem R$30. Cada açaí custa R$10 para plantar. Quantos açaís dá para plantar?",
-                new[] { "2", "3", "4" }, 1,
-                "R$30,00 dividido por R$10,00 dá 3 açaís.")
+            // Nível 1 · Básico — Calcular
+            Q("acai-calc-custo", "Acai", "Custo",
+                "Você plantou 3 açaís. Cada um custou F$10. Quanto você gastou para plantar?",
+                new[] { "F$20", "F$30", "F$40" }, 1,
+                "3 × F$10 = F$30."),
+            Q("acai-calc-receita", "Acai", "Quanto você recebeu",
+                "Você vendeu 3 açaís por F$28 cada. Quanto recebeu no total?",
+                new[] { "F$56", "F$84", "F$90" }, 1,
+                "3 × F$28 = F$84."),
+            Q("acai-calc-sobra", "Acai", "Sobra",
+                "Você gastou F$30 plantando açaí e recebeu F$84 vendendo. Quanto sobrou?",
+                new[] { "F$44", "F$54", "F$64" }, 1,
+                "F$84 − F$30 = F$54."),
+
+            // Nível 2 · Intermediário — Comparar
+            Q("acai-comp-custo", "Acai", "Comparar custo",
+                "Plantar 3 açaís custou F$30. Plantar 3 mandiocas custou F$9. Qual cultura gastou menos para plantar?",
+                new[] { "Açaí", "Mandioca", "Custaram o mesmo" }, 1,
+                "F$9 é menor que F$30 — a mandioca gastou menos."),
+            Q("acai-comp-receita", "Acai", "Comparar receita",
+                "A venda de 3 açaís rendeu F$84. A venda de 3 cacaus rendeu F$48. Qual cultura recebeu mais dinheiro?",
+                new[] { "Açaí", "Cacau", "Receberam o mesmo" }, 0,
+                "F$84 é maior que F$48 — o açaí rendeu mais."),
+            Q("acai-comp-sobra", "Acai", "Comparar sobra",
+                "O açaí deixou F$54 sobrando (3 unidades). O cacau deixou F$30 sobrando (3 unidades). Qual cultura sobrou mais dinheiro?",
+                new[] { "Açaí", "Cacau", "Sobrou o mesmo" }, 0,
+                "F$54 é maior que F$30 — o açaí deixou mais sobra."),
+
+            // Nível 3 · Avançado — Projetar e Decidir
+            Q("acai-proj-custo", "Acai", "Projetar gasto",
+                "Se você plantar 3 açaís por dia gastando F$30, quanto vai gastar em 3 dias?",
+                new[] { "F$60", "F$90", "F$120" }, 1,
+                "F$30 + F$30 + F$30 = F$90."),
+            Q("acai-proj-receita", "Acai", "Projetar receita",
+                "Se você receber F$84 por dia vendendo açaí, quanto vai receber em 2 dias?",
+                new[] { "F$84", "F$168", "F$252" }, 1,
+                "F$84 + F$84 = F$168."),
+            Q("acai-decidir", "Acai", "Decisão · qual valeu mais",
+                "Você pode plantar 1 açaí (sobra F$18) ou 3 mandiocas (sobra F$12). Qual escolha vale mais nesse dia?",
+                new[] { "Açaí", "Mandioca", "Vale o mesmo" }, 0,
+                "F$18 é maior que F$12 — o açaí dá uma sobra maior nesse dia.")
         }
     };
 
@@ -388,11 +446,15 @@ public static class DailyEducationGenerator
             "Antes do chocolate ser doce, os povos da Amazônia tomavam o cacau como uma bebida amarga e forte.",
             "Cada fruto de cacau tem por volta de 30 sementes — cada uma delas vira um pedacinho de chocolate."
         },
+        // Curiosidades do Açaí validadas em Florestia_Perguntas_Acai_MVP.pdf §3.3
+        // (base cultural: Documento Histórico Cultural Açaí ABNT §11 e §12).
         ["Acai"] = new[]
         {
-            "O açaí cresce em palmeiras altas. Os ribeirinhos sobem nelas pra colher os cachos.",
-            "Na Vila Jutaí, o açaí é tomado com farinha e peixe — não só como sobremesa.",
-            "Cada açaizeiro pode dar de 3 a 6 cachos por ano, e cada cacho tem centenas de frutinhos."
+            "No Pará, muita gente toma açaí com farinha, peixe, camarão ou charque. Ele não é só sobremesa!",
+            "Quem colhe açaí muitas vezes sobe no açaizeiro usando a peconha, um instrumento tradicional preso aos pés.",
+            "Na época da safra, existe mais açaí disponível e o preço costuma baixar. Na entressafra, o preço pode subir.",
+            "O açaí gera trabalho para agricultores, peconheiros, feirantes, batedores, cooperativas e muitas outras pessoas.",
+            "O caroço do açaí pode ser reaproveitado para fazer artesanato, biojoias, combustível e até tijolos ecológicos."
         }
     };
 
@@ -516,7 +578,7 @@ public static class DailyEducationGenerator
 
         if (bestSale != null)
         {
-            sb.AppendLine($"Melhor venda até agora: {bestSale.quantity} × {bestSale.cropName} = R${bestSale.total:F2}.");
+            sb.AppendLine($"Melhor venda até agora: {bestSale.quantity} × {bestSale.cropName} = F${bestSale.total:F0}.");
         }
         else
         {
@@ -536,7 +598,7 @@ public static class DailyEducationGenerator
             {
                 float value = gm.DailyBalances[i];
                 int bars = Mathf.Clamp(Mathf.RoundToInt(value / max * 10f), 1, 10);
-                sb.AppendLine($"Dia {i + 1}: R${value:F0} {new string('#', bars)}");
+                sb.AppendLine($"Dia {i + 1}: F${value:F0} {new string('#', bars)}");
             }
         }
 
@@ -572,10 +634,10 @@ public static class DailyEducationGenerator
             questionId = $"custo-{crop}",
             cropName = crop,
             theme = "Custo",
-            statement = $"Você plantou {qty} {PluralCrop(crop, qty)}. Cada um custou R${seedCost:F2}. Quanto você gastou no total?",
+            statement = $"Você plantou {qty} {PluralCrop(crop, qty)}. Cada um custou F${seedCost:F0}. Quanto você gastou no total?",
             options = options,
             correctIndex = correct,
-            explanation = $"{qty} × R${seedCost:F2} = R${total:F2}."
+            explanation = $"{qty} × F${seedCost:F0} = F${total:F0}."
         };
     }
 
@@ -590,10 +652,10 @@ public static class DailyEducationGenerator
             questionId = $"receita-{crop}",
             cropName = crop,
             theme = "Quanto você recebeu",
-            statement = $"{verb} {qty} {PluralCrop(crop, qty)} por R${pricePerUnit:F2} cada. Quanto {(hasSale ? "recebeu" : "receberia")} no total?",
+            statement = $"{verb} {qty} {PluralCrop(crop, qty)} por F${pricePerUnit:F0} cada. Quanto {(hasSale ? "recebeu" : "receberia")} no total?",
             options = options,
             correctIndex = correct,
-            explanation = $"{qty} × R${pricePerUnit:F2} = R${total:F2}. Esse é o dinheiro que você {explanationVerb}."
+            explanation = $"{qty} × F${pricePerUnit:F0} = F${total:F0}. Esse é o dinheiro que você {explanationVerb}."
         };
     }
 
@@ -602,8 +664,8 @@ public static class DailyEducationGenerator
         var options = OptionsAroundCorrect(sobra);
         int correct = System.Array.IndexOf(options, FormatBRL(sobra));
         string prompt = hasSale
-            ? $"Você gastou R${gasto:F2} e recebeu R${recebido:F2}. Quanto sobrou?"
-            : $"Você gastou R${gasto:F2}. Se receber R${recebido:F2}, quanto sobra?";
+            ? $"Você gastou F${gasto:F0} e recebeu F${recebido:F0}. Quanto sobrou?"
+            : $"Você gastou F${gasto:F0}. Se receber F${recebido:F0}, quanto sobra?";
         return new DailyQuestion
         {
             questionId = $"sobra-{crop}",
@@ -612,7 +674,7 @@ public static class DailyEducationGenerator
             statement = prompt,
             options = options,
             correctIndex = correct,
-            explanation = $"R${recebido:F2} − R${gasto:F2} = R${sobra:F2}."
+            explanation = $"F${recebido:F0} − F${gasto:F0} = F${sobra:F0}."
         };
     }
 
@@ -636,7 +698,7 @@ public static class DailyEducationGenerator
         return output;
     }
 
-    static string FormatBRL(float v) => $"R${v:F2}";
+    static string FormatBRL(float v) => $"F${v:F0}";
 
     static string PluralCrop(string crop, int qty)
     {

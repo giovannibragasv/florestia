@@ -14,6 +14,8 @@ public class IntermediadoraDashboardController : MonoBehaviour
     TMP_Text _accuracyLabel;
     RectTransform _chartContainer;
     Button _closeButton;
+    Button _exportCsvButton;
+    TMP_Text _exportFeedbackLabel;
 
     void Awake()
     {
@@ -82,10 +84,23 @@ public class IntermediadoraDashboardController : MonoBehaviour
         Label("ChartTitle", panel.transform, "Dinheiro em cada dia",
             new Vector2(0f, 18f), new Vector2(760f, 24f), 16, new Color(0.78f, 0.72f, 0.58f));
 
-        _closeButton = ButtonAt("CloseButton", panel.transform, new Vector2(0f, -246f), new Vector2(220f, 54f), "Fechar");
+        _closeButton = ButtonAt("CloseButton", panel.transform, new Vector2(140f, -246f), new Vector2(180f, 54f), "Fechar");
         _closeButton.onClick.AddListener(() => _root.SetActive(false));
 
+        _exportCsvButton = ButtonAt("ExportCsvButton", panel.transform, new Vector2(-140f, -246f), new Vector2(220f, 54f), "Exportar CSV");
+        _exportCsvButton.onClick.AddListener(ExportCsvAndConfirm);
+        _exportFeedbackLabel = Label("ExportFeedback", panel.transform, "",
+            new Vector2(0f, -198f), new Vector2(760f, 22f), 14, new Color(0.85f, 0.94f, 0.78f));
+
         _root.SetActive(false);
+    }
+
+    void ExportCsvAndConfirm()
+    {
+        string path = DashboardExporter.WriteCsvToFile();
+        if (_exportFeedbackLabel != null)
+            _exportFeedbackLabel.text = $"CSV salvo em: {path}";
+        Debug.Log($"Florestia Dashboard CSV exportado para: {path}");
     }
 
     TMP_Text Metric(Transform parent, string name, string title, Vector2 anchoredPos)
@@ -107,7 +122,7 @@ public class IntermediadoraDashboardController : MonoBehaviour
 
         _studentLabel.text = student;
         _dayLabel.text = $"{day}/{GameManager.TotalDays}";
-        _moneyLabel.text = $"R${money:F0}";
+        _moneyLabel.text = $"F${money:F0}";
         _accuracyLabel.text = BuildAccuracy(gm);
         _bestCropLabel.text = $"O que mais rendeu: {BestCrop(gm)}";
         BuildChart(gm);

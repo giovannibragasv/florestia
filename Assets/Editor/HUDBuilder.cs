@@ -56,7 +56,7 @@ public static class HUDBuilder
             new Vector2(14, -62), new Vector2(24, 24));
 
         var balanceLabel = MakeLabel("BalanceLabel", tlPanel,
-            "Dinheiro: R$50,00", new Vector2(48, -10), new Vector2(150, 28), 18);
+            "Dinheiro: F$50,00", new Vector2(48, -10), new Vector2(150, 28), 18);
 
         var dayLabel = MakeLabel("DayLabel", tlPanel,
             "Dia 1 de 15", new Vector2(48, -36), new Vector2(150, 22), 15);

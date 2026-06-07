@@ -66,18 +66,20 @@ public class ToolbarController : MonoBehaviour
             image.color = new Color(0.60f, 0.30f, 0.08f, 0.96f);
         if (frame is RectTransform frameRT)
         {
-            frameRT.sizeDelta = new Vector2(400f, 88f);
-            frameRT.anchoredPosition = new Vector2(0f, 18f);
+            frameRT.sizeDelta = new Vector2(560f, 120f);
+            frameRT.anchoredPosition = new Vector2(0f, 24f);
         }
 
-        float startX = -2f * (72f + 6f);
+        const float slotSize = 100f;
+        const float slotGap = 8f;
+        float startX = -2f * (slotSize + slotGap);
         for (int i = 0; i < slotBackgrounds.Length; i++)
         {
             var slot = slotBackgrounds[i];
             if (slot == null) continue;
             var rt = slot.rectTransform;
-            rt.sizeDelta = new Vector2(72f, 72f);
-            rt.anchoredPosition = new Vector2(startX + i * (72f + 6f), 0f);
+            rt.sizeDelta = new Vector2(slotSize, slotSize);
+            rt.anchoredPosition = new Vector2(startX + i * (slotSize + slotGap), 0f);
 
             var label = slot.transform.Find("Label");
             if (label != null) label.gameObject.SetActive(false);
@@ -85,8 +87,8 @@ public class ToolbarController : MonoBehaviour
             var icon = slot.transform.Find("Icon") as RectTransform;
             if (icon != null)
             {
-                icon.sizeDelta = new Vector2(48f, 48f);
-                icon.anchoredPosition = new Vector2(0f, -2f);
+                icon.sizeDelta = new Vector2(68f, 68f);
+                icon.anchoredPosition = new Vector2(0f, -3f);
             }
         }
     }

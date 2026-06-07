@@ -58,7 +58,9 @@ public class QuestionAnswerRecord
     public int day;
     public string cropName;
     public string questionId;
+    public string category;
     public bool correct;
+    public float timeTakenSeconds;
 }
 
 [System.Serializable]
@@ -146,10 +148,12 @@ public static class SaveSystem
     public static void SetActiveProfile(StudentProfile p) => ActiveProfile = p;
     public static void ClearActiveProfile() => ActiveProfile = null;
 
-    public static SaveData Load()
+    public static SaveData Load() => LoadFor(ActiveProfile);
+
+    public static SaveData LoadFor(StudentProfile profile)
     {
-        if (ActiveProfile == null) return null;
-        string path = SaveFilePath(ActiveProfile);
+        if (profile == null) return null;
+        string path = SaveFilePath(profile);
         if (!File.Exists(path)) return null;
         return JsonUtility.FromJson<SaveData>(File.ReadAllText(path));
     }

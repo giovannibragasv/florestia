@@ -20,6 +20,12 @@ public class StudentProfilePicker : MonoBehaviour
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
     }
 
     void Start()
@@ -216,13 +222,12 @@ public class StudentProfilePicker : MonoBehaviour
 
     static Canvas FindOrCreateCanvas()
     {
-        Canvas canvas = Object.FindAnyObjectByType<Canvas>();
-        if (canvas != null) return canvas;
+        SceneCameraUtility.EnsureEventSystem();
 
         var go = new GameObject("PickerCanvas");
-        canvas = go.AddComponent<Canvas>();
+        var canvas = go.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 200;
+        canvas.sortingOrder = 1000;
         var scaler = go.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920f, 1080f);

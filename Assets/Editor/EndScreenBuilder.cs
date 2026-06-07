@@ -53,7 +53,7 @@ public static class EndScreenBuilder
         MakeLabel("TitleLabel", ct, "Fim do Ciclo", new Vector2(0, 240), new Vector2(400, 55), 38);
 
         // Result labels (linguagem 8-11 anos por Modelo C §3.4)
-        var finalBalance = MakeLabel("FinalBalanceLabel", ct, "Dinheiro no fim: R$0,00",
+        var finalBalance = MakeLabel("FinalBalanceLabel", ct, "Dinheiro no fim: F$0,00",
             new Vector2(0, 170), new Vector2(400, 45));
         finalBalance.color = Color.white;
 

@@ -62,7 +62,7 @@ public class HUDController : MonoBehaviour
     public void RefreshBalance(float balance)
     {
         // Vocabulário 8-11 (Modelo C §3.4): "dinheiro" no lugar de "saldo".
-        balanceLabel.text = $"Dinheiro: R${balance:F2}";
+        balanceLabel.text = $"Dinheiro: F${balance:F0}";
         balanceLabel.color = balance < 20f
             ? new Color(0.75f, 0.10f, 0.08f, 1f)
             : new Color(0.20f, 0.09f, 0.03f, 1f);
@@ -97,7 +97,7 @@ public class HUDController : MonoBehaviour
                 {
                     int energy = crop.staminaCostToPlant;
                     cropPreviewLabel.text =
-                        $"{LabelForCrop(crop.cropName)} · R${crop.seedCost:F0} · {crop.growthDays} dias · usa {energy} energia";
+                        $"{LabelForCrop(crop.cropName)} · F${crop.seedCost:F0} · {crop.growthDays} dias · usa {energy} energia";
                     ApplyEnergyPreviewColor(energy);
                 }
                 else
@@ -150,10 +150,10 @@ public class HUDController : MonoBehaviour
 
         float invest = count * crop.seedCost;
         float expected = count * crop.baseMarketValue;
-        // Antes: "Plantando: 4× Cacau · Investimento R$24 · Receita ~R$64"
-        // Agora: "Você tem 4 pés de Cacau · gastou R$24 · pode render até R$64"
+        // Antes: "Plantando: 4× Cacau · Investimento F$24 · Receita ~F$64"
+        // Agora: "Você tem 4 pés de Cacau · gastou F$24 · pode render até F$64"
         proportionalityLabel.text =
-            $"{count} {PluralCropName(crop.cropName, count)} · gastou R${invest:F0} · rende até R${expected:F0}";
+            $"{count} {PluralCropName(crop.cropName, count)} · gastou F${invest:F0} · rende até F${expected:F0}";
     }
 
     static string LabelForCrop(string cropName) => cropName == "Acai" ? "Açaí" : cropName;
@@ -333,22 +333,69 @@ public class HUDController : MonoBehaviour
 
     void ApplyStardewStyleLayout()
     {
-        CompactHudPanel(balanceLabel, new Vector2(16f, -16f), new Vector2(208f, 86f));
-        CompactHudPanel(timerLabel, new Vector2(-16f, -16f), new Vector2(172f, 86f));
+        CompactHudPanel(balanceLabel, new Vector2(20f, -20f), new Vector2(296f, 124f));
+        CompactHudPanel(timerLabel, new Vector2(-20f, -20f), new Vector2(244f, 124f));
         StyleHudPanel(balanceLabel);
         StyleHudPanel(timerLabel);
         LayoutTopRightPanel(timerLabel);
+        LayoutLeftHudPanel();
 
-        if (balanceLabel != null) balanceLabel.fontSize = 18;
-        if (dayLabel != null) dayLabel.fontSize = 15;
-        if (staminaLabel != null) staminaLabel.fontSize = 14;
-        if (timerLabel != null) timerLabel.fontSize = 19;
-        if (phaseLabel != null) phaseLabel.fontSize = 14;
+        if (balanceLabel != null) balanceLabel.fontSize = 22;
+        if (dayLabel != null) dayLabel.fontSize = 18;
+        if (staminaLabel != null) staminaLabel.fontSize = 16;
+        if (timerLabel != null) timerLabel.fontSize = 24;
+        if (phaseLabel != null) phaseLabel.fontSize = 16;
 
-        MoveCoachingLabel(cropPreviewLabel, new Vector2(0f, 104f), 13,
+        MoveCoachingLabel(cropPreviewLabel, new Vector2(0f, 140f), 16,
             new Color(0.95f, 0.76f, 0.30f, 1f));
-        MoveCoachingLabel(proportionalityLabel, new Vector2(0f, 82f), 12,
+        MoveCoachingLabel(proportionalityLabel, new Vector2(0f, 112f), 14,
             new Color(0.78f, 0.92f, 0.78f, 1f));
+    }
+
+    void LayoutLeftHudPanel()
+    {
+        if (balanceLabel == null) return;
+        Transform panel = balanceLabel.transform.parent;
+        if (panel == null) return;
+
+        PlaceLabel(balanceLabel.rectTransform, new Vector2(56f, -14f), new Vector2(232f, 34f));
+        if (dayLabel != null)
+            PlaceLabel(dayLabel.rectTransform, new Vector2(56f, -52f), new Vector2(232f, 30f));
+        if (staminaLabel != null)
+            PlaceLabel(staminaLabel.rectTransform, new Vector2(56f, -88f), new Vector2(232f, 28f));
+
+        balanceLabel.textWrappingMode = TextWrappingModes.NoWrap;
+        if (dayLabel != null) dayLabel.textWrappingMode = TextWrappingModes.NoWrap;
+        if (staminaLabel != null) staminaLabel.textWrappingMode = TextWrappingModes.NoWrap;
+
+        var coin = panel.Find("CoinIcon") as RectTransform;
+        if (coin != null)
+        {
+            coin.anchorMin = new Vector2(0f, 1f);
+            coin.anchorMax = new Vector2(0f, 1f);
+            coin.pivot = new Vector2(0f, 1f);
+            coin.anchoredPosition = new Vector2(14f, -14f);
+            coin.sizeDelta = new Vector2(34f, 34f);
+        }
+        var heart = panel.Find("HeartIcon") as RectTransform;
+        if (heart != null)
+        {
+            heart.anchorMin = new Vector2(0f, 1f);
+            heart.anchorMax = new Vector2(0f, 1f);
+            heart.pivot = new Vector2(0f, 1f);
+            heart.anchoredPosition = new Vector2(14f, -86f);
+            heart.sizeDelta = new Vector2(30f, 30f);
+        }
+    }
+
+    static void PlaceLabel(RectTransform rt, Vector2 anchoredPos, Vector2 size)
+    {
+        if (rt == null) return;
+        rt.anchorMin = new Vector2(0f, 1f);
+        rt.anchorMax = new Vector2(0f, 1f);
+        rt.pivot = new Vector2(0f, 1f);
+        rt.anchoredPosition = anchoredPos;
+        rt.sizeDelta = size;
     }
 
     static void CompactHudPanel(TMP_Text childLabel, Vector2 anchoredPos, Vector2 size)
@@ -379,25 +426,25 @@ public class HUDController : MonoBehaviour
     {
         if (timer == null) return;
         Transform panel = timer.transform.parent;
-        PlaceChild(panel.Find("SunIcon") as RectTransform, new Vector2(14f, -10f), new Vector2(26f, 26f));
-        PlaceChild(timer.rectTransform, new Vector2(48f, -8f), new Vector2(96f, 26f));
+        PlaceChild(panel.Find("SunIcon") as RectTransform, new Vector2(18f, -14f), new Vector2(36f, 36f));
+        PlaceChild(timer.rectTransform, new Vector2(62f, -10f), new Vector2(140f, 36f));
         timer.alignment = TextAlignmentOptions.Left;
 
         TMP_Text phase = panel.Find("PhaseLabel")?.GetComponent<TMP_Text>();
         if (phase != null)
         {
-            PlaceChild(phase.rectTransform, new Vector2(14f, -36f), new Vector2(130f, 22f));
+            PlaceChild(phase.rectTransform, new Vector2(18f, -50f), new Vector2(180f, 30f));
             phase.alignment = TextAlignmentOptions.Left;
         }
 
         RectTransform bg = panel.Find("PhaseProgressBg") as RectTransform;
-        PlaceChild(bg, new Vector2(14f, -64f), new Vector2(130f, 8f));
+        PlaceChild(bg, new Vector2(18f, -90f), new Vector2(180f, 12f));
         if (bg != null && bg.GetComponent<Image>() != null)
             bg.GetComponent<Image>().color = new Color(0.42f, 0.22f, 0.08f, 1f);
         if (bg != null)
         {
             var fill = bg.Find("PhaseProgressFill") as RectTransform;
-            if (fill != null) fill.sizeDelta = new Vector2(130f, 8f);
+            if (fill != null) fill.sizeDelta = new Vector2(180f, 12f);
         }
     }
 

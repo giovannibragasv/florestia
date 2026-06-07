@@ -24,7 +24,6 @@ public static class FarmScenePolishBuilder
         EnsureDayNightUI();
         EnsureMapBounds();
         CameraConfineryBuilder.Add();
-        FontAssigner.Assign();
 
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         Debug.Log("FarmScene polish applied: terrain scale, camera, house, bridge, HUD, toolbar, and day/night UI rebuilt.");

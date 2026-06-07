@@ -88,10 +88,11 @@ public class EndScreenController : MonoBehaviour
         SceneCameraUtility.EnsureUICamera();
         SceneCameraUtility.EnsureEventSystem();
         EnsureEndScreenUI();
+        PolishEndScreenStyle();
 
         float final = GameManager.Instance.Balance;
         // Vocabulário 8-11 (Modelo C §3.4): "dinheiro no fim" no lugar de "saldo final".
-        finalBalanceLabel.text = $"Dinheiro no fim: R${final:F2}";
+        finalBalanceLabel.text = $"Dinheiro no fim: F${final:F0}";
 
         if (GameManager.Instance.IsLoss)
         {
@@ -157,7 +158,7 @@ public class EndScreenController : MonoBehaviour
         else if (GameManager.Instance.Balance > GameManager.StartingBalance)
         {
             c = new Color(0.32f, 0.80f, 0.42f, 0.18f);
-            icon = "R$";
+            icon = "F$";
             caption = "sobrou dinheiro";
         }
         else
@@ -333,7 +334,7 @@ public class EndScreenController : MonoBehaviour
                     ? PricingSystem.Instance.GetSeedCost(s.cropName)
                     : 0f;
                 if (cost > 0 && s.pricePerUnit < cost)
-                    return $"Você vendeu {s.cropName} por R${s.pricePerUnit:F2}, mas pagou R${cost:F2} na semente. Tente cobrar mais alto na próxima!";
+                    return $"Você vendeu {s.cropName} por F${s.pricePerUnit:F0}, mas pagou F${cost:F0} na semente. Tente cobrar mais alto na próxima!";
             }
         }
 
@@ -364,7 +365,7 @@ public class EndScreenController : MonoBehaviour
         if (gm.IsLoss)
             return "Não desanima! Plantar variedade e cobrar mais alto ajuda o dinheiro durar.";
         if (gm.Balance > GameManager.StartingBalance + 30f)
-            return $"Você terminou com R${gm.Balance:F0}! Bom plano de plantio e venda.";
+            return $"Você terminou com F${gm.Balance:F0}! Bom plano de plantio e venda.";
         return "Você sobreviveu aos 15 dias. Da próxima, tenta render mais!";
     }
 
@@ -421,7 +422,7 @@ public class EndScreenController : MonoBehaviour
         MakePanel("EndPanel", ct, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
             Vector2.zero, new Vector2(760f, 520f), new Color(0.13f, 0.10f, 0.08f, 0.96f));
 
-        finalBalanceLabel = MakeLabel("FinalBalanceLabel", ct, "Dinheiro no fim: R$0,00",
+        finalBalanceLabel = MakeLabel("FinalBalanceLabel", ct, "Dinheiro no fim: F$0",
             new Vector2(0f, 140f), new Vector2(520f, 42f), 26, Color.white);
         outcomeLabel = MakeLabel("OutcomeLabel", ct, "-",
             new Vector2(0f, 88f), new Vector2(560f, 46f), 32, Color.white);
@@ -498,6 +499,74 @@ public class EndScreenController : MonoBehaviour
         rt.anchoredPosition = anchoredPos;
         rt.sizeDelta = size;
         return rt;
+    }
+
+    void PolishEndScreenStyle()
+    {
+        var bg = GameObject.Find("Background");
+        if (bg != null)
+        {
+            var img = bg.GetComponent<Image>();
+            if (img != null) img.color = new Color(0.10f, 0.07f, 0.05f, 1f);
+        }
+
+        if (finalBalanceLabel != null)
+        {
+            EnsureCardBehind(finalBalanceLabel.transform.parent);
+            StyleLabel(GameObject.Find("TitleLabel")?.GetComponent<TMP_Text>(),
+                new Color(0.98f, 0.84f, 0.45f, 1f), 44, FontStyles.Bold);
+            StyleLabel(finalBalanceLabel, new Color(0.96f, 0.92f, 0.78f, 1f), 28, FontStyles.Normal);
+            StyleLabel(outcomeLabel, new Color(0.96f, 0.88f, 0.62f, 1f), 30, FontStyles.Bold);
+            StyleLabel(educationalLabel, new Color(0.92f, 0.84f, 0.68f, 1f), 18, FontStyles.Normal);
+            StyleLabel(bestCropLabel, new Color(0.88f, 0.80f, 0.62f, 1f), 20, FontStyles.Normal);
+            StyleLabel(GameObject.Find("ChartLabel")?.GetComponent<TMP_Text>(),
+                new Color(0.78f, 0.70f, 0.52f, 1f), 16, FontStyles.Italic);
+        }
+
+        if (chartContainer != null)
+        {
+            var img = chartContainer.GetComponent<Image>();
+            if (img != null) img.color = new Color(0.16f, 0.11f, 0.08f, 1f);
+            EnsureChartEmptyHint();
+        }
+    }
+
+    static void StyleLabel(TMP_Text label, Color color, int fontSize, FontStyles style)
+    {
+        if (label == null) return;
+        label.color = color;
+        label.fontSize = fontSize;
+        label.fontStyle = style;
+    }
+
+    void EnsureCardBehind(Transform sibling)
+    {
+        if (sibling == null) return;
+        if (sibling.Find("EndCard") != null) return;
+        var card = MakeRect("EndCard", sibling, new Vector2(0.5f, 0.5f),
+            new Vector2(0.5f, 0.5f), new Vector2(0f, 30f), new Vector2(780f, 560f));
+        var img = card.gameObject.AddComponent<Image>();
+        img.color = new Color(0.16f, 0.11f, 0.07f, 0.94f);
+        img.raycastTarget = false;
+        card.SetAsFirstSibling();
+        var bg = sibling.Find("Background");
+        if (bg != null) bg.SetAsFirstSibling();
+    }
+
+    GameObject _chartEmptyHint;
+    void EnsureChartEmptyHint()
+    {
+        bool hasData = GameManager.Instance != null
+            && GameManager.Instance.DailyBalances != null
+            && GameManager.Instance.DailyBalances.Count > 0;
+        if (_chartEmptyHint == null && !hasData)
+        {
+            _chartEmptyHint = MakeLabel("ChartEmptyHint", chartContainer,
+                "Ainda não há dias terminados para mostrar.",
+                Vector2.zero, new Vector2(480f, 60f), 16,
+                new Color(0.70f, 0.62f, 0.48f, 1f)).gameObject;
+        }
+        if (_chartEmptyHint != null) _chartEmptyHint.SetActive(!hasData);
     }
 
     static RectTransform MakePanel(string name, Transform parent, Vector2 anchorMin,

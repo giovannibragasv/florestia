@@ -345,7 +345,7 @@ public class MarketUIController : MonoBehaviour
         if (totalLabel != null)
         {
             totalLabel.text = _quantity > 0
-                ? $"Total: R${_quantity * price:F2}"
+                ? $"Total: F${_quantity * price:F0}"
                 : "Sem nada na sacola";
         }
         if (minusButton != null) minusButton.interactable = _quantity > 1;
@@ -399,8 +399,8 @@ public class MarketUIController : MonoBehaviour
         float cost = PricingSystem.Instance.GetSeedCost(_selectedCrop);
         float margin = PricingSystem.Instance.GetMarginValue(_selectedCrop);
 
-        costLabel.text = $"Custou: R${cost:F2}";
-        priceLabel.text = $"Seu preço: R${asking:F2}";
+        costLabel.text = $"Custou: F${cost:F0}";
+        priceLabel.text = $"Seu preço: F${asking:F0}";
         if (marginLabel != null)
         {
             // Vocabulário 8-11: "sobra" no lugar de "lucro" (Modelo C §3.4).
@@ -408,12 +408,12 @@ public class MarketUIController : MonoBehaviour
             Color color;
             if (margin > 0)
             {
-                label = $"Sobra de R${margin:F2}";
+                label = $"Sobra de F${margin:F0}";
                 color = new Color(0.32f, 0.80f, 0.42f, 1f);
             }
             else if (margin < 0)
             {
-                label = $"Faltam R${Mathf.Abs(margin):F2}";
+                label = $"Faltam F${Mathf.Abs(margin):F0}";
                 color = new Color(0.92f, 0.36f, 0.32f, 1f);
             }
             else
@@ -522,8 +522,8 @@ public class MarketUIController : MonoBehaviour
 
         float total = Mathf.Abs(unitSobra * qty);
         string text = isSobra
-            ? $"Boa! Nessa venda sobrou R${total:F2}: você recebeu mais do que gastou na semente."
-            : $"Atenção: nessa venda faltou R${total:F2}. Você vendeu por menos do que pagou na semente.";
+            ? $"Boa! Nessa venda sobrou F${total:F0}: você recebeu mais do que gastou na semente."
+            : $"Atenção: nessa venda faltou F${total:F0}. Você vendeu por menos do que pagou na semente.";
         Color color = isSobra
             ? new Color(0.32f, 0.80f, 0.42f, 1f)
             : new Color(0.95f, 0.62f, 0.32f, 1f);
@@ -613,18 +613,18 @@ public class MarketUIController : MonoBehaviour
             sb.AppendLine("Você vendeu:");
             foreach (var s in sales)
             {
-                sb.AppendLine($"  {s.quantity} × {s.cropName} a R${s.pricePerUnit:F2} = R${s.total:F2}");
+                sb.AppendLine($"  {s.quantity} × {s.cropName} a F${s.pricePerUnit:F0} = F${s.total:F0}");
                 receita += s.total;
             }
         }
         if (summaryTableLabel != null) summaryTableLabel.text = sb.ToString();
 
         float saldoAposCusto = GameManager.Instance.Balance - GameManager.DailyCost;
-        if (summaryRevenueLabel != null) summaryRevenueLabel.text = $"Você ganhou: R${receita:F2}";
-        if (summaryFixedCostLabel != null) summaryFixedCostLabel.text = $"Custo do sustento: −R${GameManager.DailyCost:F2}";
+        if (summaryRevenueLabel != null) summaryRevenueLabel.text = $"Você ganhou: F${receita:F0}";
+        if (summaryFixedCostLabel != null) summaryFixedCostLabel.text = $"Custo do sustento: −F${GameManager.DailyCost:F0}";
         if (summaryBalanceLabel != null)
         {
-            summaryBalanceLabel.text = $"Dinheiro no fim do dia: R${saldoAposCusto:F2}";
+            summaryBalanceLabel.text = $"Dinheiro no fim do dia: F${saldoAposCusto:F0}";
             summaryBalanceLabel.color = saldoAposCusto >= 0
                 ? new Color(0.30f, 0.78f, 0.40f)
                 : new Color(0.92f, 0.30f, 0.30f);
@@ -1012,11 +1012,11 @@ public class MarketUIController : MonoBehaviour
         summaryTableLabel.color = new Color(0.95f, 0.92f, 0.84f);
 
         summaryRevenueLabel = MakeLabelInRect(card.transform, "Revenue",
-            new Vector2(0f, -86f), new Vector2(500f, 26f), 18, "Você ganhou: R$0,00");
+            new Vector2(0f, -86f), new Vector2(500f, 26f), 18, "Você ganhou: F$0");
         summaryRevenueLabel.alignment = TextAlignmentOptions.Right;
 
         summaryFixedCostLabel = MakeLabelInRect(card.transform, "FixedCost",
-            new Vector2(0f, -114f), new Vector2(500f, 26f), 18, "Custo do sustento: −R$2,00");
+            new Vector2(0f, -114f), new Vector2(500f, 26f), 18, "Custo do sustento: −F$2");
         summaryFixedCostLabel.alignment = TextAlignmentOptions.Right;
         summaryFixedCostLabel.color = new Color(0.92f, 0.55f, 0.45f);
 
@@ -1031,7 +1031,7 @@ public class MarketUIController : MonoBehaviour
         divider.AddComponent<Image>().color = new Color(0.6f, 0.45f, 0.22f, 0.6f);
 
         summaryBalanceLabel = MakeLabelInRect(card.transform, "Balance",
-            new Vector2(0f, -160f), new Vector2(500f, 32f), 22, "Dinheiro no fim do dia: R$0,00");
+            new Vector2(0f, -160f), new Vector2(500f, 32f), 22, "Dinheiro no fim do dia: F$0");
         summaryBalanceLabel.alignment = TextAlignmentOptions.Right;
 
         var btnGO = new GameObject("ContinueButton");
